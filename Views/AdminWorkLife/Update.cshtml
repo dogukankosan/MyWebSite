@@ -1,0 +1,82 @@
+﻿@model Jobs
+@{
+    ViewData["Title"] = "Admin İş Guncelle";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+<form id="jobUpdateForm" method="post">
+    <br />
+    <h4>Admin İş Güncelle Sayfası</h4>
+    <hr />
+    <div class="form-group">
+        <input type="hidden" value="@Model.ID" name="ID" />
+        <label for="JobName">Firma Adı:</label>
+        <input type="text" required class="form-control" name="JobName" value="@Model.JobName" id="JobName" placeholder="">
+        <span id="JobNameError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="JobTitle">İş Ünvan:</label>
+        <input type="text" required class="form-control" name="JobTitle" value="@Model.JobTitle" id="JobTitle" placeholder="">
+        <span id="JobTitleError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="JobYears">Çalışma Hakkında:</label>
+        <input type="text" required class="form-control" name="JobYears" value="@Model.JobYears" id="JobYears" placeholder="2010-2014">
+        <span id="JobYearsError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="JobAbout">İş Hakkında:</label>
+        <input type="text" required class="form-control" name="JobAbout" value="@Model.JobAbout" id="JobAbout" placeholder="">
+        <span id="JobAboutError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Güncelle</button>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#jobUpdateForm').submit(function (event) {
+            event.preventDefault();
+
+            var formData = $(this).serialize();
+
+            // Hata mesajlarını temizle
+            $('#JobNameError').html('');
+            $('#JobTitleError').html('');
+            $('#JobYearsError').html('');
+            $('#JobAboutError').html('');
+            $('#resultsucc').html('');
+
+            $.ajax({
+                url: '/AdminIsHayati/Guncelle',
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        window.location.href = response.redirectUrl;  // Başarı durumunda yönlendirme
+                    } else {
+                        // Hataları ilgili alanlara göster
+                        if (response.errors.JobName) {
+                            $('#JobNameError').html(response.errors.JobName);
+                        }
+                        if (response.errors.JobTitle) {
+                            $('#JobTitleError').html(response.errors.JobTitle);
+                        }
+                        if (response.errors.JobYears) {
+                            $('#JobYearsError').html(response.errors.JobYears);
+                        }
+                        if (response.errors.JobAbout) {
+                            $('#JobAboutError').html(response.errors.JobAbout);
+                        }
+                    }
+                },
+                error: function () {
+                    $('#resultsucc').html('<div class="alert alert-danger">Bir hata oluştu. Lütfen tekrar deneyin.</div>');
+                }
+            });
+        });
+    });
+</script>

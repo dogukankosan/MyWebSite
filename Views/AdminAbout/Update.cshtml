@@ -1,0 +1,145 @@
+﻿@model About
+@{
+    ViewData["Title"] = "Admin Hakkinda Guncelle";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+<form id="aboutForm" enctype="multipart/form-data" method="post">
+    <br />
+    <h4>Hakkında Güncelleme Sayfası</h4>
+    <hr />
+    <span id="resultsucc" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    <div>
+        <label for="Image">Resim 1 Seçiniz:</label>
+        <input type="file" name="Picture1" id="ImageFile" accept="image/*" />
+    </div>
+    <img src="@ViewBag.Picture1" width="50" height="50" alt="Resim 1" />
+    <div>
+        <label for="Image">Resim 2 Seçiniz:</label>
+        <input type="file" name="Picture2" id="ImageFile" accept="image/*" />
+    </div>
+    <img src="@ViewBag.Picture2" width="50" height="50" alt="Resim 2" />
+    <br />
+    <div class="form-group">
+        <label>Ünvan:</label>
+        <input type="text" class="form-control" id="AboutTitle" value="@Model.AboutTitle" name="AboutTitle"
+               required minlength="2" maxlength="50"  placeholder="">
+        <span id="AboutTitleError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label>Hakkında Detay 1:</label>
+        <textarea class="form-control" name="AboutDetails1" required minlength="5" placeholder="">
+            @Model.AboutDetails1
+        </textarea>
+        <span id="AboutDetails1Error" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label>Adres:</label>
+        <input type="text" class="form-control" name="AboutAdress" value="@Model.AboutAdress"
+               required minlength="5" maxlength="30" placeholder="">
+        <span id="AboutAdressError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label>Mail:</label>
+        <input type="email" class="form-control" name="AboutMail" value="@Model.AboutMail"
+               required maxlength="40"  placeholder="">
+        <span id="AboutMailError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label>Telefon:</label>
+        <input type="tel" class="form-control" name="AboutPhone" value="@Model.AboutPhone"
+               required maxlength="15" placeholder="">
+        <span id="AboutPhoneError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+
+    <div class="form-group">
+        <label>Web Site:</label>
+        <input type="text" class="form-control" name="AboutWebSite" value="@Model.AboutWebSite"
+               required minlength="4" maxlength="30" placeholder="">
+        <span id="AboutWebSiteError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label>İsim:</label>
+        <input type="text" class="form-control" name="AboutName" value="@Model.AboutName"
+               required minlength="2" maxlength="30"  placeholder="">
+        <span id="AboutNameError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label>Hakkında Detay 2:</label>
+        <textarea class="form-control" name="AboutDetails2" required minlength="5" placeholder="">
+            @Model.AboutDetails2
+        </textarea>
+        <span id="AboutDetails2Error" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label>Harita:</label>
+        <textarea class="form-control" name="IFrameAdress" required minlength="50" placeholder="">
+            @Model.IFrameAdress
+        </textarea>
+        <span id="IFrameAdressError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Güncelle</button>
+</form>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#aboutForm').submit(function (event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                url: '@Url.Action("Guncelle", "AdminHakkinda")',
+                type: 'POST',
+                data: formData,
+                contentType: false,  // Önemli: Bu değer false olmalı
+                processData: false,  // Önemli: Bu değer false olmalı
+                success: function (response) {
+                    if (response.success) {
+                        window.location.href = response.redirectUrl;
+                    } else {
+                        if (response.errors.AboutTitle) {
+                            $('#AboutTitleError').html(response.errors.AboutTitle);
+                        }
+                        if (response.errors.AboutDetails1) {
+                            $('#AboutDetails1Error').html(response.errors.AboutDetails1);
+                        }
+                        if (response.errors.AboutAdress) {
+                            $('#AboutAdressError').html(response.errors.AboutAdress);
+                        }
+                        if (response.errors.AboutMail) {
+                            $('#AboutMailError').html(response.errors.AboutMail);
+                        }
+                        if (response.errors.AboutPhone) {
+                            $('#AboutPhoneError').html(response.errors.AboutPhone);
+                        }
+                        if (response.errors.AboutWebSite) {
+                            $('#AboutWebSiteError').html(response.errors.AboutWebSite);
+                        }
+                        if (response.errors.AboutName) {
+                            $('#AboutNameError').html(response.errors.AboutName);
+                        }
+                        if (response.errors.AboutDetails2) {
+                            $('#AboutDetails2Error').html(response.errors.AboutDetails2);
+                        }
+                        if (response.errors.IFrameAdress) {
+                            $('#IFrameAdressError').html(response.errors.IFrameAdress);
+                        }
+                        else { 
+                        $('#resultsucc').html('<div class="alert alert-danger">Bir hata oluştu. Lütfen tekrar deneyin.</div>');
+                        }
+                    }
+                },
+                error: function () {
+                    $('#resultsucc').html('<div class="alert alert-danger">Bir hata oluştu. Lütfen tekrar deneyin.</div>');
+                }
+            });
+        });
+    });
+</script>

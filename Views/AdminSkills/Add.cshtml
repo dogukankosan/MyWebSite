@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "Admin Beceri Ekle";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+<form id="skillAddForm" method="post">
+    <br />
+    <h4>Beceri Ekleme Sayfası</h4>
+    <hr />
+    <div class="form-group">
+        <label for="SkillName">Beceri Adı:</label>
+        <input required type="text" class="form-control" name="SkillName" id="SkillName" placeholder="">
+        <span id="SkillNameError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="SkillPercent">Beceri Yüzde %:</label>
+        <input required type="number" class="form-control" max="100" min="1" name="SkillPercent" id="SkillPercent" placeholder="">
+        <span id="SkillPercentError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="SkillIcon">Beceri Icon:</label>
+        <input required type="text" class="form-control" name="Skillcon" id="Skillcon" placeholder="">
+        <span id="SkillIconError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Ekle</button>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#skillAddForm').submit(function (event) {
+            event.preventDefault();
+            var formData = $(this).serialize();
+            $('#SkillNameError').html('');
+            $('#SkillPercentError').html('');
+            $('#SkillIconError').html('');
+            $('#resultsucc').html('');
+            $.ajax({
+                url: '/AdminBeceriler/Ekle',
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        window.location.href = response.redirectUrl;
+                    } else {
+                        if (response.errors.SkillName) {
+                            $('#SkillNameError').html(response.errors.SkillName);
+                        }
+                        if (response.errors.SkillPercent) {
+                            $('#SkillPercentError').html(response.errors.SkillPercent);
+                        }
+                        if (response.errors.Skillcon) {
+                            $('#SkillIconError').html(response.errors.Skillcon);
+                        }
+                    }
+                },
+                error: function () {
+                    $('#resultsucc').html('<div class="alert alert-danger">Bir hata oluştu. Lütfen tekrar deneyin.</div>');
+                }
+            });
+        });
+    });
+</script>

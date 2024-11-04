@@ -1,0 +1,67 @@
+﻿@model Skills
+@{
+    ViewData["Title"] = "Admin Beceri Guncelle";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+<form id="skillUpdateForm" method="post">
+    <input hidden value="@Model.ID"  name="ID" />
+    <br />
+    <h4>Beceri Güncelleme Sayfası</h4>
+    <hr />
+    <div class="form-group">
+        <label for="SkillName">Beceri Adı:</label>
+        <input type="text" required class="form-control" name="SkillName" value="@Model.SkillName" id="SkillName" placeholder="">
+        <span id="SkillNameError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="SkillPercent">Beceri Yüzde %:</label>
+        <input type="number" required class="form-control" max="100" min="1" name="SkillPercent" value="@Model.SkillPercent" id="SkillPercent" placeholder="">
+        <span id="SkillPercentError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="SkillIcon">Beceri Icon:</label>
+        <input type="text" required class="form-control" name="Skillcon" value="@Model.Skillcon" id="Skillcon" placeholder="">
+        <span id="SkillIconError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Güncelle</button>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#skillUpdateForm').submit(function (event) {
+            event.preventDefault();
+            var formData = $(this).serialize();
+            $('#SkillNameError').html('');
+            $('#SkillPercentError').html('');
+            $('#SkillIconError').html('');
+            $('#resultsucc').html('');
+            $.ajax({
+                url: '/AdminBeceriler/Guncelle',
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        window.location.href = response.redirectUrl;
+                    } else {
+                        if (response.errors.SkillName) {
+                            $('#SkillNameError').html(response.errors.SkillName);
+                        }
+                        if (response.errors.SkillPercent) {
+                            $('#SkillPercentError').html(response.errors.SkillPercent);
+                        }
+                        if (response.errors.Skillcon) {
+                            $('#SkillIconError').html(response.errors.Skillcon);
+                        }
+                    }
+                },
+                error: function () {
+                    $('#resultsucc').html('<div class="alert alert-danger">Bir hata oluştu. Lütfen tekrar deneyin.</div>');
+                }
+            });
+        });
+    });
+</script>

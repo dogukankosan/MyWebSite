@@ -1,0 +1,41 @@
+﻿@model List<Projects>
+<div class="container-fluid" id="pigraPortfolio">
+    <div class="container">
+        <div class="row g-0">
+            <div class="col-lg-3">
+                <div class="portfolio-header h-100 bg-dark pt-6 pe-6 pb-6">
+                    <div class="text-start d-flex flex-column justify-content-center wow fadeInUp" data-wow-delay="0.1s">
+                        <h2 class="display-6 text-white mb-0">Projelerim</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="portfolio-content h-100 pt-6 ps-6 pb-6">
+                    @foreach (Projects item in Model)
+                    {
+                        <div class="portfolio-item py-5 border-bottom wow fadeInUp" data-wow-delay="0.1s">
+                            <div class="row g-4 align-items-center">
+                                <div class="col-xl-6">
+                                    <h2>@item.ProjectName</h2>
+                                    <p class="display-7">@item.ProjectDescription</p>
+                                </div>
+                                <div class="col-9 col-xl-4">
+                                    <div class="portfolio-img">
+                                        <div class="portfolio-img-inner">
+                                            <a title="Projeye Git" href="@item.ProjectLink" target="_blank"><img src="data:image/jpeg;base64,@item.Base64Pictures" class="img-fluid" alt="Image"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3 col-xl-2">
+                                    <div class="view-img">
+                                        <a title="Githuba Git" href="@item.ProjectGithubLink" target="_blank" class="btn btn-primary btn-lg-square"><i class="fas fa-plus"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

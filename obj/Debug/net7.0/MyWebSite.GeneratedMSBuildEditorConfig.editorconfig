@@ -1,0 +1,167 @@
+is_global = true
+build_property.TargetFramework = net7.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = MyWebSite
+build_property.RootNamespace = MyWebSite
+build_property.ProjectDir = C:\Users\DOGUKAN\source\repos\MyWebSite\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 7.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\DOGUKAN\source\repos\MyWebSite
+build_property._RazorSourceGeneratorDebug = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminAbout/List.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5BYm91dFxMaXN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminAbout/Update.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5BYm91dFxVcGRhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminContact/List.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Db250YWN0XExpc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminEducation/Add.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5FZHVjYXRpb25cQWRkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminEducation/List.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5FZHVjYXRpb25cTGlzdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminEducation/Update.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5FZHVjYXRpb25cVXBkYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminErrorLogin/List.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5FcnJvckxvZ2luXExpc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminErrorLog/List.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5FcnJvckxvZ1xMaXN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminHome/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Ib21lXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminLogin/Panel.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Mb2dpblxQYW5lbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminLog/List.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Mb2dcTGlzdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminMail/List.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5NYWlsXExpc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminMail/Update.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5NYWlsXFVwZGF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminProjects/Add.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Qcm9qZWN0c1xBZGQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminProjects/List.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Qcm9qZWN0c1xMaXN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminProjects/Update.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Qcm9qZWN0c1xVcGRhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminSkills/Add.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Ta2lsbHNcQWRkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminSkills/List.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Ta2lsbHNcTGlzdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminSkills/Update.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Ta2lsbHNcVXBkYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminSocialMedia/List.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Tb2NpYWxNZWRpYVxMaXN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminSocialMedia/Update.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Tb2NpYWxNZWRpYVxVcGRhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminUserLogin/Liste.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Vc2VyTG9naW5cTGlzdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminUserLogin/Update.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Vc2VyTG9naW5cVXBkYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminWorkLife/Add.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Xb3JrTGlmZVxBZGQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminWorkLife/List.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Xb3JrTGlmZVxMaXN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminWorkLife/Update.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Xb3JrTGlmZVxVcGRhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/Home/Components/ContactUserComponent/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDb21wb25lbnRzXENvbnRhY3RVc2VyQ29tcG9uZW50XERlZmF1bHQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/Home/Components/EducationComponent/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDb21wb25lbnRzXEVkdWNhdGlvbkNvbXBvbmVudFxEZWZhdWx0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/Home/Components/JobComponent/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDb21wb25lbnRzXEpvYkNvbXBvbmVudFxEZWZhdWx0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/Home/Components/ProjectComponent/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDb21wb25lbnRzXFByb2plY3RDb21wb25lbnRcRGVmYXVsdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/Home/Components/SkillsComponent/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDb21wb25lbnRzXFNraWxsc0NvbXBvbmVudFxEZWZhdWx0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/Home/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxFcnJvci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/Shared/_adminLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9hZG1pbkxheW91dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 

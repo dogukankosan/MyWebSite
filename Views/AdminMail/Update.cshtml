@@ -1,0 +1,90 @@
+﻿@model AdminMail
+@{
+    ViewData["Title"] = "Admin Mail Guncelle";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+<form id="adminMailForm" method="post">
+    <br />
+    <h4>Admin Mail Güncelleme Sayfası</h4>
+    <hr />
+    <span id="resultsucc" class="text-danger" style="margin-top: 5px; display: block;"></span>
+
+    <div class="form-group">
+        <label>Mail Adres:</label>
+        <input type="email"  class="form-control" name="MailAdress" value="@Model.MailAdress" id="MailAdress" placeholder="">
+        <span id="MailAdressError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label>Mail Şifre:</label>
+        <input type="password"  class="form-control" name="MailPassword" value="@Model.MailPassword" id="MailPassword" placeholder="">
+        <span id="MailPasswordError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label>Server Name:</label>
+        <input type="text"  class="form-control" name="ServerName" value="@Model.ServerName" id="ServerName" placeholder="">
+        <span id="ServerNameError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label>Port:</label>
+        <input type="number"  class="form-control" name="MailPort" value="@Model.MailPort" id="MailPort" placeholder="">
+        <span id="MailPortError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <div class="form-group mb-3">
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" name="IsSSL" id="IsSSL" value="true" @(Model.IsSSL ? "checked" : "") />
+            <label class="form-check-label" for="IsSSL">SSL</label>
+        </div>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Güncelle</button>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#adminMailForm').submit(function (event) {
+            event.preventDefault();
+
+            var formData = $(this).serialize();
+
+            // Hata mesajlarını temizle
+            $('#MailAdressError').html('');
+            $('#MailPasswordError').html('');
+            $('#ServerNameError').html('');
+            $('#MailPortError').html('');
+            $('#resultsucc').html('');
+
+            $.ajax({
+                url: '/AdminMail/Guncelle',
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        window.location.href = response.redirectUrl;  // Başarı durumunda yönlendirme
+                    } else {
+                        // Hataları ilgili alanlara göster
+                        if (response.errors.MailAdress) {
+                            $('#MailAdressError').html(response.errors.MailAdress);
+                        }
+                        if (response.errors.MailPassword) {
+                            $('#MailPasswordError').html(response.errors.MailPassword);
+                        }
+                        if (response.errors.ServerName) {
+                            $('#ServerNameError').html(response.errors.ServerName);
+                        }
+                        if (response.errors.MailPort) {
+                            $('#MailPortError').html(response.errors.MailPort);
+                        }
+                    }
+                },
+                error: function () {
+                    $('#resultsucc').html('<div class="alert alert-danger">Bir hata oluştu. Lütfen tekrar deneyin.</div>');
+                }
+            });
+        });
+    });
+</script>

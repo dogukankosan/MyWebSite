@@ -1,0 +1,87 @@
+﻿@model Projects
+@{
+    ViewData["Title"] = "Admin Proje Güncelle";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+<form id="projectUpdateForm" enctype="multipart/form-data" method="post">
+    <input type="hidden" name="ID" value="@Model.ID" />
+    <br />
+    <h4>Admin Proje Güncelle Sayfası</h4>
+    <hr />
+    <div class="form-group">
+        <label for="ProjectName">Proje Adı:</label>
+        <input type="text" required class="form-control" name="ProjectName" id="ProjectName" value="@Model.ProjectName" placeholder="">
+        <span id="ProjectNameError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="ProjectDescription">Proje Açıklama:</label>
+        <input type="text" required class="form-control" name="ProjectDescription" id="ProjectDescription" value="@Model.ProjectDescription" placeholder="">
+        <span id="ProjectDescriptionError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <div>
+        <label for="ProjectImg">Proje Resim Seçiniz:</label>
+        <input type="file" name="ProjectImg" id="ProjectImg" accept="image/*" />
+    </div>
+    @if (ViewData["picture"] != null)
+    {
+        <img src="@ViewData["picture"]" width="50" height="50" alt="Resim 1" />
+    }
+    <br />
+    <div class="form-group">
+        <label for="ProjectGithubLink">Proje Github Link:</label>
+        <input type="url" required class="form-control" name="ProjectGithubLink" id="ProjectGithubLink" value="@Model.ProjectGithubLink" placeholder="">
+        <span id="ProjectGithubLinkError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <div class="form-group">
+        <label for="ProjectLink">Proje Web Link:</label>
+        <input type="url" class="form-control" name="ProjectLink" id="ProjectLink" value="@Model.ProjectLink" placeholder="">
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Güncelle</button>
+</form>
+
+<!-- Hata mesajları için boş bir div ekledik -->
+<div id="resultsucc"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#projectUpdateForm').submit(function (event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            $('#ProjectNameError').html('');
+            $('#ProjectDescriptionError').html('');
+            $('#ProjectGithubLinkError').html('');
+            $('#resultsucc').html(''); // Hata mesajı temizle
+
+            $.ajax({
+                url: '/AdminProje/Guncelle',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.success) {
+                        window.location.href = response.redirectUrl; // Başarılıysa yönlendir
+                    } else {
+                        // Hata mesajlarını doldur
+                        if (response.errors.ProjectName) {
+                            $('#ProjectNameError').html(response.errors.ProjectName);
+                        }
+                        if (response.errors.ProjectDescription) {
+                            $('#ProjectDescriptionError').html(response.errors.ProjectDescription);
+                        }
+                        if (response.errors.ProjectGithubLink) {
+                            $('#ProjectGithubLinkError').html(response.errors.ProjectGithubLink);
+                        }
+                    }
+                },
+                error: function () {
+                    $('#resultsucc').html('<div class="alert alert-danger">Bir hata oluştu. Lütfen tekrar deneyin.</div>');
+                }
+            });
+        });
+    });
+</script>

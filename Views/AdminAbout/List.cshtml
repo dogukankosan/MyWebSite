@@ -1,0 +1,78 @@
+﻿@model About
+@{
+    ViewData["Title"] = "Admin Hakkinda Liste";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+<br />
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Hakkında
+    </div>
+    <div class="card-body">
+        <table class="table table-hover" id="datatablesSimple">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Ünvan</th>
+                    <th>Resim 1</th>
+                    <th>Hakkında Detay 1</th>
+                    <th>Adres</th>
+                    <th>Mail</th>
+                    <th>Telefon</th>
+                    <th>Web Site</th>
+                    <th>Resim 2</th>
+                    <th>İsim</th>
+                    <th>Hakkında Detay 2</th>
+                    <th>Harita</th>
+                    <th>Güncelle</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@Model.ID</td>
+                    <td>@Model.AboutTitle</td>
+                    <td><img src="@ViewBag.Picture1" width="50" height="50" alt="Resim 1" /></td>
+                    <td>@Model.AboutDetails1</td>
+                    <td>@Model.AboutAdress</td>
+                    <td><a href="mailto:@Model.AboutMail" target="_self">@Model.AboutMail</a></td>
+                    <td>@Model.AboutPhone</td>
+                    <td>@Model.AboutWebSite</td>
+                    <td><img src="@ViewBag.Picture2" width="50" height="50" alt="Resim 1" /></td>
+                    <td>@Model.AboutName</td>
+                    <td>@Model.AboutDetails2</td>
+                    <td><iframe class="rounded w-100" loading="lazy" referrerpolicy="no-referrer-when-downgrade" style="height: 400px;" src="@Model.IFrameAdress" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></td>
+                    <td><a class="btn btn-success" href="/AdminHakkinda/Guncelle/@Model.ID">Güncelle</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+@if (TempData["Type"] != null && !string.IsNullOrEmpty(TempData["Type"].ToString()))
+{
+    var title = "";
+    var icon = "";
+    var message = TempData["Message"]?.ToString() ?? "";
+
+    if (TempData["Type"].ToString() == "error")
+    {
+        title = "Hata";
+        icon = "error";
+    }
+    else if (TempData["Type"].ToString() == "success")
+    {
+        title = "Başarılı";
+        icon = "success";
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Swal.fire({
+                title: '@Html.Raw(title)',
+                text: '@Html.Raw(message)',
+                icon: '@Html.Raw(icon)',
+                confirmButtonText: 'Tamam'
+            });
+        });
+    </script>
+}

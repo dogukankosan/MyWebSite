@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Admin Giriş Ekranı</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="~/LoginTemp/images/icons/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="~/LoginTemp/css/util.css">
+    <link rel="stylesheet" type="text/css" href="~/LoginTemp/css/main.css">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="limiter">
+        <div class="container-login100" style="background-image: url('@Url.Content("~/LoginTemp/images/bg-01.jpg")');">
+            <div class="wrap-login100 p-t-80 p-b-80">
+                <span class="login100-form-title p-b-41">
+                    Admin Giriş Ekranı
+                </span>
+                <form id="loginForm" class="login100-form validate-form p-b-33 p-t-5">
+                    <div class="wrap-input100 validate-input" data-validate="Kullanıcı Adı Boş Geçilemez">
+                        <input class="input100" type="text" name="UserName" placeholder="Kullanıcı Adınız.." required pattern="[^<>]+" title="HTML karakterlerine izin verilmez">
+                        <span class="focus-input100" data-placeholder="&#xe82a;"></span>
+                        <span id="UserNameError" class="text-danger" style="display: block; margin-top: 5px;margin-left:15px;color:red"></span>
+                    </div>
+                    <div class="wrap-input100 validate-input" data-validate="Şifre Boş Geçilemez">
+                        <input class="input100" type="password" name="Password" placeholder="Şifreniz.." required pattern="[^<>]+" title="HTML karakterlerine izin verilmez">
+                        <span class="focus-input100" data-placeholder="&#xe80f;"></span>
+                        <span id="PasswordError" class="text-danger" style="display: block; margin-top: 5px;margin-left:15px;color:red"></span>
+                    </div>
+                    <div class="container-login100-form-btn m-t-32">
+                        <button type="submit" class="login100-form-btn">
+                            Giriş Yap
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        // TempData'dan gelen mesajı kontrol et
+        $(document).ready(function () {
+            var message = '@TempData["Message"]';
+            if (message != "") {
+                Swal.fire({
+                    title: 'Giriş İşlemi Hatalı!',
+                    text: 'Kullanıcı Adı veya Şifre Hatalı. Tekrar Giriş Yapınız.',
+                    icon: 'error',
+                    confirmButtonText: 'Tamam'
+                });
+            }
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#loginForm').submit(function (event) {
+                event.preventDefault();
+
+                // Hata mesajlarını temizle
+                $('#UserNameError').html('');
+                $('#PasswordError').html('');
+
+                $.ajax({
+                    url: '/AdminGiris/Panel',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        if (response.success) {
+                            // Başarılı girişte yönlendirme
+                            window.location.href = response.redirectUrl;
+                        }
+                        if (response.locked) {
+                            // Eğer locked durumu true ise sayfayı yenile
+                            location.reload();
+                        } else {
+                            // Hataları göster
+                            if (response.errors.UserName) {
+                                $('#UserNameError').html(response.errors.UserName);
+                            }
+                            if (response.errors.Password) {
+                                $('#PasswordError').html(response.errors.Password);
+                            }
+                        }
+                    },
+                });
+            });
+        });
+    </script>
+</body>
+</html>

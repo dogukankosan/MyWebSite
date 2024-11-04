@@ -1,0 +1,70 @@
+﻿@model AdminMail
+@{
+    ViewData["Title"] = "Admin Mail Liste";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+<br />
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Admin Mail Sayfası
+    </div>
+    <div class="card-body">
+        <table class="table table-hover" id="datatablesSimple">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Mail Adres</th>
+                    <th>Mail Şifre</th>
+                    <th>Server</th>
+                    <th>Port</th>
+                    <th>SSL</th>
+                    <th>Güncelle</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    @{
+                        string ssl = Model.IsSSL ? "SSL Var" : "SSL Yok";
+                    }
+                    <td>@Model.ID</td>
+                    <td>@Model.MailAdress</td>
+                    <td>***</td>
+                    <td>@Model.ServerName</td>
+                    <td>@Model.MailPort</td>
+                    <td>@ssl</td>
+                    <td><a class="btn btn-success" href="/AdminMail/Guncelle/@Model.ID">Güncelle</a></td>
+                </tr>
+            </tbody>
+        </table>
+  <a class="btn btn-primary" href="/AdminMail/TestMail">Test Maili Gönder</a>
+    </div>
+</div>
+@if (TempData["Type"] != null && !string.IsNullOrEmpty(TempData["Type"].ToString()))
+{
+    var title = "";
+    var icon = "";
+    var message = TempData["Message"]?.ToString() ?? "";
+
+    if (TempData["Type"].ToString() == "error")
+    {
+        title = "Hata";
+        icon = "error";
+    }
+    else if (TempData["Type"].ToString() == "success")
+    {
+        title = "Başarılı";
+        icon = "success";
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Swal.fire({
+                title: '@Html.Raw(title)',
+                text: '@Html.Raw(message)',
+                icon: '@Html.Raw(icon)',
+                confirmButtonText: 'Tamam'
+            });
+        });
+    </script>
+}

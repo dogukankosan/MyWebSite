@@ -1,0 +1,58 @@
+﻿@model AdminLoginProp
+@{
+    ViewData["Title"] = "Admin Giris Guncelleme Sayfasi";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+<form id="loginForm" method="post">
+    <br />
+    <h4>Admin Giriş Güncelleme Sayfası</h4>
+    <hr />
+    <span id="resultsucc" class="text-danger" style="margin-top: 5px; display: block;"></span>
+
+    <div class="form-group">
+        <label for="UserName">Kullanıcı Adı:</label>
+        <input type="text" class="form-control" name="UserName" required min="3" max="50" value="@Model.UserName" placeholder="">
+        <span id="UserNameError" class="text-danger"  style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="Password">Şifre:</label>
+        <input type="password" class="form-control" requried maxlength="50" min="8"  name="Password" value="@Model.Password" placeholder="">
+        <span id="PasswordError" class="text-danger"  style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Güncelle</button>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#loginForm').submit(function (event) {
+            event.preventDefault();
+            var formData = $(this).serialize();
+            $('#UserNameError').html('');
+            $('#PasswordError').html('');
+            $('#resultsucc').html('');
+            $.ajax({
+                url: '/AdminKullanici/Guncelle',
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        window.location.href = response.redirectUrl; 
+                    } else {
+                        if (response.errors.UserName) {
+                            $('#UserNameError').html(response.errors.UserName);
+                        }
+                        if (response.errors.Password) {
+                            $('#PasswordError').html(response.errors.Password);
+                        }
+                    }
+                },
+                error: function () {
+                    $('#resultsucc').html('<div class="alert alert-danger">Bir hata oluştu. Lütfen tekrar deneyin.</div>');
+                }
+            });
+        });
+    });
+</script>

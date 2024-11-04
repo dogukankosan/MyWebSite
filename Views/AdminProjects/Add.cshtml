@@ -1,0 +1,80 @@
+﻿@{
+    ViewData["Title"] = "Admin Proje Ekle";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+<form id="projectAddForm" enctype="multipart/form-data" method="post">
+    <br />
+    <h4>Admin Proje Ekle Sayfası</h4>
+    <hr />
+    <div class="form-group">
+        <label for="ProjectName">Proje Adı:</label>
+        <input type="text" class="form-control" name="ProjectName" id="ProjectName" placeholder="">
+        <span id="ProjectNameError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="ProjectDescription">Proje Açıklama:</label>
+        <textarea class="form-control" name="ProjectDescription" id="ProjectDescription" placeholder=""></textarea>
+        <span id="ProjectDescriptionError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <br />
+    <div>
+        <label for="ProjectImg">Proje Resim Seçiniz:</label>
+        <input required type="file" name="ProjectImg" id="ProjectImg" accept="image/*" />
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="ProjectGithubLink">Proje Github Link:</label>
+        <input type="url" class="form-control" name="ProjectGithubLink" id="ProjectGithubLink" placeholder="">
+        <span id="ProjectGithubLinkError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    </div>
+    <div class="form-group">
+        <label for="ProjectLink">Proje Web Link:</label>
+        <input type="url" class="form-control" name="ProjectLink" id="ProjectLink" placeholder="">
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Ekle</button>
+</form>
+
+<!-- Hata veya başarı mesajları için bir div eklendi -->
+<div id="resultsucc"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#projectAddForm').submit(function (event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            $('#ProjectNameError').html('');
+            $('#ProjectDescriptionError').html('');
+            $('#ProjectGithubLinkError').html('');
+            $('#resultsucc').html(''); // Hata mesajlarını temizle
+
+            $.ajax({
+                url: '/AdminProje/Ekle',
+                type: 'POST',
+                data: formData,
+                contentType: false,  
+                processData: false,  
+                success: function (response) {
+                    if (response.success) {
+                        window.location.href = response.redirectUrl; 
+                    } else {
+                        if (response.errors.ProjectName) {
+                            $('#ProjectNameError').html(response.errors.ProjectName);
+                        }
+                        if (response.errors.ProjectDescription) {
+                            $('#ProjectDescriptionError').html(response.errors.ProjectDescription);
+                        }
+                        if (response.errors.ProjectGithubLink) {
+                            $('#ProjectGithubLinkError').html(response.errors.ProjectGithubLink);
+                        }
+                    }
+                },
+                error: function () {
+                    $('#resultsucc').html('<div class="alert alert-danger">Bir hata oluştu. Lütfen tekrar deneyin.</div>');
+                }
+            });
+        });
+    });
+</script>

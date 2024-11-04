@@ -1,0 +1,26 @@
+﻿using FluentValidation;
+using MyWebSite.Models;
+
+namespace MyWebSite.Business
+{
+    public class AdminMailValidator : AbstractValidator<AdminMail>
+    {
+        public AdminMailValidator()
+        {
+            RuleFor(mail => mail.MailAdress)
+                .NotEmpty().WithMessage("Mail adresi boş bırakılamaz.")
+                .MaximumLength(50).WithMessage("Mail adresi en fazla 50 karakter olabilir.").MinimumLength(5).WithMessage("Mail adresi en az 5 karakter olmalıdır")
+                .EmailAddress().WithMessage("Geçerli bir mail adresi giriniz.");
+            RuleFor(mail => mail.MailPassword)
+                .NotEmpty().WithMessage("Mail şifresi boş bırakılamaz.")
+                .MaximumLength(50).WithMessage("Mail şifresi en fazla 50 karakter olabilir.")
+                .MinimumLength(3).WithMessage("Mail şifresi en az 3 karakter olmalıdır.");
+            RuleFor(mail => mail.ServerName)
+                .NotEmpty().WithMessage("Sunucu adı boş bırakılamaz.")
+                .MaximumLength(20).WithMessage("Sunucu adı en fazla 20 karakter olabilir.").MinimumLength(3).WithMessage("Sunucu adı en az 3 karakter olmalıdır");
+            RuleFor(mail => mail.MailPort)
+                .NotEmpty().WithMessage("Mail port boş bırakılamaz.")
+                .InclusiveBetween(1, 65535).WithMessage("Mail portu 1 ile 65535 arasında olmalıdır.");
+        }
+    }
+}
