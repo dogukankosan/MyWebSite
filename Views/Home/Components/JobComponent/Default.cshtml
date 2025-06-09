@@ -19,15 +19,7 @@
                                     <div class="d-flex align-items-center mb-3">
                                         <p class="fs-5 mb-0 me-4">@item.JobName</p>
                                         <div>
-                                            @{
-                                                string years = item.JobYears;
-                                                string[] yearParts = years.Split('-');
-                                                if (yearParts.Length == 2 && yearParts[0] == yearParts[1])
-                                                {
-                                                    years = yearParts[0]+"-Aktif";
-                                                }
-                                            }
-                                            <span class="fa fa-calendar me-1"></span> @years
+                                            <span class="fa fa-calendar me-1"></span> @item.JobYears
                                         </div>
                                     </div>
                                     <h4 class="mb-3">@item.JobTitle</h4>

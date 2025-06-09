@@ -3,16 +3,8 @@
   "WorkspaceRootPath": "C:\\Users\\DOGUKAN\\source\\repos\\MyWebSite\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F51A204D-A094-4628-9390-1AF667288D6C}|MyWebSite.csproj|c:\\users\\dogukan\\source\\repos\\mywebsite\\views\\home\\error.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{F51A204D-A094-4628-9390-1AF667288D6C}|MyWebSite.csproj|solutionrelative:views\\home\\error.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{F51A204D-A094-4628-9390-1AF667288D6C}|MyWebSite.csproj|c:\\users\\dogukan\\source\\repos\\mywebsite\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{F51A204D-A094-4628-9390-1AF667288D6C}|MyWebSite.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F51A204D-A094-4628-9390-1AF667288D6C}|MyWebSite.csproj|c:\\users\\dogukan\\source\\repos\\mywebsite\\views\\shared\\_adminlayout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{F51A204D-A094-4628-9390-1AF667288D6C}|MyWebSite.csproj|solutionrelative:views\\shared\\_adminlayout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,45 +14,27 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Error.cshtml",
-              "DocumentMoniker": "C:\\Users\\DOGUKAN\\source\\repos\\MyWebSite\\Views\\Home\\Error.cshtml",
-              "RelativeDocumentMoniker": "Views\\Home\\Error.cshtml",
-              "ToolTip": "C:\\Users\\DOGUKAN\\source\\repos\\MyWebSite\\Views\\Home\\Error.cshtml",
-              "RelativeToolTip": "Views\\Home\\Error.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-04T07:28:21.808Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "_adminLayout.cshtml",
-              "DocumentMoniker": "C:\\Users\\DOGUKAN\\source\\repos\\MyWebSite\\Views\\Shared\\_adminLayout.cshtml",
-              "RelativeDocumentMoniker": "Views\\Shared\\_adminLayout.cshtml",
-              "ToolTip": "C:\\Users\\DOGUKAN\\source\\repos\\MyWebSite\\Views\\Shared\\_adminLayout.cshtml",
-              "RelativeToolTip": "Views\\Shared\\_adminLayout.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAQAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-04T07:28:04.217Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\DOGUKAN\\source\\repos\\MyWebSite\\Views\\Home\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Home\\Index.cshtml",
               "ToolTip": "C:\\Users\\DOGUKAN\\source\\repos\\MyWebSite\\Views\\Home\\Index.cshtml",
               "RelativeToolTip": "Views\\Home\\Index.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAABcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-11-04T07:07:26.86Z",
+              "WhenOpened": "2025-06-09T16:49:16.528Z",
               "EditorCaption": ""
             }
           ]

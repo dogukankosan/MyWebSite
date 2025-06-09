@@ -4,75 +4,113 @@
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
 <br />
-<div class="card mb-4">
-    <div class="card-header">
-        <i class="fas fa-table me-1"></i>
-        Hakkında
-    </div>
-    <div class="card-body">
-        <table class="table table-hover" id="datatablesSimple">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Ünvan</th>
-                    <th>Resim 1</th>
-                    <th>Hakkında Detay 1</th>
-                    <th>Adres</th>
-                    <th>Mail</th>
-                    <th>Telefon</th>
-                    <th>Web Site</th>
-                    <th>Resim 2</th>
-                    <th>İsim</th>
-                    <th>Hakkında Detay 2</th>
-                    <th>Harita</th>
-                    <th>Güncelle</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>@Model.ID</td>
-                    <td>@Model.AboutTitle</td>
-                    <td><img src="@ViewBag.Picture1" width="50" height="50" alt="Resim 1" /></td>
-                    <td>@Model.AboutDetails1</td>
-                    <td>@Model.AboutAdress</td>
-                    <td><a href="mailto:@Model.AboutMail" target="_self">@Model.AboutMail</a></td>
-                    <td>@Model.AboutPhone</td>
-                    <td>@Model.AboutWebSite</td>
-                    <td><img src="@ViewBag.Picture2" width="50" height="50" alt="Resim 1" /></td>
-                    <td>@Model.AboutName</td>
-                    <td>@Model.AboutDetails2</td>
-                    <td><iframe class="rounded w-100" loading="lazy" referrerpolicy="no-referrer-when-downgrade" style="height: 400px;" src="@Model.IFrameAdress" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></td>
-                    <td><a class="btn btn-success" href="/AdminHakkinda/Guncelle/@Model.ID">Güncelle</a></td>
-                </tr>
-            </tbody>
-        </table>
+<title>Hakkında</title>
+<h4 class="card-title">Hakkında Bilgileri</h4>
+<hr />
+<div class="row mb-2">
+    <div class="col text-right">
+        <select id="exportOptions" class="form-control form-control-sm w-100 mb-2 d-md-inline-block">
+            <option value="">Dışa Aktar</option>
+            <option value="excel">📥 Excel</option>
+            <option value="pdf">📄 PDF</option>
+            <option value="print">🖨️ Yazdır</option>
+        </select>
     </div>
 </div>
-@if (TempData["Type"] != null && !string.IsNullOrEmpty(TempData["Type"].ToString()))
-{
-    var title = "";
-    var icon = "";
-    var message = TempData["Message"]?.ToString() ?? "";
+<div class="table-responsive">
+    <table class="table table-hover table-striped table-bordered" id="yourTableId">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Ünvan</th>
+                <th>Resim 1</th>
+                <th>Hakkında Detay 1</th>
+                <th>Adres</th>
+                <th>Mail</th>
+                <th>Telefon</th>
+                <th>Web Site</th>
+                <th>Resim 2</th>
+                <th>İsim</th>
+                <th>Hakkında Detay 2</th>
+                <th>Harita</th>
+                <th class="no-export">Güncelle</th>
+            </tr>
+        </thead>
+        <tbody>
+        @{
+            string phoneDigits = new string(Model.AboutPhone?.Where(char.IsDigit).ToArray());
+            string whatsappUrl = "https://wa.me/90" + phoneDigits;
+        }
+        <tr>
+            <td>@Model.ID</td>
+            <td>@Model.AboutTitle</td>
+            <td><img src="@ViewBag.Picture1" width="50" height="50" alt="Resim 1" /></td>
+            <td>@Model.AboutDetails1</td>
+            <td>@Model.AboutAdress</td>
+            <td><a href="mailto:@Model.AboutMail" style="color:blue" target="_blank"><u>@Model.AboutMail</u></a></td>
+            <td>
+                <a href="@whatsappUrl" target="_blank" style="color:blue">
+                    <u>@Model.AboutPhone</u>
+                </a>
+            </td>
+            @{
+                string website = Model.AboutWebSite?.StartsWith("http") == true 
+                    ? Model.AboutWebSite 
+                    : "https://" + Model.AboutWebSite;
+            }
+            <td>
+                <a href="@website" style="color:blue" target="_blank">
+                    <u>@Model.AboutWebSite</u>
+                </a>
+            </td>
+            <td><img src="@ViewBag.Picture2" width="50" height="50" alt="Resim 2" /></td>
+            <td>@Model.AboutName</td>
+            <td>@Model.AboutDetails2</td>
+            <td>
+                <iframe class="rounded w-100" style="height: 400px;" src="@Model.IFrameAdress" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </td>
+            <td>
+                <a href="/AdminHakkinda/Guncelle/@Model.ID" class="btn btn-outline-info btn-sm" title="Düzenle">
+                    <i class="fa fa-pencil"></i>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div id="tempDataMessages"
+     data-type="@TempData["Type"]"
+     data-message="@TempData["Message"]">
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const el = document.getElementById('tempDataMessages');
+        if (!el) return;
 
-    if (TempData["Type"].ToString() == "error")
-    {
-        title = "Hata";
-        icon = "error";
-    }
-    else if (TempData["Type"].ToString() == "success")
-    {
-        title = "Başarılı";
-        icon = "success";
-    }
+        const type = el.getAttribute('data-type');
+        const message = el.getAttribute('data-message');
+        const fromUpdate = sessionStorage.getItem("updated");
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        if (type && message && type === "success" && fromUpdate === "1") {
             Swal.fire({
-                title: '@Html.Raw(title)',
-                text: '@Html.Raw(message)',
-                icon: '@Html.Raw(icon)',
-                confirmButtonText: 'Tamam'
+                icon: 'success',
+                title: 'Başarılı!',
+                text: message,
+                timer: 3000,
+                showConfirmButton: false
             });
-        });
-    </script>
-}
+            sessionStorage.removeItem("updated");
+        }
+
+        if (type && message && type === "error") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Hata!',
+                text: message,
+                timer: 3000,
+                showConfirmButton: false
+            });
+        }
+    });
+</script>

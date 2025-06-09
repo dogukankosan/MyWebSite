@@ -8,16 +8,27 @@ namespace MyWebSite.Business
         public AdminProjectsValidator()
         {
             RuleFor(project => project.ProjectName)
-                .NotEmpty().WithMessage("Proje adı boş bırakılamaz.").MinimumLength(3).WithMessage("Proje adı en az 3 karakter olabilir")
-                .MaximumLength(50).WithMessage("Proje adı en fazla 50 karakter olabilir.");
+                .NotEmpty().WithMessage("Proje adı boş bırakılamaz.")
+                .MinimumLength(3).WithMessage("Proje adı en az 3 karakter olabilir.")
+                .MaximumLength(75).WithMessage("Proje adı en fazla 75 karakter olabilir.");
+
             RuleFor(project => project.ProjectDescription)
-                .NotEmpty().WithMessage("Proje açıklaması boş bırakılamaz.").MinimumLength(3).WithMessage("Proje açıklaması en az 3 karakter olabilir")
-                .MaximumLength(300).WithMessage("Proje açıklaması en fazla 300 karakter olabilir.");
+                .NotEmpty().WithMessage("Proje açıklaması boş bırakılamaz.")
+                .MinimumLength(3).WithMessage("Proje açıklaması en az 3 karakter olabilir.");
+
             RuleFor(project => project.ProjectGithubLink)
-                .NotEmpty().WithMessage("GitHub linki boş bırakılamaz.").MinimumLength(3).WithMessage("Github linki en az 3 karakter olabilir")
-                .MaximumLength(50).WithMessage("GitHub linki en fazla 50 karakter olabilir.")
+                .NotEmpty().WithMessage("GitHub linki boş bırakılamaz.")
+                .MinimumLength(3).WithMessage("Github linki en az 3 karakter olabilir.")
+                .MaximumLength(75).WithMessage("GitHub linki en fazla 75 karakter olabilir.")
                 .Must(link => Uri.IsWellFormedUriString(link, UriKind.Absolute))
-                .WithMessage("Geçerli bir URL giriniz.");
+                .WithMessage("Geçerli bir GitHub URL'si giriniz.");
+
+            RuleFor(project => project.ProjectLink)
+                .NotEmpty().WithMessage("Proje linki boş bırakılamaz.")
+                .MinimumLength(3).WithMessage("Proje linki en az 3 karakter olabilir.")
+                .MaximumLength(75).WithMessage("Proje linki en fazla 75 karakter olabilir.")
+                .Must(link => Uri.IsWellFormedUriString(link, UriKind.Absolute))
+                .WithMessage("Geçerli bir proje linki giriniz.");
         }
     }
 }

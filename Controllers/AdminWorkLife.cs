@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MyWebSite.Classes;
 using MyWebSite.Models;
-using System.Data;
 using System.Data.SqlClient;
 
 namespace MyWebSite.Controllers
@@ -11,210 +10,142 @@ namespace MyWebSite.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminWorkLife : Controller
     {
-        private readonly IConfiguration _configuration;
-        public AdminWorkLife(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-        [Route("Liste")]
-        [HttpGet]
+        [HttpGet("Liste")]
         public async Task<IActionResult> List()
         {
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
-            using (SqlConnection con = new(connectionString))
+            try
             {
-                try
-                {
-                    await con.OpenAsync();
-                    SqlCommand cmd = new("JobsGet", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    List<Jobs> jobs = new();
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                List<Jobs> jobs = await SQLCrud.ExecuteModelListAsync(
+                    "JobsGet",
+                    null,
+                    reader => new Jobs
                     {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                jobs.Add(new Jobs()
-                                {
-                                    ID = Convert.ToByte(reader["ID"]),
-                                    JobName = reader["JobName"].ToString(),
-                                    JobTitle = reader["JobTitle"].ToString(),
-                                    JobYears = reader["JobYears"].ToString(),
-                                    JobAbout = reader["JobAbout"].ToString(),
-                                });
-                            }
-                            return View(jobs);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    await Logging.LogAdd("Admin Eğitim Panelde Listeleme İşlemi Hatası", ex.Message, connectionString, HttpContext.Connection.RemoteIpAddress.ToString());
-                    TempData["Type"] = "error";
-                    TempData["Message"] = "Admin Eğitim Hatalı Listeleme İşlemi";
-                }
+                        ID = Convert.ToByte(reader["ID"]),
+                        JobName = reader["JobName"].ToString(),
+                        JobTitle = reader["JobTitle"].ToString(),
+                        JobYears = reader["JobYears"].ToString(),
+                        JobAbout = reader["JobAbout"].ToString()
+                    },
+                    System.Data.CommandType.StoredProcedure
+                );
+                return View(jobs);
             }
-            return View();
-        }
-        [Route("Ekle")]
-        public IActionResult Add()
-        {
-            return View();
-        }
-        [HttpPost]
-        [Route("Ekle")]
-        public async Task<IActionResult> Add(Jobs jobs)
-        {
-            if (!ModelState.IsValid)
+            catch (Exception ex)
             {
-                Dictionary<string, string> errors = new();
-                if (ModelState.ContainsKey("JobName"))
-                    errors["JobName"] = string.Join(", ", ModelState["JobName"].Errors.Select(e => e.ErrorMessage));
-                if (ModelState.ContainsKey("JobTitle"))
-                    errors["JobTitle"] = string.Join(", ", ModelState["JobTitle"].Errors.Select(e => e.ErrorMessage));
-                if (ModelState.ContainsKey("JobYears"))
-                    errors["JobYears"] = string.Join(", ", ModelState["JobYears"].Errors.Select(e => e.ErrorMessage));
-                if (ModelState.ContainsKey("JobAbout"))
-                    errors["JobAbout"] = string.Join(", ", ModelState["JobAbout"].Errors.Select(e => e.ErrorMessage));
-                return Json(new { success = false, errors });
-            }
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
-            using (SqlConnection con = new(connectionString))
-            {
-                try
-                {
-                    await con.OpenAsync();
-                    SqlCommand cmd = new("JobsAdd", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@JobName", jobs.JobName);
-                    cmd.Parameters.AddWithValue("@JobTitle", jobs.JobTitle);
-                    cmd.Parameters.AddWithValue("@JobYears", jobs.JobYears);
-                    cmd.Parameters.AddWithValue("@JobAbout", jobs.JobAbout);
-                    await cmd.ExecuteNonQueryAsync();
-                    TempData["Type"] = "success";
-                    TempData["Message"] = "Admin İş Hayatı Başarılı Ekleme İşlemi";
-                    return Json(new { success = true, redirectUrl = Url.Action("Liste", "AdminIsHayati") });
-                }
-                catch (Exception ex)
-                {
-                    await Logging.LogAdd("Admin Eğitim Panelde Ekleme İşlemi Hatası", ex.Message, connectionString, HttpContext.Connection.RemoteIpAddress.ToString());
-                    TempData["Type"] = "error";
-                    TempData["Message"] = "Admin Eğitim Hatalı Ekleme İşlemi";
-                }
-            }
-            return View();
-        }
-        [Route("Sil/{id:int}")]
-        [HttpGet]
-        public async Task<IActionResult> Delete(int id)
-        {
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
-            using (SqlConnection con = new(connectionString))
-            {
-                try
-                {
-                    await con.OpenAsync();
-                    SqlCommand cmd = new("JobsDelete", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@ID", id);
-                    await cmd.ExecuteNonQueryAsync();
-                    TempData["Type"] = "success";
-                    TempData["Message"] = "Admin İş Hayatı Başarılı Silme İşlemi";
-                    return RedirectToAction("Liste", "AdminIsHayati");
-                }
-                catch (Exception ex)
-                {
-                    await Logging.LogAdd("Admin Eğitim Panelde Silme İşlemi Hatası", ex.Message, connectionString, HttpContext.Connection.RemoteIpAddress.ToString());
-                    TempData["Type"] = "error";
-                    TempData["Message"] = "Admin Eğitim Hatalı Silme İşlemi";
-                }
+                await Logging.LogAdd("Admin İş Hayatı Listeleme Hatası", ex.Message);
+                TempData["Type"] = "error";
+                TempData["Message"] = "Listeleme işlemi sırasında hata oluştu.";
                 return View();
             }
         }
-        [HttpGet]
-        [Route("Guncelle/{id:int}")]
+        [HttpGet("Ekle")]
+        public IActionResult Add() => View();
+
+        [HttpPost("Ekle")]
+        public async Task<IActionResult> Add(Jobs jobs)
+        {
+            if (!ModelState.IsValid)
+                return Json(new { success = false, errors = ModelState.ToDictionary(k => k.Key, v => string.Join(", ", v.Value.Errors.Select(e => e.ErrorMessage))) });
+            try
+            {
+                List<SqlParameter> parameters = new List<SqlParameter>
+                {
+                    new SqlParameter("@JobName", jobs.JobName),
+                    new SqlParameter("@JobTitle", jobs.JobTitle),
+                    new SqlParameter("@JobYears", jobs.JobYears),
+                    new SqlParameter("@JobAbout", jobs.JobAbout)
+                };
+                await SQLCrud.InsertUpdateDeleteAsync("JobsAdd", parameters);
+                TempData["Type"] = "success";
+                TempData["Message"] = "İş hayatı başarıyla eklendi.";
+                return Json(new { success = true, redirectUrl = Url.Action("Liste", "AdminIsHayati") });
+            }
+            catch (Exception ex)
+            {
+                await Logging.LogAdd("Admin İş Hayatı Ekleme Hatası", ex.Message);
+                TempData["Type"] = "error";
+                TempData["Message"] = "Ekleme sırasında bir hata oluştu.";
+                return View();
+            }
+        }
+        [HttpGet("Sil/{id:int}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                List<SqlParameter> parameters = new List<SqlParameter> { new SqlParameter("@ID", id) };
+                await SQLCrud.InsertUpdateDeleteAsync("JobsDelete", parameters);
+
+                TempData["Type"] = "success";
+                TempData["Message"] = "Silme işlemi başarılı.";
+            }
+            catch (Exception ex)
+            {
+                await Logging.LogAdd("Admin İş Hayatı Silme Hatası", ex.Message);
+                TempData["Type"] = "error";
+                TempData["Message"] = "Silme işlemi sırasında bir hata oluştu.";
+            }
+            return RedirectToAction("Liste", "AdminIsHayati");
+        }
+        [HttpGet("Guncelle/{id:int}")]
         public async Task<IActionResult> Update(int id)
         {
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
-            using (SqlConnection con = new(connectionString))
+            try
             {
-                try
-                {
-                    await con.OpenAsync();
-                    SqlCommand cmd = new("JobsGetByID", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@ID", id);
-                    Jobs jobs = new();
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                List<SqlParameter> parameters = new List<SqlParameter> { new SqlParameter("@ID", id) };
+                List<Jobs> jobsList = await SQLCrud.ExecuteModelListAsync(
+                    "JobsGetByID",
+                    parameters,
+                    reader => new Jobs
                     {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                jobs.ID = Convert.ToByte(reader["ID"]);
-                                jobs.JobName = reader["JobName"].ToString();
-                                jobs.JobTitle = reader["JobTitle"].ToString();
-                                jobs.JobYears = reader["JobYears"].ToString();
-                                jobs.JobAbout = reader["JobAbout"].ToString();
-                            }
-                            return View(jobs);
-                        }
-                    }
+                        ID = Convert.ToByte(reader["ID"]),
+                        JobName = reader["JobName"].ToString(),
+                        JobTitle = reader["JobTitle"].ToString(),
+                        JobYears = reader["JobYears"].ToString(),
+                        JobAbout = reader["JobAbout"].ToString()
+                    },
+                    System.Data.CommandType.StoredProcedure
+                );
+                Jobs job = jobsList.FirstOrDefault();
+                if (job == null)
                     return RedirectToAction("Liste", "AdminIsHayati");
-                }
-                catch (Exception ex)
-                {
-                    await Logging.LogAdd("Admin Eğitim Panelde Güncelleme Listesi İşlemi Hatası", ex.Message, connectionString, HttpContext.Connection.RemoteIpAddress.ToString());
-                    TempData["Type"] = "error";
-                    TempData["Message"] = "Admin Eğitim Güncelleme Listesi İşlemi Hatası";
-                }
+                return View(job);
             }
-            return View();
+            catch (Exception ex)
+            {
+                await Logging.LogAdd("Admin İş Hayatı Güncelleme Listeleme Hatası", ex.Message);
+                TempData["Type"] = "error";
+                TempData["Message"] = "Güncelleme listesi yüklenemedi.";
+                return View();
+            }
         }
-        [HttpPost]
-        [Route("Guncelle")]
+        [HttpPost("Guncelle")]
         public async Task<IActionResult> Update(Jobs jobs)
         {
             if (!ModelState.IsValid)
+                return Json(new { success = false, errors = ModelState.ToDictionary(k => k.Key, v => string.Join(", ", v.Value.Errors.Select(e => e.ErrorMessage))) });
+            try
             {
-                Dictionary<string, string> errors = new();
-                if (ModelState.ContainsKey("JobName"))
-                    errors["JobName"] = string.Join(", ", ModelState["JobName"].Errors.Select(e => e.ErrorMessage));
-                if (ModelState.ContainsKey("JobTitle"))
-                    errors["JobTitle"] = string.Join(", ", ModelState["JobTitle"].Errors.Select(e => e.ErrorMessage));
-                if (ModelState.ContainsKey("JobYears"))
-                    errors["JobYears"] = string.Join(", ", ModelState["JobYears"].Errors.Select(e => e.ErrorMessage));
-                if (ModelState.ContainsKey("JobAbout"))
-                    errors["JobAbout"] = string.Join(", ", ModelState["JobAbout"].Errors.Select(e => e.ErrorMessage));
-                return Json(new { success = false, errors });
+                List<SqlParameter> parameters =new List<SqlParameter>
+                {
+                    new SqlParameter("@ID", jobs.ID),
+                    new SqlParameter("@JobName", jobs.JobName),
+                    new SqlParameter("@JobTitle", jobs.JobTitle),
+                    new SqlParameter("@JobYears", jobs.JobYears),
+                    new SqlParameter("@JobAbout", jobs.JobAbout)
+                };
+                await SQLCrud.InsertUpdateDeleteAsync("JobsUpdate", parameters);
+                TempData["Type"] = "success";
+                TempData["Message"] = "Güncelleme işlemi başarılı.";
+                return Json(new { success = true, redirectUrl = Url.Action("Liste", "AdminIsHayati") });
             }
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
-            using (SqlConnection con = new(connectionString))
+            catch (Exception ex)
             {
-                try
-                {
-                    await con.OpenAsync();
-                    SqlCommand cmd = new("JobsUpdate", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@ID", jobs.ID);
-                    cmd.Parameters.AddWithValue("@JobName", jobs.JobName);
-                    cmd.Parameters.AddWithValue("@JobTitle", jobs.JobTitle);
-                    cmd.Parameters.AddWithValue("@JobYears", jobs.JobYears);
-                    cmd.Parameters.AddWithValue("@JobAbout", jobs.JobAbout);
-                    await cmd.ExecuteNonQueryAsync();
-                    TempData["Type"] = "success";
-                    TempData["Message"] = "Admin İş Hayatı Başarılı Güncelleme İşlemi";
-                    return Json(new { success = true, redirectUrl = Url.Action("Liste", "AdminIsHayati") });
-                }
-                catch (Exception ex)
-                {
-                    await Logging.LogAdd("Admin Eğitim Panelde Güncelleme İşlemi Hatası", ex.Message, connectionString, HttpContext.Connection.RemoteIpAddress.ToString());
-                    TempData["Type"] = "error";
-                    TempData["Message"] = "Admin Eğitim Güncelleme İşlemi Hatası";
-                }
+                await Logging.LogAdd("Admin İş Hayatı Güncelleme Hatası", ex.Message);
+                TempData["Type"] = "error";
+                TempData["Message"] = "Güncelleme sırasında bir hata oluştu.";
+                return View();
             }
-            return View();
         }
     }
 }

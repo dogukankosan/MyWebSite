@@ -5,25 +5,24 @@ namespace MyWebSite.Classes
 {
     public static class Logging
     {
-        public static async Task LogAdd(string type, string message, string connection, string ipAdress)
+        private static IHttpContextAccessor _httpContextAccessor;
+        public static void Configure(IHttpContextAccessor httpContextAccessor)
         {
-            using (SqlConnection con = new(connection))
+            _httpContextAccessor = httpContextAccessor;
+        }
+        private static string GetClientIp()
+        {
+            return _httpContextAccessor?.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "IP alınamadı";
+        }
+        public static async Task LogAdd(string type, string message)
+        {
+            List<SqlParameter> parameters = new()
             {
-                try
-                {
-                    await con.OpenAsync();
-                    SqlCommand cmd = new("AdminLogsAdd", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@LogType", type);
-                    cmd.Parameters.AddWithValue("@ErrorMessage", message);
-                    cmd.Parameters.AddWithValue("@IPAdress", ipAdress);
-                    await cmd.ExecuteNonQueryAsync();
-                }
-                catch (Exception ex)
-                {
-
-                }
-            }
+                new SqlParameter("@LogType", type),
+                new SqlParameter("@ErrorMessage", message),
+                new SqlParameter("@IPAdress", GetClientIp())
+            };
+            await SQLCrud.InsertUpdateDeleteAsync("AdminLogsAdd", parameters, CommandType.StoredProcedure);
         }
     }
 }

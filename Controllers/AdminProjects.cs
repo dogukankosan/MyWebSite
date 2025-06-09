@@ -11,240 +11,172 @@ namespace MyWebSite.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminProjects : Controller
     {
-        private readonly IConfiguration _configuration;
-        public AdminProjects(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-        [Route("Liste")]
-        [HttpGet]
+        [HttpGet("Liste")]
         public async Task<IActionResult> List()
         {
-            List<Projects> projects = new();
-            string base64Image1 = "";
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
-            using (SqlConnection con = new(connectionString))
+            try
             {
-                try
+                List<Projects> projects = await SQLCrud.ExecuteModelListAsync("ProjectsGet", null, reader =>
                 {
-                    await con.OpenAsync();
-                    SqlCommand cmd = new("ProjectsGet", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    string base64Image = string.Empty;
+                    if (!Convert.IsDBNull(reader["ProjectImg"]))
                     {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                if (!Convert.IsDBNull(reader["ProjectImg"]))
-                                {
-                                    byte[] imageBytes = (byte[])reader["ProjectImg"];
-                                    base64Image1 = Convert.ToBase64String(imageBytes);
-                                }
-                                projects.Add(new Projects()
-                                {
-                                    ID = Convert.ToByte(reader["ID"]),
-                                    ProjectName = reader["ProjectName"].ToString(),
-                                    Base64Pictures = base64Image1,
-                                    ProjectDescription = reader["ProjectDescription"].ToString(),
-                                    ProjectGithubLink = reader["ProjectGithubLink"].ToString(),
-                                    ProjectLink = reader["ProjectLink"].ToString()
-                                });
-                            }
-                            return View(projects);
-                        }
+                        byte[] imageBytes = (byte[])reader["ProjectImg"];
+                        base64Image = Convert.ToBase64String(imageBytes);
                     }
-                }
-                catch (Exception ex)
-                {
-                    await Logging.LogAdd("Admin Projeler Panelde Listeleme İşlemi Hatası", ex.Message, connectionString, HttpContext.Connection.RemoteIpAddress.ToString());
-                    TempData["Type"] = "error";
-                    TempData["Message"] = "Admin Projeler Hatalı Listeleme İşlemi";
-                }
+                    return new Projects
+                    {
+                        ID = Convert.ToByte(reader["ID"]),
+                        ProjectName = reader["ProjectName"].ToString(),
+                        Base64Pictures = base64Image,
+                        ProjectDescription = reader["ProjectDescription"].ToString(),
+                        ProjectGithubLink = reader["ProjectGithubLink"].ToString(),
+                        ProjectLink = reader["ProjectLink"].ToString()
+                    };
+                });
+                return View(projects);
             }
-            return View(projects);
+            catch (Exception ex)
+            {
+                await Logging.LogAdd("Admin Projeler Panelde Listeleme Hatası", ex.Message);
+                TempData["Type"] = "error";
+                TempData["Message"] = "Proje listeleme sırasında hata oluştu.";
+                return View(new List<Projects>());
+            }
         }
-        [Route("Guncelle/{id:int}")]
-        [HttpGet]
+        [HttpGet("Guncelle/{id:int}")]
         public async Task<IActionResult> Update(int id)
         {
-            string base64Image1 = "";
-            Projects cs = new();
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
-            using (SqlConnection con = new(connectionString))
+            try
             {
-                try
+                List<SqlParameter> parameters = new List<SqlParameter> { new SqlParameter("@ID", id) };
+                List<Projects> project = await SQLCrud.ExecuteModelListAsync("ProjectsGetByID", parameters, reader =>
                 {
-                    await con.OpenAsync();
-                    SqlCommand cmd = new("ProjectsGetByID", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@ID", id);
-                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    string base64Image = string.Empty;
+                    if (!Convert.IsDBNull(reader["ProjectImg"]))
                     {
-                        if (reader.HasRows)
-                        {
-                            while (await reader.ReadAsync())
-                            {
-                                cs.ID = Convert.ToByte(reader["ID"]);
-                                cs.ProjectName = reader["ProjectName"].ToString();
-                                cs.ProjectDescription = reader["ProjectDescription"].ToString();
-                                cs.ProjectGithubLink = reader["ProjectGithubLink"].ToString();
-                                cs.ProjectLink = reader["ProjectLink"].ToString();
-                                if (!Convert.IsDBNull(reader["ProjectImg"]))
-                                {
-                                    byte[] imageBytes = (byte[])reader["ProjectImg"];
-                                    base64Image1 = Convert.ToBase64String(imageBytes);
-                                }
-                            }
-                            ViewData["picture"] = $"data:image/jpeg;base64,{base64Image1}";
-                            return View(cs);
-                        }
+                        byte[] imageBytes = (byte[])reader["ProjectImg"];
+                        base64Image = Convert.ToBase64String(imageBytes);
                     }
-                }
-                catch (Exception ex)
-                {
-                    await Logging.LogAdd("Admin Projeler Panelde Güncelle Listeleme İşlemi Hatası", ex.Message, connectionString, HttpContext.Connection.RemoteIpAddress.ToString());
-                    TempData["Type"] = "error";
-                    TempData["Message"] = "Admin Projeler Hatalı Güncelle Listeleme İşlemi";
-                }
+                    return new Projects
+                    {
+                        ID = Convert.ToByte(reader["ID"]),
+                        ProjectName = reader["ProjectName"].ToString(),
+                        ProjectDescription = reader["ProjectDescription"].ToString(),
+                        ProjectGithubLink = reader["ProjectGithubLink"].ToString(),
+                        ProjectLink = reader["ProjectLink"].ToString(),
+                        Base64Pictures = base64Image
+                    };
+                });
+                Projects result = project.FirstOrDefault();
+                if (result?.Base64Pictures != null)
+                    ViewData["picture"] = "data:image/jpeg;base64," + result.Base64Pictures;
+                return View(result ?? new Projects());
             }
-            return View(cs);
+            catch (Exception ex)
+            {
+                await Logging.LogAdd("Admin Projeler Panelde Güncelleme Listeleme Hatası", ex.Message);
+                TempData["Type"] = "error";
+                TempData["Message"] = "Güncelleme sayfası yüklenemedi.";
+                return View(new Projects());
+            }
         }
-        [Route("Guncelle")]
-        [HttpPost]
+        [HttpPost("Guncelle")]
         public async Task<IActionResult> Update(Projects projects)
-        {  
+        {
             if (!ModelState.IsValid)
             {
-                Dictionary<string, string> errors = new();
-                if (ModelState.ContainsKey("ProjectName"))
-                    errors["ProjectName"] = string.Join(", ", ModelState["ProjectName"].Errors.Select(e => e.ErrorMessage));
-                if (ModelState.ContainsKey("ProjectDescription"))
-                    errors["ProjectDescription"] = string.Join(", ", ModelState["ProjectDescription"].Errors.Select(e => e.ErrorMessage));
-                if (ModelState.ContainsKey("ProjectGithubLink"))
-                    errors["ProjectGithubLink"] = string.Join(", ", ModelState["ProjectGithubLink"].Errors.Select(e => e.ErrorMessage));
-                if (ModelState.ContainsKey("ProjectImg"))
-                    errors["ProjectImg"] = string.Join(", ", ModelState["ProjectImg"].Errors.Select(e => e.ErrorMessage));
+                var errors = ModelState
+                    .Where(x => x.Value.Errors.Any())
+                    .ToDictionary(k => k.Key, v => string.Join(", ", v.Value.Errors.Select(e => e.ErrorMessage)));
                 return Json(new { success = false, errors });
             }
-            byte[] imageBytes1 = null;
+            byte[] imageBytes = null;
             if (projects.ProjectImg != null && projects.ProjectImg.Length > 0)
             {
-                using (var ms = new MemoryStream())
-                {
-                    await projects.ProjectImg.CopyToAsync(ms);
-                    imageBytes1 = ms.ToArray();
-                }
+                await using MemoryStream ms = new MemoryStream();
+                await projects.ProjectImg.CopyToAsync(ms);
+                imageBytes = ms.ToArray();
             }
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
-            using (SqlConnection con = new(connectionString))
+            List<SqlParameter> parameters = new List<SqlParameter>
             {
-                try
-                {
-                    await con.OpenAsync();
-                    SqlCommand cmd = new("ProjectsUpdate", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@ID", projects.ID);
-                    cmd.Parameters.AddWithValue("@ProjectName", projects.ProjectName);
-                    cmd.Parameters.AddWithValue("@ProjectDescription", projects.ProjectDescription);
-                    cmd.Parameters.Add("@ProjectImg", SqlDbType.VarBinary).Value = (object)imageBytes1 ?? DBNull.Value;
-                    cmd.Parameters.AddWithValue("@ProjectGithubLink", projects.ProjectGithubLink);
-                    cmd.Parameters.AddWithValue("@ProjectLink", projects.ProjectLink);
-                    await cmd.ExecuteNonQueryAsync();
-                    TempData["Type"] = "success";
-                    TempData["Message"] = "Admin Projeler Başarılı Güncelleme İşlemi";
-                }
-                catch (Exception ex)
-                {
-                    await Logging.LogAdd("Admin Projeler Panelde Güncelleme Hatası", ex.Message, connectionString, HttpContext.Connection.RemoteIpAddress.ToString());
-                    TempData["Type"] = "error";
-                    TempData["Message"] = "Admin Projeler Hatalı Güncelleme İşlemi";
-                }
+                new SqlParameter("@ID", projects.ID),
+                new SqlParameter("@ProjectName", projects.ProjectName),
+                new SqlParameter("@ProjectDescription", projects.ProjectDescription),
+                new SqlParameter("@ProjectImg", SqlDbType.VarBinary) { Value = (object)imageBytes ?? DBNull.Value },
+                new SqlParameter("@ProjectGithubLink", projects.ProjectGithubLink),
+                new SqlParameter("@ProjectLink", projects.ProjectLink)
+            };
+            try
+            {
+                await SQLCrud.InsertUpdateDeleteAsync("ProjectsUpdate", parameters);
+                TempData["Type"] = "success";
+                TempData["Message"] = "Proje başarıyla güncellendi.";
+                return Json(new { success = true, redirectUrl = Url.Action("Liste", "AdminProje") });
             }
-            return Json(new { success = true, redirectUrl = Url.Action("Liste", "AdminProje") });
+            catch (Exception ex)
+            {
+                await Logging.LogAdd("Admin Projeler Güncelleme Hatası", ex.Message);
+                return Json(new { success = false });
+            }
         }
-        [HttpGet]
-        [Route("Ekle")]
-        public async Task<IActionResult> Add()
-        {
-            return View();
-        }
-        [HttpPost]
-        [Route("Ekle")]
+        [HttpGet("Ekle")]
+        public IActionResult Add() => View();
+        [HttpPost("Ekle")]
         public async Task<IActionResult> Add(Projects projects)
         {
             if (!ModelState.IsValid)
             {
-                Dictionary<string, string> errors = new();
-                if (ModelState.ContainsKey("ProjectName"))
-                    errors["ProjectName"] = string.Join(", ", ModelState["ProjectName"].Errors.Select(e => e.ErrorMessage));
-                if (ModelState.ContainsKey("ProjectDescription"))
-                    errors["ProjectDescription"] = string.Join(", ", ModelState["ProjectDescription"].Errors.Select(e => e.ErrorMessage));
-                if (ModelState.ContainsKey("ProjectGithubLink"))
-                    errors["ProjectGithubLink"] = string.Join(", ", ModelState["ProjectGithubLink"].Errors.Select(e => e.ErrorMessage));
+                var errors = ModelState
+                    .Where(x => x.Value.Errors.Any())
+                    .ToDictionary(k => k.Key, v => string.Join(", ", v.Value.Errors.Select(e => e.ErrorMessage)));
                 return Json(new { success = false, errors });
             }
-            byte[] imageBytes1 = null;
+            byte[] imageBytes = null;
             if (projects.ProjectImg != null && projects.ProjectImg.Length > 0)
             {
-                using (var ms = new MemoryStream())
-                {
-                    await projects.ProjectImg.CopyToAsync(ms);
-                    imageBytes1 = ms.ToArray();
-                }
+                await using MemoryStream ms = new MemoryStream();
+                await projects.ProjectImg.CopyToAsync(ms);
+                imageBytes = ms.ToArray();
             }
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
-            using (SqlConnection con = new(connectionString))
+            List<SqlParameter> parameters = new List<SqlParameter>
             {
-                try
-                {
-                    await con.OpenAsync();
-                    SqlCommand cmd = new("ProjectsInsert", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@ProjectName", projects.ProjectName);
-                    cmd.Parameters.AddWithValue("@ProjectDescription", projects.ProjectDescription);
-                    cmd.Parameters.Add("@ProjectImg", SqlDbType.VarBinary).Value = (object)imageBytes1 ?? DBNull.Value;
-                    cmd.Parameters.AddWithValue("@ProjectGithubLink", projects.ProjectGithubLink);
-                    cmd.Parameters.AddWithValue("@ProjectLink", projects.ProjectLink);
-                    await cmd.ExecuteNonQueryAsync();
-                    TempData["Type"] = "success";
-                    TempData["Message"] = "Admin Projeler Başarılı Ekleme İşlemi";
-                    return Json(new { success = true, redirectUrl = Url.Action("Liste", "AdminProje") });
-                }
-                catch (Exception ex)
-                {
-                    await Logging.LogAdd("Admin Projeler Panelde Ekleme İşlemi Hatası", ex.Message, connectionString, HttpContext.Connection.RemoteIpAddress.ToString());
-                    TempData["Type"] = "error";
-                    TempData["Message"] = "Admin Projeler Hatalı Ekleme İşlemi";
-                }
+                new SqlParameter("@ProjectName", projects.ProjectName),
+                new SqlParameter("@ProjectDescription", projects.ProjectDescription),
+                new SqlParameter("@ProjectImg", SqlDbType.VarBinary) { Value = (object)imageBytes ?? DBNull.Value },
+                new SqlParameter("@ProjectGithubLink", projects.ProjectGithubLink),
+                new SqlParameter("@ProjectLink", projects.ProjectLink)
+            };
+            try
+            {
+                await SQLCrud.InsertUpdateDeleteAsync("ProjectsInsert", parameters);
+                TempData["Type"] = "success";
+                TempData["Message"] = "Proje başarıyla eklendi.";
+                return Json(new { success = true, redirectUrl = Url.Action("Liste", "AdminProje") });
             }
-            return View();
+            catch (Exception ex)
+            {
+                await Logging.LogAdd("Admin Projeler Ekleme Hatası", ex.Message);
+                return Json(new { success = false });
+            }
         }
-        [Route("Sil/{id:int}")]
-        [HttpGet]
+        [HttpGet("Sil/{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
-            using (SqlConnection con = new(connectionString))
+            List<SqlParameter> parameters = new List<SqlParameter> { new SqlParameter("@ID", id) };
+            try
             {
-                try
-                {
-                    await con.OpenAsync();
-                    SqlCommand cmd = new("ProjectsDelete", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@ID", id);
-                    await cmd.ExecuteNonQueryAsync();
-                    TempData["Type"] = "success";
-                    TempData["Message"] = "Admin Projeler Başarılı Silme İşlemi";
-                    return RedirectToAction("Liste", "AdminProje");
-                }
-                catch (Exception ex)
-                {
-                    await Logging.LogAdd("Admin Projeler Panelde Silme İşlemi Hatası", ex.Message, connectionString, HttpContext.Connection.RemoteIpAddress.ToString());
-                    TempData["Type"] = "error";
-                    TempData["Message"] = "Admin Projeler Hatalı Silme İşlemi";
-                }
-                return View();
+                await SQLCrud.InsertUpdateDeleteAsync("ProjectsDelete", parameters);
+                TempData["Type"] = "success";
+                TempData["Message"] = "Proje başarıyla silindi.";
+                return RedirectToAction("Liste", "AdminProje");
+            }
+            catch (Exception ex)
+            {
+                await Logging.LogAdd("Admin Projeler Silme Hatası", ex.Message);
+                TempData["Type"] = "error";
+                TempData["Message"] = "Proje silinirken hata oluştu.";
+                return RedirectToAction("Liste", "AdminProje");
             }
         }
     }

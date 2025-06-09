@@ -1,71 +1,66 @@
 ﻿@model SocialMedia
 @{
-    ViewData["Title"] = "Admin Sosyal Medya Guncelle";
+    ViewData["Title"] = "Admin Sosyal Medya Güncelle";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
-<form id="socialMediaForm" method="post">
+<form id="socialMediaForm" method="post" autocomplete="off">
     <br />
     <h4>Sosyal Medya Güncelleme Sayfası</h4>
     <hr />
-    <span id="resultsucc" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    <div id="resultsucc" class="text-danger mb-2"></div>
+    <input type="hidden" name="ID" value="@Model.ID" />
     <div class="form-group">
-        <input type="hidden" name="ID" value="@Model.ID" />
-        <label>Facebook Link:</label>
-        <input type="url" class="form-control" name="FacebookLink" value="@Model.FacebookLink"  maxlength="200" placeholder="https://">
-        <span id="FacebookLinkError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+        <label for="FacebookLink">Facebook Link:</label>
+        <input type="url" class="form-control" name="FacebookLink" id="FacebookLink"
+               value="@Model.FacebookLink" required maxlength="200" minlength="5" placeholder="https://facebook.com/...">
+        <span id="FacebookLinkError" class="text-danger mt-1 d-block"></span>
     </div>
-    <br />
-    <div class="form-group">
-        <label>Github Link:</label>
-        <input type="url" class="form-control" name="GithubLink" value="@Model.GithubLink" required maxlength="200" placeholder="https://">
-        <span id="GithubLinkError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    <div class="form-group mt-3">
+        <label for="GithubLink">Github Link:</label>
+        <input type="url" class="form-control" name="GithubLink" id="GithubLink"
+               value="@Model.GithubLink" required maxlength="200" minlength="5" placeholder="https://github.com/...">
+        <span id="GithubLinkError" class="text-danger mt-1 d-block"></span>
     </div>
-    <br />
-    <div class="form-group">
-        <label>Instagram Link:</label>
-        <input type="url" class="form-control" name="InstagramLink" value="@Model.InstagramLink" required maxlength="200" placeholder="https://">
-        <span id="InstagramLinkError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    <div class="form-group mt-3">
+        <label for="InstagramLink">Instagram Link:</label>
+        <input type="url" class="form-control" name="InstagramLink" id="InstagramLink"
+               value="@Model.InstagramLink" required maxlength="200" minlength="5" placeholder="https://instagram.com/...">
+        <span id="InstagramLinkError" class="text-danger mt-1 d-block"></span>
     </div>
-    <br />
-    <div class="form-group">
-        <label>Linkedin Link:</label>
-        <input type="url" class="form-control" name="LinkedinLink" value="@Model.LinkedinLink" required maxlength="200" placeholder="https://">
-        <span id="LinkedinLinkError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    <div class="form-group mt-3">
+        <label for="LinkedinLink">Linkedin Link:</label>
+        <input type="url" class="form-control" name="LinkedinLink" id="LinkedinLink"
+               value="@Model.LinkedinLink" required maxlength="200" minlength="5" placeholder="https://linkedin.com/...">
+        <span id="LinkedinLinkError" class="text-danger mt-1 d-block"></span>
     </div>
-    <br />
-    <button type="submit" class="btn btn-primary">Güncelle</button>
+    <button type="submit" class="btn btn-primary mt-4">Güncelle</button>
 </form>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function () {
-        $('#socialMediaForm').submit(function (event) {
+    $(function () {
+        $('#socialMediaForm').on('submit', function (event) {
             event.preventDefault();
-            var formData = $(this).serialize();
+            $('#FacebookLinkError, #GithubLinkError, #InstagramLinkError, #LinkedinLinkError, #resultsucc').html('');
+            const formData = $(this).serialize();
             $.ajax({
-                url: '@Url.Action("Guncelle", "AdminSosyalMedya")', 
+                url: '@Url.Action("Guncelle", "AdminSosyalMedya")',
                 type: 'POST',
                 data: formData,
                 success: function (response) {
                     if (response.success) {
-                        window.location.href = response.redirectUrl; 
+                        window.location.href = response.redirectUrl;
+                    } else if (response.errors) {
+                        if (response.errors.FacebookLink) $('#FacebookLinkError').html(response.errors.FacebookLink);
+                        if (response.errors.GithubLink) $('#GithubLinkError').html(response.errors.GithubLink);
+                        if (response.errors.InstagramLink) $('#InstagramLinkError').html(response.errors.InstagramLink);
+                        if (response.errors.LinkedinLink) $('#LinkedinLinkError').html(response.errors.LinkedinLink);
                     } else {
-                        if (response.errors.FacebookLink) {
-                            $('#FacebookLinkError').html(response.errors.FacebookLink);
-                        }
-                        if (response.errors.GithubLink) {
-                            $('#GithubLinkError').html(response.errors.GithubLink);
-                        }
-                        if (response.errors.InstagramLink) {
-                            $('#InstagramLinkError').html(response.errors.InstagramLink);
-                        }
-                        if (response.errors.LinkedinLink) {
-                            $('#LinkedinLinkError').html(response.errors.LinkedinLink);
-                        }
-                        else {
-                            $('#resultsucc').html('<div class="alert alert-danger">Bir hata oluştu. Lütfen tekrar deneyin.</div>');
-                        }
+                        $('#resultsucc').html('<div class="alert alert-danger">Bir hata oluştu. Lütfen tekrar deneyin.</div>');
                     }
                 },
+                error: function () {
+                    $('#resultsucc').html('<div class="alert alert-danger">Sunucu hatası. Lütfen tekrar deneyin.</div>');
+                }
             });
         });
     });

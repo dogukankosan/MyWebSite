@@ -1,73 +1,154 @@
-﻿@{
+﻿@model MyWebSite.Models.AdminDashboardViewModel
+@{
     ViewData["Title"] = "Admin Panel";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
 <h1 class="mt-4">Admin Rapor Ekranı</h1>
-            <ol class="breadcrumb mb-4">
-                <li class="breadcrumb-item active">Dashboard</li>
-            </ol>
-            <div class="row">
-                <div class="col-xl-3 col-md-6">
-                    <div class="card bg-primary text-white mb-4">
-                        <div class="card-body">Bloglar İle İlgili Yapılacak</div>
-                        <div class="card-footer d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link" href="#">Detaylar</a>
-                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-md-6">
-                    <div class="card bg-warning text-white mb-4">
-            <div class="card-body">Toplam İletişim Gönderen Sayısı <span style="color:white"><b>(@ViewBag.ContactCount)</b></span></div>
-                
-                        <div class="card-footer d-flex align-items-center justify-content-between">
-                <a class="small text-white stretched-link" href="/AdminIletisim/Liste">Detaylar</a>
-                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-md-6">
-                    <div class="card bg-success text-white mb-4">
-            <div class="card-body">Siteye Giren Kişi Sayısı <span style="color:white"><b>(@ViewBag.WebLogCount)</b></span></div>
-   
-                        <div class="card-footer d-flex align-items-center justify-content-between">
-                <a class="small text-white stretched-link" href="/AdminWebLog/Liste">Detaylar</a>
-                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-md-6">
-                    <div class="card bg-danger text-white mb-4">
-            <div class="card-body">Admin Login Panel Hatalı Giriş <span style="color:white"><b>(@ViewBag.AdminLoginErrorCount)</b></span></div>
+<hr />
+<style>
+    .card a.stretched-link {
+        text-decoration: none;
+        color: inherit;
+    }
 
-                        <div class="card-footer d-flex align-items-center justify-content-between">
-                <a class="small text-white stretched-link" href="/AdminHataliGiris/Liste">Detayları Gör</a>
-                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                        </div>
-                    </div>
-                </div>
+    .card:hover {
+        transform: scale(1.02);
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .card .card-body {
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+    .bg-gradient-purple {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        color: white;
+    }
+</style>
+<div class="row">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <a href="/AdminProje/Liste" class="text-white stretched-link">
+            <div class="card bg-dark text-white h-100">
+                <div class="card-body">Toplam Proje Sayısı <b>(@Model.ProjectCount)</b></div>
             </div>
-            <div class="row">
-                <div class="col-xl-6">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <i class="fas fa-chart-area me-1"></i>
-                          Aylara Göre İletişim Gönderenler - @DateTime.Now.Year.ToString()
-                        </div>
+        </a>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <a href="/AdminBeceriler/Liste" class="text-white stretched-link">
+            <div class="card bg-secondary text-white h-100">
+                <div class="card-body">Yetenek Sayısı <b>(@Model.SkillsCount)</b></div>
+            </div>
+        </a>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <a href="/AdminHataLog/Liste" class="text-white stretched-link">
+            <div class="card bg-info text-white h-100">
+                <div class="card-body">Admin Log Kayıt Sayısı <b>(@Model.AdminLogsCount)</b></div>
+            </div>
+        </a>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <a href="/AdminIsHayati/Liste" class="text-white stretched-link">
+            <div class="card bg-success text-white h-100">
+                <div class="card-body">İş (Job) Sayısı <b>(@Model.JobsCount)</b></div>
+            </div>
+        </a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card bg-warning text-white h-100">
+            <div class="card-body">Toplam İletişim Gönderen Sayısı <b>(@Model.ContactCount)</b></div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <a class="small text-white stretched-link" href="/AdminIletisim/Liste">Detaylar</a>
+                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card bg-primary text-white h-100">
+            <div class="card-body">Siteye Giren Kişi Sayısı <b>(@Model.WebLogCount)</b></div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <a class="small text-white stretched-link" href="/AdminWebLog/Liste">Detaylar</a>
+                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card bg-danger text-white h-100">
+            <div class="card-body">Admin Login Panel Hatalı Giriş <b>(@Model.AdminLoginErrorCount)</b></div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <a class="small text-white stretched-link" href="/AdminHataliGiris/Liste">Detaylar</a>
+                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card bg-gradient-purple text-white h-100">
+            <div class="card-body">Eğitim Hayatı <b>(@Model.EducationCount)</b></div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <a class="small text-white stretched-link" href="/AdminEgitim/Liste">Detaylar</a>
+                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-6 mb-4">
+        <div class="card">
+            <div class="card-header"><i class="fas fa-chart-area me-1"></i> Aylara Göre İletişim Gönderenler - @DateTime.Now.Year</div>
             <div class="card-body">
-                <canvas id="myChart" width="400" height="200"></canvas>
+                <canvas id="contactChart" width="400" height="200"></canvas>
             </div>
-                    </div>
-                </div>
-                <div class="col-xl-6">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <i class="fas fa-chart-bar me-1"></i>
-                Aylara Göre Siteye Giriş - @DateTime.Now.Year.ToString()
-                        </div>
+        </div>
+    </div>
+    <div class="col-xl-6 mb-4">
+        <div class="card">
+            <div class="card-header"><i class="fas fa-chart-bar me-1"></i> Aylara Göre Siteye Giriş - @DateTime.Now.Year</div>
             <div class="card-body">
-                <canvas id="myChart1" width="400" height="200"></canvas>
+                <canvas id="webLogChart" width="400" height="200"></canvas>
             </div>
-                    </div>
-                </div>
-            </div>
+        </div>
+    </div>
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var contactData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ContactMonthlyCounts));
+        var webLogData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.WebLogMonthlyCounts));
+        var labels = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+        new Chart(document.getElementById('contactChart'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'İletişim Sayısı',
+                    data: contactData,
+                    borderColor: 'rgba(255, 206, 86, 1)',
+                    backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+        new Chart(document.getElementById('webLogChart'), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Site Girişi',
+                    data: webLogData,
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+    </script>

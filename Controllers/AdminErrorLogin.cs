@@ -1,84 +1,63 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyWebSite.Classes;
-using System.Data;
+using MyWebSite.Models;
 using System.Data.SqlClient;
 
 namespace MyWebSite.Controllers
 {
     [Route("AdminHataliGiris")]
     [Authorize(Roles = "Admin")]
-    public class AdminErrorLogin : Controller
+    public class AdminErrorLoginController : Controller
     {
-        private readonly IConfiguration _configuration;
-        public AdminErrorLogin(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-        [Route("Liste")]
-        [HttpGet]
+        [HttpGet("Liste")]
         public async Task<IActionResult> List()
         {
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
-            using (SqlConnection con = new(connectionString))
+            try
             {
-                try
-                {
-                    await con.OpenAsync();
-                    SqlCommand cmd = new("AdminLoginErrorGetAll", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    List<Models.AdminErrorLogin> errorLogin = new();
-                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                List<AdminErrorLogin> errorList = await SQLCrud.ExecuteModelListAsync<AdminErrorLogin>(
+                    "AdminLoginErrorGetAll",
+                    null,
+                    reader => new AdminErrorLogin
                     {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                errorLogin.Add(new Models.AdminErrorLogin()
-                                {
-                                    ID = Convert.ToInt16(reader["ID"]),
-                                    IPAdress = reader["IPAdress"].ToString(),
-                                    Geo = reader["Geo"].ToString(),
-                                    UserInfo = reader["UserInfo"].ToString(),
-                                    CreateDate = Convert.ToDateTime(reader["CreateDate"]),
-                                });
-                            }
-                            return View(errorLogin);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    await Logging.LogAdd("Admin Hatalı Giriş Bilgileri Listeleme Hatalı", ex.Message, connectionString, HttpContext.Connection.RemoteIpAddress?.ToString());
-                    TempData["Type"] = "error";
-                    TempData["Message"] = "Admin Hatalı Giriş Bilgileri Listeleme Hatalı";
-                }
-                return View();
+                        ID = Convert.ToInt16(reader["ID"]),
+                        IPAdress = reader["IPAdress"].ToString(),
+                        Geo = reader["Geo"].ToString(),
+                        UserInfo = reader["UserInfo"].ToString(),
+                        CreateDate = Convert.ToDateTime(reader["CreateDate"])
+                    },
+                    System.Data.CommandType.StoredProcedure
+                );
+                return View(errorList);
+            }
+            catch (Exception ex)
+            {
+                await Logging.LogAdd("Admin Hatalı Giriş Bilgileri Listeleme Hatası", ex.Message);
+                TempData["Type"] = "error";
+                TempData["Message"] = "Listeleme işlemi sırasında hata oluştu.";
+                return View(new List<AdminErrorLogin>());
             }
         }
-        [HttpGet]
-        [Route("Sil/{id:int}")]
+        [HttpGet("Sil/{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
-            using (SqlConnection con = new(connectionString))
+            try
             {
-                try
+                List<SqlParameter> parameters = new()
                 {
-                    await con.OpenAsync();
-                    SqlCommand cmd = new("AdminLoginErrorDelete", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@ID", id);
-                    await cmd.ExecuteNonQueryAsync();
-                    TempData["Type"] = "success";
-                    TempData["Message"] = "Admin Hatalı Giriş Başarılı Silme İşlemi";
-                }
-                catch (Exception ex)
-                {
-                    await Logging.LogAdd("Admin Hatalı Giriş Bilgileri Silme Hatalı", ex.Message, connectionString, HttpContext.Connection.RemoteIpAddress?.ToString());
-                    TempData["Type"] = "error";
-                    TempData["Message"] = "Admin Hatalı Giriş Hatalı Silme İşlemi";
-                }
+                    new SqlParameter("@ID", id)
+                };
+
+                await SQLCrud.InsertUpdateDeleteAsync("AdminLoginErrorDelete", parameters, System.Data.CommandType.StoredProcedure);
+
+                TempData["Type"] = "success";
+                TempData["Message"] = "Kayıt başarıyla silindi.";
+            }
+            catch (Exception ex)
+            {
+                await Logging.LogAdd("Admin Hatalı Giriş Silme Hatası", ex.Message);
+                TempData["Type"] = "error";
+                TempData["Message"] = "Silme işlemi sırasında hata oluştu.";
             }
             return RedirectToAction("Liste", "AdminHataliGiris");
         }

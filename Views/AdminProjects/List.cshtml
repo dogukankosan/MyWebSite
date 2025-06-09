@@ -4,45 +4,62 @@
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
 <br />
-<div class="card mb-4">
-    <div class="card-header">
-        <i class="fas fa-table me-1"></i>
-        Projeler
+<h4 class="card-title">Projeler</h4>
+<hr />
+<div class="row mb-2">
+    <div class="col text-right">
+        <select id="exportOptions" class="form-control form-control-sm w-100 mb-2 d-md-inline-block">
+            <option value="">Dışa Aktar</option>
+            <option value="excel">📥 Excel</option>
+            <option value="pdf">📄 PDF</option>
+            <option value="print">🖨️ Yazdır</option>
+        </select>
     </div>
-    <div class="card-body">
-        <table class="table table-hover" id="datatablesSimple">
-            <thead>
+</div>
+<div class="table-responsive">
+    <table class="table table-hover table-striped table-bordered" id="yourTableId">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Proje Adı</th>
+                <th>Proje Açıklama</th>
+                <th>Proje Resim</th>
+                <th>Github Link</th>
+                <th>Web Link</th>
+                <th class="no-export">İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Projects item in Model)
+            {
                 <tr>
-                    <th>#</th>
-                    <th>Proje Adı</th>
-                    <th>Proje Açıklama</th>
-                    <th>Proje Resim</th>
-                    <th>Proje Github Link</th>
-                    <th>Proje Web Link</th>
-                    <th>Güncelle</th>
-                    <th>Sil</th>
+                    <td>@item.ID</td>
+                    <td>@item.ProjectName</td>
+                    <td>@item.ProjectDescription</td>
+                    <td>
+                        <img src="data:image/jpeg;base64,@item.Base64Pictures" width="50" height="50" alt="Proje Resim" />
+                    </td>
+                    <td>
+                        <a href="@item.ProjectGithubLink" title="Github Link" style="color:blue" target="_blank"><u>@item.ProjectGithubLink</u>
+            
+                </a>
+                    </td>
+                    <td>
+                        <a href="@item.ProjectLink" title="Web Link" style="color:blue" target="_blank"><u>@item.ProjectLink</u></a>
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-info btn-sm" href="/AdminProje/Guncelle/@item.ID">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                        <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm" onclick="confirmDelete('@item.ID')">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (Projects item in Model)
-                {
-                    <tr>
-                        <td>@item.ID</td>
-                        <td>@item.ProjectName</td>
-                        <td>@item.ProjectDescription</td>
-                        <td><img src="data:image/jpeg;base64,@item.Base64Pictures" width="50" height="50" alt="Image" /></td>
-                        <td><a title="Github Projeye Git" href="@item.ProjectGithubLink" target="_blank">@item.ProjectGithubLink</a></td>
-                        <td><a title="Web Linke Git" href="@item.ProjectLink" target="_blank">@item.ProjectLink</a></td>
-                        <td>
-                            <a class="btn btn-success" href="/AdminProje/Guncelle/@item.ID">Güncelle</a>
-                            </td>
-                        <td>   <a href="javascript:void(0)" class="btn btn-danger" onclick="confirmDelete('@item.ID')">Sil</a></td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-        <a class="btn btn-primary" href="/AdminProje/Ekle">Yeni Proje Ekle</a>
-    </div>
+            }
+        </tbody>
+    </table>
+    <a class="btn btn-primary mt-3" href="/AdminProje/Ekle">Yeni Proje Ekle</a>
 </div>
 <script>
     function confirmDelete(id) {
@@ -61,31 +78,18 @@
             }
         });
     }
-</script>
-@if (TempData["Type"] != null && !string.IsNullOrEmpty(TempData["Type"].ToString()))
-{
-    var title = "";
-    var icon = "";
-    var message = TempData["Message"]?.ToString() ?? "";
+    document.addEventListener('DOMContentLoaded', function () {
+        const type = '@TempData["Type"]';
+        const message = @Html.Raw(Json.Serialize(TempData["Message"]));
 
-    if (TempData["Type"].ToString() == "error")
-    {
-        title = "Hata";
-        icon = "error";
-    }
-    else if (TempData["Type"].ToString() == "success")
-    {
-        title = "Başarılı";
-        icon = "success";
-    }
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        if (type && message && performance.getEntriesByType("navigation")[0].type === "navigate") {
             Swal.fire({
-                title: '@Html.Raw(title)',
-                text: '@Html.Raw(message)',
-                icon: '@Html.Raw(icon)',
-                confirmButtonText: 'Tamam'
+                icon: type === 'success' ? 'success' : 'error',
+                title: type === 'success' ? 'Başarılı' : 'Hata',
+                text: message,
+                timer: 3000,
+                showConfirmButton: false
             });
-        });
-    </script>
-}
+        }
+    });
+</script>

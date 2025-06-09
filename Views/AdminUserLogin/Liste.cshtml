@@ -1,58 +1,55 @@
 ﻿@model Login
 @{
-    ViewData["Title"] = "Admin Giris Liste";
+    ViewData["Title"] = "Admin Giriş Liste";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
 <br />
-<div class="card mb-4">
-    <div class="card-header">
-        <i class="fas fa-table me-1"></i>
-        Admin Giriş Bilgileri
-    </div>
-    <div class="card-body">
-        <table class="table table-hover" id="datatablesSimple">
-            <thead>
-                <tr>
-                    <th>Kullanıcı Adı</th>
-                    <th>Şifre</th>
-                    <th>Güncelle</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>@Model.UserName</td>
-                    <td>***</td>
-                    <td><a class="btn btn-success" href="/AdminKullanici/Guncelle">Güncelle</a></td>
-                </tr>
-            </tbody>
-        </table>
+<h4 class="card-title">Admin Giriş Bilgileri</h4>
+<hr />
+<div class="row mb-2">
+    <div class="col text-right">
+        <select id="exportOptions" class="form-control form-control-sm w-100 mb-2 d-md-inline-block">
+            <option value="">Dışa Aktar</option>
+            <option value="excel">📥 Excel</option>
+            <option value="pdf">📄 PDF</option>
+            <option value="print">🖨️ Yazdır</option>
+        </select>
     </div>
 </div>
-@if (TempData["Type"] != null && !string.IsNullOrEmpty(TempData["Type"].ToString()))
-{
-    var title = "";
-    var icon = "";
-    var message = TempData["Message"]?.ToString() ?? "";
-
-    if (TempData["Type"].ToString() == "error")
-    {
-        title = "Hata";
-        icon = "error";
-    }
-    else if (TempData["Type"].ToString() == "success")
-    {
-        title = "Başarılı";
-        icon = "success";
-    }
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
+<div class="table-responsive">
+    <table class="table table-hover table-striped table-bordered" id="yourTableId">
+        <thead>
+        <tr>
+            <th>Kullanıcı Adı</th>
+            <th>Şifre</th>
+            <th class="no-export">Güncelle</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>@Model.UserName</td>
+            <td>***</td>
+            <td>
+                <a class="btn btn-outline-info btn-sm" href="/AdminKullanici/Guncelle" title="Güncelle">
+                    <i class="fa fa-pencil"></i>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const type = '@TempData["Type"]';
+        const message = @Html.Raw(Json.Serialize(TempData["Message"]));
+        if (type && message && performance.getEntriesByType("navigation")[0].type === "navigate") {
             Swal.fire({
-                title: '@Html.Raw(title)',
-                text: '@Html.Raw(message)',
-                icon: '@Html.Raw(icon)',
-                confirmButtonText: 'Tamam'
+                icon: type === 'success' ? 'success' : 'error',
+                title: type === 'success' ? 'Başarılı!' : 'Hata!',
+                text: message,
+                timer: 3000,
+                showConfirmButton: false
             });
-        });
-    </script>
-}
+        }
+    });
+</script>

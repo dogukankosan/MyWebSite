@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyWebSite.Classes;
-using System.Data;
+using MyWebSite.Models;
 using System.Data.SqlClient;
 
 namespace MyWebSite.Controllers
@@ -10,76 +10,52 @@ namespace MyWebSite.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminLog : Controller
     {
-        private readonly IConfiguration _configuration;
-        public AdminLog(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-        [HttpGet]
-        [Route("Liste")]
+        [HttpGet("Liste")]
         public async Task<IActionResult> List()
         {
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
-            using (SqlConnection con = new(connectionString))
+            try
             {
-                try
-                {
-                    await con.OpenAsync();
-                    SqlCommand cmd = new("WebLogGet", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    List<Models.AdminLogs> log = new();
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                List<AdminLogs> logList = await SQLCrud.ExecuteModelListAsync<AdminLogs>(
+                    "WebLogGet",
+                    null,
+                    reader => new AdminLogs
                     {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                log.Add(new Models.AdminLogs()
-                                {
-                                    ID = Convert.ToInt16(reader["ID"]),
-                                    IPAdress = reader["IPAdress"].ToString(),
-                                    UserGeo = reader["UserGeo"].ToString(),
-                                    UserInfo = reader["UserInfo"].ToString(),
-                                    CreateDate = Convert.ToDateTime(reader["CreateDate"])
-                                });
-                            }
-                            return View(log);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    await Logging.LogAdd("Admin Siteye Giren Kullanıcı Panelde Listeme İşlemi Hatası", ex.Message, connectionString, HttpContext.Connection.RemoteIpAddress?.ToString());
-                    TempData["Type"] = "error";
-                    TempData["Message"] = "Admin Siteye Giren Kullanıcı Listeme İşlemi Hatalı";
-                }
+                        ID = Convert.ToInt16(reader["ID"]),
+                        IPAdress = reader["IPAdress"].ToString(),
+                        UserGeo = reader["UserGeo"].ToString(),
+                        UserInfo = reader["UserInfo"].ToString(),
+                        CreateDate = Convert.ToDateTime(reader["CreateDate"])
+                    },
+                    System.Data.CommandType.StoredProcedure
+                );
+                return View(logList);
             }
-            return View();
+            catch (Exception ex)
+            {
+                await Logging.LogAdd("Admin Siteye Giren Kullanıcı Panelde Listeleme Hatası", ex.Message);
+                TempData["Type"] = "error";
+                TempData["Message"] = "Listeleme işlemi sırasında bir hata oluştu.";
+                return View(new List<AdminLogs>());
+            }
         }
-        [HttpGet]
-        [Route("Sil/{id:int}")]
+        [HttpGet("Sil/{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
-            using (SqlConnection con = new(connectionString))
+            try
             {
-                try
+                List<SqlParameter> parameters = new List<SqlParameter>
                 {
-                    await con.OpenAsync();
-                    SqlCommand cmd = new("WebLogDelete", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@ID", id);
-                    await cmd.ExecuteNonQueryAsync();
-                    TempData["Type"] = "success";
-                    TempData["Message"] = "Admin Siteye Giren Kullanıcı Silme İşlemi Başarılı";
-                    return RedirectToAction("Liste", "AdminWebLog");
-                }
-                catch (Exception ex)
-                {
-                    await Logging.LogAdd("Admin Siteye Giren Kullanıcı Panelde Silme İşlemi Hatası", ex.Message, connectionString, HttpContext.Connection.RemoteIpAddress?.ToString());
-                    TempData["Type"] = "error";
-                    TempData["Message"] = "Admin Siteye Giren Kullanıcı Silme İşlemi Hatalı";
-                }
+                    new SqlParameter("@ID", id)
+                };
+                await SQLCrud.InsertUpdateDeleteAsync("WebLogDelete", parameters);
+                TempData["Type"] = "success";
+                TempData["Message"] = "Kayıt silme işlemi başarılı.";
+            }
+            catch (Exception ex)
+            {
+                await Logging.LogAdd("Admin Siteye Giren Kullanıcı Panelde Silme Hatası", ex.Message);
+                TempData["Type"] = "error";
+                TempData["Message"] = "Silme işlemi sırasında bir hata oluştu.";
             }
             return RedirectToAction("Liste", "AdminWebLog");
         }

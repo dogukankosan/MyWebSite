@@ -4,61 +4,61 @@
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
 <br />
-<div class="card mb-4">
-    <div class="card-header">
-        <i class="fas fa-table me-1"></i>
-        Sosyal Medya
-    </div>
-    <div class="card-body">
-        <table class="table table-hover" id="datatablesSimple">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Facebook Link</th>
-                    <th>Github Link</th>
-                    <th>Instagram Link</th>
-                    <th>Linkedin Link</th>
-                    <th>Güncelle</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>@Model.ID</td>
-                    <td><a target="_blank" href="@Model.FacebookLink">Facebook</a></td>
-                    <td><a target="_blank" href="@Model.GithubLink">Github</a></td>
-                    <td><a target="_blank" href="@Model.InstagramLink">Instagram</a></td>
-                    <td><a target="_blank" href="@Model.LinkedinLink">Linkedin</a></td>
-                    <td><a class="btn btn-success" href="/AdminSosyalMedya/Guncelle">Güncelle</a></td>
-                </tr>
-            </tbody>
-        </table>
+<h4 class="card-title">Sosyal Medya Bilgileri</h4>
+<hr />
+<br />
+<div class="row mb-2">
+    <div class="col text-right">
+        <select id="exportOptions" class="form-control form-control-sm w-100 mb-2 d-md-inline-block">
+            <option value="">Dışa Aktar</option>
+            <option value="excel">📥 Excel</option>
+            <option value="pdf">📄 PDF</option>
+            <option value="print">🖨️ Yazdır</option>
+        </select>
     </div>
 </div>
-@if (TempData["Type"] != null && !string.IsNullOrEmpty(TempData["Type"].ToString()))
-{
-    var title = "";
-    var icon = "";
-    var message = TempData["Message"]?.ToString() ?? "";
+<div class="table-responsive">
+    <table class="table table-bordered table-hover table-striped" id="yourTableId">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Facebook</th>
+                <th>Github</th>
+                <th>Instagram</th>
+                <th>Linkedin</th>
+                <th class="no-export">İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Model.ID</td>
+                <td><a href="@Model.FacebookLink" class="text-primary" target="_blank"><u>@Model.FacebookLink</u></a></td>
+                <td><a href="@Model.GithubLink" class="text-primary" target="_blank"><u>@Model.GithubLink</u></a></td>
+                <td><a href="@Model.InstagramLink" class="text-primary" target="_blank"><u>@Model.InstagramLink</u></a></td>
+                <td><a href="@Model.LinkedinLink" class="text-primary" target="_blank"><u>@Model.LinkedinLink</u></a></td>
+                <td>
+                    <a class="btn btn-outline-info btn-sm" href="/AdminSosyalMedya/Guncelle">
+                        <i class="fa fa-pencil-alt"></i>
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const type = '@TempData["Type"]';
+        const message = @Html.Raw(Json.Serialize(TempData["Message"]));
 
-    if (TempData["Type"].ToString() == "error")
-    {
-        title = "Hata";
-        icon = "error";
-    }
-    else if (TempData["Type"].ToString() == "success")
-    {
-        title = "Başarılı";
-        icon = "success";
-    }
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        if (type && message && performance.getEntriesByType("navigation")[0].type === "navigate") {
             Swal.fire({
-                title: '@Html.Raw(title)',
-                text: '@Html.Raw(message)',
-                icon: '@Html.Raw(icon)',
-                confirmButtonText: 'Tamam'
+                icon: type === 'success' ? 'success' : 'error',
+                title: type === 'success' ? 'Başarılı' : 'Hata',
+                text: message,
+                timer: 3000,
+                showConfirmButton: false
             });
-        });
-    </script>
-}
+        }
+    });
+</script>

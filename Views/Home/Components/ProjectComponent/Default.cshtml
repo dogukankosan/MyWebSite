@@ -20,16 +20,19 @@
                                     <p class="display-7">@item.ProjectDescription</p>
                                 </div>
                                 <div class="col-9 col-xl-4">
-                                    <div class="portfolio-img">
-                                        <div class="portfolio-img-inner">
-                                            <a title="Projeye Git" href="@item.ProjectLink" target="_blank"><img src="data:image/jpeg;base64,@item.Base64Pictures" class="img-fluid" alt="Image"></a>
-                                        </div>
-                                    </div>
+                                    <a title="Projeye Git" href="@item.ProjectLink" target="_blank">
+                                        <img src="data:image/jpeg;base64,@item.Base64Pictures"
+                                             alt="Project Image"
+                                             class="img-fluid"
+                                             style="display: block; width: 100%; height: auto; object-fit: cover; border-radius: 8px;"
+                                             loading="eager"
+                                             decoding="sync" />
+                                    </a>
                                 </div>
                                 <div class="col-3 col-xl-2">
-                                    <div class="view-img">
-                                        <a title="Githuba Git" href="@item.ProjectGithubLink" target="_blank" class="btn btn-primary btn-lg-square"><i class="fas fa-plus"></i></a>
-                                    </div>
+                                    <a title="Githuba Git" href="@item.ProjectGithubLink" target="_blank" class="btn btn-primary btn-lg-square">
+                                        <i class="fas fa-plus"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>

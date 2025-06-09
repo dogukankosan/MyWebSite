@@ -7,35 +7,80 @@
             <div class="row g-3">
                 <div class="col-lg-12 col-xl-12">
                     <div class="form-floating">
-                        <input type="text" required minlength="2" maxlength="40" class="form-control border-0" id="name" name="ContactName" asp-for="ContactName" placeholder="İsminiz">
+                        <input type="text" 
+                               class="form-control border-0" 
+                               id="name" 
+                               name="ContactName"
+                               asp-for="ContactName"
+                               placeholder="İsminiz"
+                               required 
+                               minlength="2" 
+                               maxlength="75" 
+                               pattern="^[a-zA-ZğüşöçİĞÜŞÖÇ\s]+$"
+                        />
                         <label for="ContactName">İsminiz</label>
                         <span id="nameError" class="text-danger" style="margin-top: 5px; display: block;"></span>
                     </div>
                 </div>
+
                 <div class="col-lg-12 col-xl-6">
                     <div class="form-floating">
-                        <input type="email" required minlength="4" maxlength="40" class="form-control border-0" name="ContactMail" id="email" placeholder="E-Mailiniz">
+                        <input type="email" 
+                               class="form-control border-0" 
+                               name="ContactMail" 
+                               id="email" 
+                               placeholder="E-Mailiniz"
+                               required 
+                               minlength="5" 
+                               maxlength="75" 
+                               pattern="^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                        />
                         <label for="email">E-Mail</label>
                         <span id="emailError" class="text-danger" style="margin-top: 5px; display: block;"></span>
                     </div>
                 </div>
                 <div class="col-lg-12 col-xl-6">
                     <div class="form-floating">
-                        <input type="tel" class="form-control border-0" minlength="10" maxlength="10" required id="phone" name="ContactPhone" placeholder="Telefon">
+                        <input type="tel" 
+                               class="form-control border-0" 
+                               id="phone" 
+                               name="ContactPhone" 
+                               placeholder="Telefon"
+                               required 
+                               pattern="^\d{10}$"
+                               maxlength="10"
+                        />
                         <label for="phone">Telefon</label>
                         <span id="phoneError" class="text-danger" style="margin-top: 5px; display: block;"></span>
                     </div>
                 </div>
+
                 <div class="col-12">
                     <div class="form-floating">
-                        <input type="text" class="form-control border-0" required minlength="4" maxlength="50" id="subject" name="ContactSubject" placeholder="Konu">
+                        <input type="text" 
+                               class="form-control border-0" 
+                               id="subject" 
+                               name="ContactSubject" 
+                               placeholder="Konu"
+                               required 
+                               minlength="4" 
+                               maxlength="75"
+                        />
                         <label for="subject">Konu</label>
                         <span id="subjectError" class="text-danger" style="margin-top: 5px; display: block;"></span>
                     </div>
                 </div>
+
                 <div class="col-12">
                     <div class="form-floating">
-                        <textarea class="form-control border-0" required minlength="4" maxlength="500" placeholder="Mesajınız" name="ContactMessage" id="message" style="height: 120px"></textarea>
+                        <textarea class="form-control border-0" 
+                                  name="ContactMessage" 
+                                  id="message" 
+                                  placeholder="Mesajınız" 
+                                  required 
+                                  minlength="4" 
+                                  maxlength="500"
+                                  style="height: 120px"></textarea>
                         <label for="message">Mesaj</label>
                         <span id="messageError" class="text-danger" style="margin-top: 5px; display: block;"></span>
                     </div>

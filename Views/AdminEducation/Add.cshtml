@@ -1,58 +1,51 @@
 ﻿@{
-    ViewData["Title"] = "Admin Egitim Ekle";
+    ViewData["Title"] = "Admin Eğitim Ekle";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
-<form id="educationForm" method="post">
+<form id="educationForm" method="post" autocomplete="off">
     <br />
     <h4>Eğitim Ekleme Sayfası</h4>
     <hr />
-    <span id="resultsucc" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    <div id="resultsucc" class="text-danger mb-2"></div>
     <div class="form-group">
         <label for="SchoolName">Okul Adı:</label>
-        <input type="text" required maxlength="50" min="3" class="form-control" name="SchoolName" id="SchoolName" placeholder="">
-        <span id="SchoolNameError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+        <input type="text" class="form-control" name="SchoolName" id="SchoolName" maxlength="75" minlength="3" required placeholder="Örn: İstanbul Üniversitesi">
+        <span id="SchoolNameError" class="text-danger mt-1 d-block"></span>
     </div>
-    <br />
-    <div class="form-group">
+    <div class="form-group mt-3">
         <label for="SectionName">Bölüm:</label>
-        <input type="text" required maxlength="50" min="3" class="form-control" name="SectionName" id="SectionName" placeholder="">
-        <span id="SectionNameError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+        <input type="text" class="form-control" name="SectionName" id="SectionName" maxlength="75" minlength="3" required placeholder="Örn: Bilgisayar Mühendisliği">
+        <span id="SectionNameError" class="text-danger mt-1 d-block"></span>
     </div>
-    <br />
-    <div class="form-group">
+    <div class="form-group mt-3">
         <label for="Years">Okul Yılı:</label>
-        <input type="text" required maxlength="11"  class="form-control" name="Years" id="Years" placeholder="2010-2014">
-        <span id="YearsError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+        <input type="text" class="form-control" name="Years" id="Years"
+               maxlength="12" pattern="^\d{4}-[A-Za-z0-9ÇçĞğİıÖöŞşÜü]+$"
+               required placeholder="Örn: 2020-2025 | 2020-AKTİF">
+        <span id="YearsError" class="text-danger mt-1 d-block"></span>
     </div>
-    <br />
-    <button type="submit" class="btn btn-primary">Ekle</button>
+
+    <button type="submit" class="btn btn-primary mt-4">Ekle</button>
 </form>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function () {
-        $('#educationForm').submit(function (event) {
+    $(function () {
+        $('#educationForm').on('submit', function (event) {
             event.preventDefault();
+            $('#SchoolNameError, #SectionNameError, #YearsError, #resultsucc').html('');
             var formData = $(this).serialize();
-            $('#SchoolNameError').html('');
-            $('#SectionNameError').html('');
-            $('#YearsError').html('');
-            $('#resultsucc').html('');
             $.ajax({
-                url: '/AdminEgitim/Ekle', 
+                url: '/AdminEgitim/Ekle',
                 type: 'POST',
                 data: formData,
                 success: function (response) {
                     if (response.success) {
-                        window.location.href = response.redirectUrl; 
+                        window.location.href = response.redirectUrl;
                     } else {
-                        if (response.errors.SchoolName) {
-                            $('#SchoolNameError').html(response.errors.SchoolName);
-                        }
-                        if (response.errors.SectionName) {
-                            $('#SectionNameError').html(response.errors.SectionName);
-                        }
-                        if (response.errors.Years) {
-                            $('#YearsError').html(response.errors.Years);
+                        if (response.errors) {
+                            if (response.errors.SchoolName) $('#SchoolNameError').html(response.errors.SchoolName);
+                            if (response.errors.SectionName) $('#SectionNameError').html(response.errors.SectionName);
+                            if (response.errors.Years) $('#YearsError').html(response.errors.Years);
                         }
                     }
                 },

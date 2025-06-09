@@ -1,114 +1,69 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyWebSite.Classes;
+using MyWebSite.Models;
 using System.Data;
 using System.Data.SqlClient;
+using Microsoft.AspNetCore.Authentication;
 
-namespace MyWebSite.Controllers
+[Route("Admin")]
+[Authorize(Roles = "Admin")]
+public class AdminHome : Controller
 {
-    [Route("Admin")]
-    [Authorize(Roles = "Admin")]
-    public class AdminHome : Controller
+    [Route("Anasayfa")]
+    public async Task<IActionResult> Index()
     {
-        private readonly IConfiguration _configuration;
-        public AdminHome(IConfiguration configuration)
+        AdminDashboardViewModel model = new();
+        try
         {
-            _configuration = configuration;
-        }
-        [Route("Anasayfa")]
-        public async Task<IActionResult> Index()
-        {
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
-            using (SqlConnection con = new(connectionString))
-            {
-                try
+            List<SqlParameter> emptyParams = new();
+            List<ReportResultModel> contactResults = await SQLCrud.ExecuteModelListAsync<ReportResultModel>(
+                "ContactMonthReport",
+                emptyParams,
+                reader => new ReportResultModel
                 {
-                    int[] count = new int[12];
-                    int[] count2 = new int[12];
-                    byte step = 0;
-                    await con.OpenAsync();
-                    SqlCommand cmd = new("ContactMonthReport", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
-                    {
-                        if (reader.HasRows)
-                        {
-                            while (await reader.ReadAsync())
-                            {
-                                step = byte.Parse(reader["Ay"].ToString());
-                                count[step - 1] = int.Parse(reader["Sayisi"].ToString());
-                            }
-                        }
-                    }
-                    SqlCommand cmd1 = new("WebLogMonthReport", con);
-                    cmd1.CommandType = CommandType.StoredProcedure;
-                    using (SqlDataReader reader1 = await cmd1.ExecuteReaderAsync())
-                    {
-                        if (reader1.HasRows)
-                        {
-                            while (await reader1.ReadAsync())
-                            {
-                                step = byte.Parse(reader1["Ay"].ToString());
-                                count2[step - 1] = int.Parse(reader1["Sayisi"].ToString());
-                            }
-                        }
-                    }
-                    SqlCommand cmd2 = new("WebLogCount", con);
-                    cmd2.CommandType = CommandType.StoredProcedure;
-                    using (SqlDataReader reader2 = await cmd2.ExecuteReaderAsync())
-                    {
-                        if (reader2.HasRows)
-                        {
-                            while (await reader2.ReadAsync())
-                            {
-                                ViewBag.WebLogCount = int.Parse(reader2["Sayisi"].ToString());
-                            }
-                        }
-                    }
-                    SqlCommand cmd3 = new("ContactCount", con);
-                    cmd3.CommandType = CommandType.StoredProcedure;
-                    using (SqlDataReader reader3 = await cmd3.ExecuteReaderAsync())
-                    {
-                        if (reader3.HasRows)
-                        {
-                            while (await reader3.ReadAsync())
-                            {
-                                ViewBag.ContactCount = int.Parse(reader3["Sayisi"].ToString());
-                            }
-                        }
-                    }
-                    SqlCommand cmd4 = new("AdminLoginErrorCount", con);
-                    cmd4.CommandType = CommandType.StoredProcedure;
-                    using (SqlDataReader reader4 = await cmd4.ExecuteReaderAsync())
-                    {
-                        if (reader4.HasRows)
-                        {
-                            while (await reader4.ReadAsync())
-                            {
-                                ViewBag.AdminLoginErrorCount = int.Parse(reader4["Sayisi"].ToString());
-                            }
-                        }
-                    }
-                    ViewBag.MonthlyCounts = count;
-                    ViewBag.MonthlyWebLog = count2;
-                    return View();
-                }
-                catch (Exception ex)
+                    Ay = Convert.ToByte(reader["Ay"]),
+                    Sayisi = Convert.ToInt32(reader["Sayisi"])
+                },
+                CommandType.StoredProcedure
+            );
+            foreach (var item in contactResults)
+                model.ContactMonthlyCounts[item.Ay - 1] = item.Sayisi;
+            List<ReportResultModel> webLogResults = await SQLCrud.ExecuteModelListAsync<ReportResultModel>(
+                "WebLogMonthReport",
+                emptyParams,
+                reader => new ReportResultModel
                 {
-                    await Logging.LogAdd("Admin Rapor Ekranı Panelde Listeleme İşlemi Hatası", ex.Message, connectionString, HttpContext.Connection.RemoteIpAddress.ToString());
-                    TempData["Type"] = "error";
-                    TempData["Message"] = "Admin Rapor Hatalı Listeleme İşlemi";
-                }
-            }
-            return View();
+                    Ay = Convert.ToByte(reader["Ay"]),
+                    Sayisi = Convert.ToInt32(reader["Sayisi"])
+                },
+                CommandType.StoredProcedure
+            );
+            foreach (var item in webLogResults)
+                model.WebLogMonthlyCounts[item.Ay - 1] = item.Sayisi;
+            model.WebLogCount = await SQLCrud.ExecuteScalarAsync<int>("WebLogCount", emptyParams, 0, CommandType.StoredProcedure);
+            model.ContactCount = await SQLCrud.ExecuteScalarAsync<int>("ContactCount", emptyParams, 0, CommandType.StoredProcedure);
+            model.AdminLoginErrorCount = await SQLCrud.ExecuteScalarAsync<int>("AdminLoginErrorCount", emptyParams, 0, CommandType.StoredProcedure);
+            model.ProjectCount = await SQLCrud.ExecuteScalarAsync<int>("ProjectCount", emptyParams, 0, CommandType.StoredProcedure);
+            model.SkillsCount = await SQLCrud.ExecuteScalarAsync<int>("SkillsCount", emptyParams, 0, CommandType.StoredProcedure);
+            model.AdminLogsCount = await SQLCrud.ExecuteScalarAsync<int>("AdminLogsCount", emptyParams, 0, CommandType.StoredProcedure);
+            model.JobsCount = await SQLCrud.ExecuteScalarAsync<int>("JobsCount", emptyParams, 0, CommandType.StoredProcedure);
+            model.EducationCount = await SQLCrud.ExecuteScalarAsync<int>("EducationCount", emptyParams, 0, CommandType.StoredProcedure);
+            return View(model);
         }
-        [Route("CikisYap")]
-        public async Task<IActionResult> Logout()
+        catch (Exception ex)
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index", "Home");
+            await Logging.LogAdd("Admin Rapor Ekranı Panelde Listeleme İşlemi Hatası", ex.Message);
+            TempData["Type"] = "error";
+            TempData["Message"] = "Admin Rapor Hatalı Listeleme İşlemi";
         }
+        return View(model);
+    }
+    [Route("CikisYap")]
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return RedirectToAction("Index", "Home");
     }
 }

@@ -1,65 +1,57 @@
 ﻿@model Education
 @{
-    ViewData["Title"] = "Admin Egitim Guncelle";
+    ViewData["Title"] = "Admin Eğitim Güncelle";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
-<form id="educationUpdateForm" method="post">
+<form id="educationUpdateForm" method="post" autocomplete="off">
     <br />
     <h4>Eğitim Güncelleme Sayfası</h4>
     <hr />
+    <input type="hidden" name="ID" value="@Model.ID" />
+    <div id="resultsucc" class="text-danger mb-2"></div>
     <div class="form-group">
-        <input type="hidden" name="ID" value="@Model.ID">
         <label for="SchoolName">Okul Adı:</label>
-        <input type="text" required maxlength="50" min="3" class="form-control" name="SchoolName" value="@Model.SchoolName" id="SchoolName" placeholder="">
-        <span id="SchoolNameError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+        <input type="text" class="form-control" name="SchoolName" id="SchoolName"
+               maxlength="75" minlength="3" required placeholder="Örn: İstanbul Üniversitesi"
+               value="@Model.SchoolName">
+        <span id="SchoolNameError" class="text-danger mt-1 d-block"></span>
     </div>
-    <br />
-    <div class="form-group">
+    <div class="form-group mt-3">
         <label for="SectionName">Bölüm:</label>
-        <input type="text" required maxlength="50" min="3" class="form-control" name="SectionName" value="@Model.SectionName" id="SectionName" placeholder="">
-        <span id="SectionNameError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+        <input type="text" class="form-control" name="SectionName" id="SectionName"
+               maxlength="75" minlength="3" required placeholder="Örn: Bilgisayar Mühendisliği"
+               value="@Model.SectionName">
+        <span id="SectionNameError" class="text-danger mt-1 d-block"></span>
     </div>
-    <br />
-    <div class="form-group">
+    <div class="form-group mt-3">
         <label for="Years">Okul Yılı:</label>
-        <input type="text" required maxlength="11"  class="form-control" name="Years" value="@Model.Years" id="Years" placeholder="">
-        <span id="YearsError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+        <input type="text" class="form-control" name="Years" id="Years"
+               maxlength="12" pattern="^\d{4}-[A-Za-z0-9ÇçĞğİıÖöŞşÜü]+$"
+               required placeholder="Örn: 2020-2025 | 2020-AKTİF"
+               value="@Model.Years">
+        <span id="YearsError" class="text-danger mt-1 d-block"></span>
     </div>
-    <br />
-    <button type="submit" class="btn btn-primary">Güncelle</button>
+    <button type="submit" class="btn btn-primary mt-4">Güncelle</button>
 </form>
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function () {
-        $('#educationUpdateForm').submit(function (event) {
+    $(function () {
+        $('#educationUpdateForm').on('submit', function (event) {
             event.preventDefault();
-
+            $('#SchoolNameError, #SectionNameError, #YearsError, #resultsucc').html('');
             var formData = $(this).serialize();
-
-            // Hata mesajlarını temizle
-            $('#SchoolNameError').html('');
-            $('#SectionNameError').html('');
-            $('#YearsError').html('');
-            $('#resultsucc').html('');
-
             $.ajax({
                 url: '/AdminEgitim/Guncelle',
                 type: 'POST',
                 data: formData,
                 success: function (response) {
                     if (response.success) {
-                        window.location.href = response.redirectUrl;  // Başarı durumunda yönlendirme
+                        window.location.href = response.redirectUrl;
                     } else {
-                        // Hataları ilgili alanlara göster
-                        if (response.errors.SchoolName) {
-                            $('#SchoolNameError').html(response.errors.SchoolName);
-                        }
-                        if (response.errors.SectionName) {
-                            $('#SectionNameError').html(response.errors.SectionName);
-                        }
-                        if (response.errors.Years) {
-                            $('#YearsError').html(response.errors.Years);
+                        if (response.errors) {
+                            if (response.errors.SchoolName) $('#SchoolNameError').html(response.errors.SchoolName);
+                            if (response.errors.SectionName) $('#SectionNameError').html(response.errors.SectionName);
+                            if (response.errors.Years) $('#YearsError').html(response.errors.Years);
                         }
                     }
                 },

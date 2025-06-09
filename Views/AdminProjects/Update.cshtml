@@ -10,52 +10,69 @@
     <hr />
     <div class="form-group">
         <label for="ProjectName">Proje Adı:</label>
-        <input type="text" required class="form-control" name="ProjectName" id="ProjectName" value="@Model.ProjectName" placeholder="">
-        <span id="ProjectNameError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+        <input type="text" class="form-control" name="ProjectName" id="ProjectName"
+               value="@Model.ProjectName"
+               required minlength="3" maxlength="75" />
+        <span id="ProjectNameError" class="text-danger"></span>
     </div>
     <br />
     <div class="form-group">
         <label for="ProjectDescription">Proje Açıklama:</label>
-        <input type="text" required class="form-control" name="ProjectDescription" id="ProjectDescription" value="@Model.ProjectDescription" placeholder="">
-        <span id="ProjectDescriptionError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+        <textarea class="form-control" name="ProjectDescription" id="ProjectDescription"
+                  required minlength="3">@Model.ProjectDescription</textarea>
+        <span id="ProjectDescriptionError" class="text-danger"></span>
     </div>
     <br />
-    <div>
+    <div class="form-group">
         <label for="ProjectImg">Proje Resim Seçiniz:</label>
-        <input type="file" name="ProjectImg" id="ProjectImg" accept="image/*" />
+        <input type="file" name="ProjectImg" id="ProjectImg" class="form-control" accept="image/*" />
+        <br />
+        @if (ViewData["picture"] != null)
+        {
+            <img id="previewImage" src="@ViewData["picture"]" alt="Mevcut Resim" style="max-height: 150px;" />
+        }
+        else
+        {
+            <img id="previewImage" src="#" alt="Önizleme" style="max-height: 150px; display: none;" />
+        }
     </div>
-    @if (ViewData["picture"] != null)
-    {
-        <img src="@ViewData["picture"]" width="50" height="50" alt="Resim 1" />
-    }
     <br />
     <div class="form-group">
         <label for="ProjectGithubLink">Proje Github Link:</label>
-        <input type="url" required class="form-control" name="ProjectGithubLink" id="ProjectGithubLink" value="@Model.ProjectGithubLink" placeholder="">
-        <span id="ProjectGithubLinkError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+        <input type="url" class="form-control" name="ProjectGithubLink" id="ProjectGithubLink"
+               value="@Model.ProjectGithubLink"
+               required minlength="3" maxlength="75" />
+        <span id="ProjectGithubLinkError" class="text-danger"></span>
     </div>
+    <br />
     <div class="form-group">
         <label for="ProjectLink">Proje Web Link:</label>
-        <input type="url" class="form-control" name="ProjectLink" id="ProjectLink" value="@Model.ProjectLink" placeholder="">
+        <input type="url" class="form-control" name="ProjectLink" id="ProjectLink"
+               value="@Model.ProjectLink"
+               required minlength="3" maxlength="75" />
+        <span id="ProjectLinkError" class="text-danger"></span>
     </div>
     <br />
     <button type="submit" class="btn btn-primary">Güncelle</button>
 </form>
-
-<!-- Hata mesajları için boş bir div ekledik -->
-<div id="resultsucc"></div>
-
+<div id="resultsucc" class="mt-3"></div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
+        $('#ProjectImg').change(function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#previewImage').attr('src', e.target.result).show();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
         $('#projectUpdateForm').submit(function (event) {
             event.preventDefault();
-            var formData = new FormData(this);
-            $('#ProjectNameError').html('');
-            $('#ProjectDescriptionError').html('');
-            $('#ProjectGithubLinkError').html('');
-            $('#resultsucc').html(''); // Hata mesajı temizle
-
+            const formData = new FormData(this);
+            $('#ProjectNameError, #ProjectDescriptionError, #ProjectGithubLinkError, #ProjectLinkError, #resultsucc').html('');
             $.ajax({
                 url: '/AdminProje/Guncelle',
                 type: 'POST',
@@ -64,9 +81,8 @@
                 processData: false,
                 success: function (response) {
                     if (response.success) {
-                        window.location.href = response.redirectUrl; // Başarılıysa yönlendir
+                        window.location.href = response.redirectUrl;
                     } else {
-                        // Hata mesajlarını doldur
                         if (response.errors.ProjectName) {
                             $('#ProjectNameError').html(response.errors.ProjectName);
                         }
@@ -75,6 +91,9 @@
                         }
                         if (response.errors.ProjectGithubLink) {
                             $('#ProjectGithubLinkError').html(response.errors.ProjectGithubLink);
+                        }
+                        if (response.errors.ProjectLink) {
+                            $('#ProjectLinkError').html(response.errors.ProjectLink);
                         }
                     }
                 },

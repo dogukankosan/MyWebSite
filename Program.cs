@@ -1,19 +1,16 @@
-using AspNetCoreRateLimit;
+﻿using AspNetCoreRateLimit;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using MyWebSite.Business;
+using MyWebSite.Classes;
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddControllersWithViews();
-builder.Services.AddControllersWithViews().AddFluentValidation(fv => { fv.DisableDataAnnotationsValidation = true; fv.RegisterValidatorsFromAssemblyContaining<ContactValidator>(); });
-builder.Services.AddControllersWithViews().AddFluentValidation(fv => { fv.DisableDataAnnotationsValidation = true; fv.RegisterValidatorsFromAssemblyContaining<AdminAboutValidator>(); });
-builder.Services.AddControllersWithViews().AddFluentValidation(fv => { fv.DisableDataAnnotationsValidation = true; fv.RegisterValidatorsFromAssemblyContaining<AdminSocialMediaValidator>(); });
-builder.Services.AddControllersWithViews().AddFluentValidation(fv => { fv.DisableDataAnnotationsValidation = true; fv.RegisterValidatorsFromAssemblyContaining<AdminLoginValidator>(); });
-builder.Services.AddControllersWithViews().AddFluentValidation(fv => { fv.DisableDataAnnotationsValidation = true; fv.RegisterValidatorsFromAssemblyContaining<AdminMailValidator>(); });
-builder.Services.AddControllersWithViews().AddFluentValidation(fv => { fv.DisableDataAnnotationsValidation = true; fv.RegisterValidatorsFromAssemblyContaining<AdminEducationValidator>(); });
-builder.Services.AddControllersWithViews().AddFluentValidation(fv => { fv.DisableDataAnnotationsValidation = true; fv.RegisterValidatorsFromAssemblyContaining<AdminJobsValidator>(); });
-builder.Services.AddControllersWithViews().AddFluentValidation(fv => { fv.DisableDataAnnotationsValidation = true; fv.RegisterValidatorsFromAssemblyContaining<AdminSkillsValidator>(); });
-builder.Services.AddControllersWithViews().AddFluentValidation(fv => { fv.DisableDataAnnotationsValidation = true; fv.RegisterValidatorsFromAssemblyContaining<AdminProjectsValidator>(); });
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddControllersWithViews()
+    .AddFluentValidation(fv =>
+    {
+        fv.DisableDataAnnotationsValidation = true;
+        fv.RegisterValidatorsFromAssemblyContaining<ContactValidator>(); 
+    });
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -29,7 +26,7 @@ builder.Services.Configure<IpRateLimitOptions>(options =>
         new RateLimitRule
         {
             Endpoint = "*",
-            Limit = 30,
+            Limit = 100,
             Period = "1m"
         }
     };
@@ -40,19 +37,16 @@ builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>()
 builder.Services.AddInMemoryRateLimiting();
 builder.Services.AddAuthorization();
 var app = builder.Build();
+SQLCrud.Configure(builder.Configuration, app.Services.GetRequiredService<IHttpContextAccessor>());
 app.UseIpRateLimiting();
-app.MapControllers();
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
-}
 app.UseStatusCodePagesWithReExecute("/Home/Error");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+var httpContextAccessor = app.Services.GetRequiredService<IHttpContextAccessor>();
+Logging.Configure(httpContextAccessor);
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

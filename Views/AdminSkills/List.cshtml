@@ -4,47 +4,59 @@
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
 <br />
-<div class="card mb-4">
-    <div class="card-header">
-        <i class="fas fa-table me-1"></i>
-        Beceriler
-    </div>
-    <div class="card-body">
-        <table class="table table-hover" id="datatablesSimple">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Beceri Adı</th>
-                    <th>Beceri Yüzdesi</th>
-                    <th>Beceri İcon</th>
-                    <th>Güncelle</th>
-                    <th>Sil</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model != null && Model.Any())
-                {
-                    @foreach (Skills item in Model)
-                    {
-                        <tr>
-                            <td>@item.ID</td>
-                            <td>@item.SkillName</td>
-                            <td>@item.SkillPercent</td>
-                            <td>@item.Skillcon</td>
-                            <td><a class="btn btn-success" href="/AdminBeceriler/Guncelle/@item.ID">Güncelle</a></td>
-                            <td>
-                                <a href="javascript:void(0)" class="btn btn-danger" onclick="confirmDelete('@item.ID')">Sil</a>
-                            </td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
-        <a class="btn btn-primary" href="/AdminBeceriler/Ekle">Yeni Beceri Ekle</a>
+<h4 class="card-title">Beceriler</h4>
+<hr />
+<div class="row mb-2">
+    <div class="col text-right">
+        <select id="exportOptions" class="form-control form-control-sm w-100 mb-2 d-md-inline-block">
+            <option value="">Dışa Aktar</option>
+            <option value="excel">📥 Excel</option>
+            <option value="pdf">📄 PDF</option>
+            <option value="print">🖨️ Yazdır</option>
+        </select>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+<div class="table-responsive">
+    <table class="table table-hover table-striped table-bordered" id="yourTableId">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Beceri Adı</th>
+                <th>Beceri Yüzdesi</th>
+                <th>Beceri İkon</th>
+                <th class="no-export">İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ID</td>
+                    <td>@item.SkillName</td>
+                    <td>
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar" role="progressbar"
+                                 style="width: @item.SkillPercent%; background: linear-gradient(to right, #00c6ff, #0072ff);"
+                                 aria-valuenow="@item.SkillPercent" aria-valuemin="0" aria-valuemax="100">
+                                @item.SkillPercent%
+                            </div>
+                        </div>
+                    </td>
+                    <td><i class="@item.Skillcon"></i> <small>@item.Skillcon</small></td>
+                    <td>
+                        <a class="btn btn-outline-info btn-sm" href="/AdminBeceriler/Guncelle/@item.ID">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                        <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm" onclick="confirmDelete('@item.ID')">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <a class="btn btn-primary mt-3" href="/AdminBeceriler/Ekle">Yeni Beceri Ekle</a>
+</div>
 <script>
     function confirmDelete(id) {
         Swal.fire({
@@ -62,31 +74,18 @@
             }
         });
     }
-</script>
-@if (TempData["Type"] != null && !string.IsNullOrEmpty(TempData["Type"].ToString()))
-{
-    var title = "";
-    var icon = "";
-    var message = TempData["Message"]?.ToString() ?? "";
+    document.addEventListener('DOMContentLoaded', function () {
+        const type = '@TempData["Type"]';
+        const message = @Html.Raw(Json.Serialize(TempData["Message"]));
 
-    if (TempData["Type"].ToString() == "error")
-    {
-        title = "Hata";
-        icon = "error";
-    }
-    else if (TempData["Type"].ToString() == "success")
-    {
-        title = "Başarılı";
-        icon = "success";
-    }
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        if (type && message && performance.getEntriesByType("navigation")[0].type === "navigate") {
             Swal.fire({
-                title: '@Html.Raw(title)',
-                text: '@Html.Raw(message)',
-                icon: '@Html.Raw(icon)',
-                confirmButtonText: 'Tamam'
+                icon: type === 'success' ? 'success' : 'error',
+                title: type === 'success' ? 'Başarılı' : 'Hata',
+                text: message,
+                timer: 3000,
+                showConfirmButton: false
             });
-        });
-    </script>
-}
+        }
+    });
+</script>

@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "CV";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+<br/>
+<h2 class="mb-4">CV Güncelle</h2>
+<hr/>
+@if (TempData["Message"] != null)
+{
+    var type = TempData["Type"]?.ToString() == "success" ? "alert-success" : "alert-danger";
+    <div class="alert @type" role="alert">
+        @TempData["Message"]
+    </div>
+}
+<form asp-action="CvGuncelle" asp-controller="AdminCV" asp-area="" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="pdfFile">PDF Dosyası Seçin</label>
+        <input type="file" name="pdfFile" accept=".pdf" class="form-control-file" required />
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">
+        <i class="fas fa-upload"></i> Yükle
+    </button>
+</form>

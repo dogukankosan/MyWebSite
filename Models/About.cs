@@ -14,5 +14,7 @@
         public string AboutName { get; set; }
         public string AboutDetails2 { get; set; }
         public string IFrameAdress { get; set; }
+        public string? ExistingPicture1 { get; set; }
+        public string? ExistingPicture2 { get; set; }
     }
 }

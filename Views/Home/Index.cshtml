@@ -1,13 +1,13 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="utf-8">
-    <link rel="shortcut icon" href="~/css/software-developer.png" type="image/x-icon">
+    <link rel="icon" type="image/png" href="@Url.Content("~/css/software-developer.png")" />
     <title>@ViewBag.AboutName | @ViewBag.AboutTitle</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta property="og:title" content="@ViewBag.AboutName | @ViewBag.AboutTitle" />
     <meta property="og:description" content="Veri Tabanı Yöneticisi,ERP-İş Analisti Raporlama Uzmanı,Teknik Destek,Veritabanı Yöneticisi,SQL,T-SQL,C#,Microsoft Excel VBA" />
-    <meta property="og:image" content="https://www.dogukankosan.com.tr/img/77827358.jpeg" />
+    <meta property="og:image" content="https://www.dogukankosan.com.tr/wwwroot/userThema/img/dogukan.jpeg" />
     <meta property="og:url" content="https://www.dogukankosan.com.tr/" />
     <meta property="og:type" content="website" />
     <link rel="canonical" href="https://www.dogukankosan.com.tr/" />
@@ -17,7 +17,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Edu+TAS+Beginner:wght@400..700&family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
@@ -34,7 +33,6 @@
     <link href="~/userThema/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="~/userThema/css/bootstrap.min.css" rel="stylesheet">
     <link href="~/userThema/css/style.css" rel="stylesheet">
-    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DX52B81E6M"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -42,29 +40,6 @@
         gtag('js', new Date());
         gtag('config', 'G-DX52B81E6M');
     </script>
-    <style>
-        p::selection {
-            background-color: aqua;
-            color: black;
-        }
-
-        h4::selection {
-            background-color: aqua;
-            color: black;
-        }
-        h3::selection {
-            background-color: aqua;
-            color: black;
-        }
-        h2::selection {
-            background-color: aqua;
-            color: black;
-        }
-        h1::selection {
-           background-color: aqua;
-            color: black;
-        }
-    </style>
 </head>
 <body>
     @{
@@ -112,7 +87,12 @@
                         <div class="row g-5">
                             <div class="col-xl-6 wow fadeInUp" data-wow-delay="0.1s">
                                 <div class="bg-light p-4" style="border-radius: 68% 32% 100% 0% / 0% 75% 25% 100%;">
-                                    <img src="@ViewBag.Picture1" class="img-fluid w-100" style="border-radius: 68% 32% 100% 0% / 0% 75% 25% 100%;" alt="Image">
+                                    <img src="@ViewBag.Picture1" 
+                                         class="img-fluid w-100 rounded-4 shadow-sm"
+                                         style="border-radius: 68% 32% 100% 0% / 0% 75% 25% 100%;" 
+                                         alt="Profil Görseli" 
+                                         loading="lazy" 
+                                         decoding="async">
                                 </div>
                             </div>
                             <div class="col-xl-6 wow fadeInUp" data-wow-delay="0.3s">
@@ -137,6 +117,7 @@
                                     <p class="text-dark mb-0"><a href="/">@ViewBag.AboutWebSite</a></p>
                                 </div>
                                 <div class="d-flex">
+                                    @await Component.InvokeAsync("MyCvComponent")
                                     <a class="btn btn-primary btn-sm-square me-3" href="@ViewBag.FacebookLink" target="_blank"><i class="fab fa-facebook-f text-white"></i></a>
                                     <a class="btn btn-primary btn-sm-square me-3" href="@ViewBag.GithubLink" target="_blank"><i class="fab fa-github text-white"></i></a>
                                     <a class="btn btn-primary btn-sm-square me-3" href="@ViewBag.InstagramLink" target="_blank"><i class="fab fa-instagram text-white"></i></a>
@@ -164,7 +145,13 @@
                         <div class="row g-5">
                             <div class="col-xl-5">
                                 <div class="about-img bg-light p-4 wow fadeInUp" data-wow-delay="0.1s">
-                                    <img src="@ViewBag.Picture2" class="img-fluid w-100" alt="Image">
+                                    <img src="@ViewBag.Picture2" 
+                                         class="img-fluid w-100 rounded-4 shadow-sm"
+                                         style="border-radius: 68% 32% 100% 0% / 0% 75% 25% 100%;" 
+                                         alt="Profil Görseli" 
+                                         loading="lazy" 
+                                         decoding="async">
+
                                     <div class="sosial-icon">
                                         <a class="btn btn-primary btn-sm-square mb-3" href="@ViewBag.FacebookLink" target="_blank"><i class="fab fa-facebook-f text-white"></i></a>
                                         <a class="btn btn-primary btn-sm-square mb-3" href="@ViewBag.GithubLink" target="_blank"><i class="fab fa-github text-white"></i></a>
@@ -286,7 +273,6 @@
         </div>
     </div>
     <a href="#" class="btn btn-primary btn-lg-square back-to-top"><i class="fa fa-arrow-up"></i></a>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/mvc/5.2.3/jquery.validate.min.js"></script>
@@ -300,18 +286,6 @@
     <script src="~/userThema/js/main.js"></script>
     <script>
         var email =@ViewBag.AboutMail;
-        var emailLink = document.getElementById("emailLink2");
-        emailLink.href = "mailto:" + email;
-        emailLink.textContent = email;
-    </script>
-    <script>
-        var email = @ViewBag.AboutMail;
-        var emailLink = document.getElementById("emailLink2");
-        emailLink.href = "mailto:" + email;
-        emailLink.textContent = email;
-    </script>
-    <script>
-        var email = @ViewBag.AboutMail;
         var emailLink = document.getElementById("emailLink2");
         emailLink.href = "mailto:" + email;
         emailLink.textContent = email;

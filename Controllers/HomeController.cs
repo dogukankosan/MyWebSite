@@ -3,144 +3,116 @@ using MyWebSite.Classes;
 using MyWebSite.Models;
 using Newtonsoft.Json.Linq;
 using System.Data;
-
 using System.Data.SqlClient;
 
 namespace MyWebSite.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IConfiguration _configuration;
-        public HomeController(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
         public async Task<IActionResult> Index()
         {
-            SocialMedia cs1 = new();
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
-            using (SqlConnection con = new(connectionString))
+            try
             {
-                try
-                {
-                    await con.OpenAsync();
-                    SqlCommand cmd = new("SocialMediaGet", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                string sql = "SocialMediaGet";
+                List<SocialMedia> socialList = await SQLCrud.ExecuteModelListAsync<SocialMedia>(
+                    sql,
+                    null,
+                    reader => new SocialMedia
                     {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                cs1.ID = Convert.ToByte(reader["ID"]);
-                                cs1.FacebookLink = reader["FacebookLink"].ToString();
-                                cs1.GithubLink = reader["GithubLink"].ToString();
-                                cs1.InstagramLink = reader["InstagramLink"].ToString();
-                                cs1.LinkedinLink = reader["LinkedinLink"].ToString();
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    await Logging.LogAdd("Anasayfada Sosyal Medya Listeleme Hatası", ex.Message, connectionString, HttpContext.Connection.RemoteIpAddress.ToString());
-                }
+                        ID = Convert.ToByte(reader["ID"]),
+                        FacebookLink = reader["FacebookLink"].ToString(),
+                        GithubLink = reader["GithubLink"].ToString(),
+                        InstagramLink = reader["InstagramLink"].ToString(),
+                        LinkedinLink = reader["LinkedinLink"].ToString()
+                    },
+                    CommandType.StoredProcedure
+                );
+                SocialMedia cs1 = socialList.FirstOrDefault() ?? new SocialMedia();
+                ViewBag.FacebookLink = cs1.FacebookLink;
+                ViewBag.GithubLink = cs1.GithubLink;
+                ViewBag.InstagramLink = cs1.InstagramLink;
+                ViewBag.LinkedinLink = cs1.LinkedinLink;
             }
-            ViewBag.FacebookLink = cs1.FacebookLink;
-            ViewBag.GithubLink = cs1.GithubLink;
-            ViewBag.InstagramLink = cs1.InstagramLink;
-            ViewBag.LinkedinLink = cs1.LinkedinLink;
-            About cs = new();
-            string base64Image1 = "", base64Image2 = "";
-            using (SqlConnection con = new(connectionString))
+            catch (Exception ex)
             {
-                try
-                {
-                    await con.OpenAsync();
-                    using (SqlCommand cmd = new("AboutGet", con))
+                await Logging.LogAdd("Anasayfada Sosyal Medya Listeleme Hatası", ex.Message);
+            }
+            try
+            {
+                string sql = "AboutGet";
+                List<About> aboutList = await SQLCrud.ExecuteModelListAsync<About>(
+                    sql,
+                    null,
+                    reader =>
                     {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                        About cs = new About();
+                        if (!Convert.IsDBNull(reader["Picture1"]))
                         {
-                            if (reader.HasRows)
-                            {
-                                while (await reader.ReadAsync())
-                                {
-                                    if (!Convert.IsDBNull(reader["Picture1"]))
-                                    {
-                                        byte[] imageBytes = (byte[])reader["Picture1"];
-                                        base64Image1 = Convert.ToBase64String(imageBytes);
-                                    }
-                                    if (!Convert.IsDBNull(reader["Picture2"]))
-                                    {
-                                        byte[] imageBytes = (byte[])reader["Picture2"];
-                                        base64Image2 = Convert.ToBase64String(imageBytes);
-                                    }
-                                    cs.ID = reader["ID"] != DBNull.Value ? Convert.ToByte(reader["ID"]) : default;
-                                    cs.AboutTitle = reader["AboutTitle"]?.ToString();
-                                    cs.AboutDetails1 = reader["AboutDetails1"]?.ToString();
-                                    cs.AboutAdress = reader["AboutAdress"]?.ToString();
-                                    cs.AboutMail = reader["AboutMail"]?.ToString();
-                                    cs.AboutPhone = reader["AboutPhone"]?.ToString();
-                                    cs.AboutWebSite = reader["AboutWebSite"]?.ToString();
-                                    cs.AboutName = reader["AboutName"]?.ToString();
-                                    cs.AboutDetails2 = reader["AboutDetails2"]?.ToString();
-                                    cs.IFrameAdress = reader["IFrameAdress"]?.ToString();
-                                }
-                            }
+                            byte[] imageBytes = (byte[])reader["Picture1"];
+                            ViewBag.Picture1 = $"data:image/jpeg;base64,{Convert.ToBase64String(imageBytes)}";
                         }
-                    }
-                    ViewBag.Picture1 = $"data:image/jpeg;base64,{base64Image1}";
-                    ViewBag.Picture2 = $"data:image/jpeg;base64,{base64Image2}";
-                    ViewBag.AboutTitle = cs.AboutTitle;
-                    ViewBag.AboutDetails1 = cs.AboutDetails1;
-                    ViewBag.AboutAdress = cs.AboutAdress;
-                    ViewBag.AboutMail = cs.AboutMail;
-                    ViewBag.AboutPhone = cs.AboutPhone;
-                    ViewBag.AboutWebSite = cs.AboutWebSite;
-                    ViewBag.AboutName = cs.AboutName;
-                    ViewBag.AboutDetails2 = cs.AboutDetails2;
-                    ViewBag.IFrameAdress = cs.IFrameAdress;
-                }
-                catch (Exception ex)
+                        if (!Convert.IsDBNull(reader["Picture2"]))
+                        {
+                            byte[] imageBytes = (byte[])reader["Picture2"];
+                            ViewBag.Picture2 = $"data:image/jpeg;base64,{Convert.ToBase64String(imageBytes)}";
+                        }
+                        cs.ID = reader["ID"] != DBNull.Value ? Convert.ToByte(reader["ID"]) : default;
+                        cs.AboutTitle = reader["AboutTitle"]?.ToString();
+                        cs.AboutDetails1 = reader["AboutDetails1"]?.ToString();
+                        cs.AboutAdress = reader["AboutAdress"]?.ToString();
+                        cs.AboutMail = reader["AboutMail"]?.ToString();
+                        cs.AboutPhone = reader["AboutPhone"]?.ToString();
+                        cs.AboutWebSite = reader["AboutWebSite"]?.ToString();
+                        cs.AboutName = reader["AboutName"]?.ToString();
+                        cs.AboutDetails2 = reader["AboutDetails2"]?.ToString();
+                        cs.IFrameAdress = reader["IFrameAdress"]?.ToString();
+                        return cs;
+                    },
+                    CommandType.StoredProcedure
+                );
+                About cs = aboutList.FirstOrDefault() ?? new About();
+                ViewBag.AboutTitle = cs.AboutTitle;
+                ViewBag.AboutDetails1 = cs.AboutDetails1;
+                ViewBag.AboutAdress = cs.AboutAdress;
+                ViewBag.AboutMail = cs.AboutMail;
+                ViewBag.AboutPhone = cs.AboutPhone;
+                ViewBag.AboutWebSite = cs.AboutWebSite;
+                ViewBag.AboutName = cs.AboutName;
+                ViewBag.AboutDetails2 = cs.AboutDetails2;
+                ViewBag.IFrameAdress = cs.IFrameAdress;
+            }
+            catch (Exception ex)
+            {
+                await Logging.LogAdd("Anasayfada Hakkında Listeleme Hatası", ex.Message);
+            }
+            try
+            {
+                string geo = "";
+                using (HttpClient client = new HttpClient())
                 {
-                    await Logging.LogAdd("Anasayfada Hakkında Listeleme Hatası", ex.Message, connectionString, HttpContext.Connection.RemoteIpAddress?.ToString());
+                    string response = await client.GetStringAsync($"http://ip-api.com/json/{HttpContext.Connection.RemoteIpAddress}");
+                    JObject json = JObject.Parse(response);
+                    geo = json["city"] + ", " + json["country"];
                 }
+                string sql = "WebLogAdd";
+                List<SqlParameter> parameters = new List<SqlParameter>
+                {
+                    new SqlParameter("@IPAdress", HttpContext.Connection.RemoteIpAddress?.ToString()),
+                    new SqlParameter("@UserGeo", geo),
+                    new SqlParameter("@UserInfo", Request.Headers["User-Agent"].ToString())
+                };
+                await SQLCrud.InsertUpdateDeleteAsync(sql, parameters);
+            }
+            catch (Exception ex)
+            {
+                await Logging.LogAdd("Siteye Giren Kullanıcı IP Alma İşlemi Hatalı", ex.Message);
             }
 
-
-            string geo = "";
-            using (HttpClient client = new HttpClient())
-            {
-                string response = await client.GetStringAsync($"http://ip-api.com/json/{HttpContext.Connection.RemoteIpAddress.ToString()}");
-                JObject json = JObject.Parse(response);
-                geo = json["city"] + ", " + json["country"];
-            }
-            using (SqlConnection con = new(connectionString))
-            {
-                try
-                {
-                    await con.OpenAsync();
-                    SqlCommand cmd = new("WebLogAdd", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@IPAdress", HttpContext.Connection.RemoteIpAddress.ToString());
-                    cmd.Parameters.AddWithValue("@UserGeo", geo);
-                    cmd.Parameters.AddWithValue("@UserInfo", Request.Headers["User-Agent"].ToString());
-                    await cmd.ExecuteNonQueryAsync();
-                }
-                catch (Exception ex)
-                {
-                    await Logging.LogAdd("Siteye Giren Kullanıcı IP Alma İşlemi Hatalı", ex.Message, connectionString, HttpContext.Connection.RemoteIpAddress?.ToString());
-                }
-            }
             return View();
         }
         [HttpPost]
         public async Task<JsonResult> ContactAdd(Contacts c)
         {
-            c.UserGeo = "test";
-            c.IPAdress = "test";
-            c.UserInfo = "test";
             if (!ModelState.IsValid)
             {
                 Dictionary<string, string> errors = new();
@@ -156,39 +128,37 @@ namespace MyWebSite.Controllers
                     errors["ContactMessage"] = string.Join(", ", ModelState["ContactMessage"].Errors.Select(e => e.ErrorMessage));
                 return Json(new { success = false, errors });
             }
-            string geo = "";
-            using (HttpClient client = new())
+            try
             {
-                string response = await client.GetStringAsync($"http://ip-api.com/json/{HttpContext.Connection.RemoteIpAddress.ToString()}");
-                JObject json = JObject.Parse(response);
-                geo = json["city"] + ", " + json["country"];
+                string geo = "";
+                using (HttpClient client = new())
+                {
+                    string response = await client.GetStringAsync($"http://ip-api.com/json/{HttpContext.Connection.RemoteIpAddress}");
+                    JObject json = JObject.Parse(response);
+                    geo = json["city"] + ", " + json["country"];
+                }
+                string sql = "ContactAdd";
+                List<SqlParameter> parameters = new List<SqlParameter>
+                {
+                    new SqlParameter("@ContactName", c.ContactName),
+                    new SqlParameter("@ContactMail", c.ContactMail),
+                    new SqlParameter("@ContactPhone", c.ContactPhone),
+                    new SqlParameter("@ContactSubject", c.ContactSubject),
+                    new SqlParameter("@ContactMessage", c.ContactMessage),
+                    new SqlParameter("@IPAdress", HttpContext.Connection.RemoteIpAddress?.ToString()),
+                    new SqlParameter("@UserGeo", geo),
+                    new SqlParameter("@UserInfo", Request.Headers["User-Agent"].ToString())
+                };
+                await SQLCrud.InsertUpdateDeleteAsync(sql, parameters);
+                return Json(new { success = true, message = "Mesajınız Başarıyla Gönderilmiştir" });
             }
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
-            using (SqlConnection con = new(connectionString))
+            catch (Exception ex)
             {
-                try
-                {
-                    await con.OpenAsync();
-                    SqlCommand cmd = new("ContactAdd", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@ContactName", c.ContactName);
-                    cmd.Parameters.AddWithValue("@ContactMail", c.ContactMail);
-                    cmd.Parameters.AddWithValue("@ContactPhone", c.ContactPhone);
-                    cmd.Parameters.AddWithValue("@ContactSubject", c.ContactSubject);
-                    cmd.Parameters.AddWithValue("@ContactMessage", c.ContactMessage);
-                    cmd.Parameters.AddWithValue("@IPAdress", HttpContext.Connection.RemoteIpAddress.ToString());
-                    cmd.Parameters.AddWithValue("@UserGeo", geo);
-                    cmd.Parameters.AddWithValue("@UserInfo", Request.Headers["User-Agent"].ToString());
-                    await cmd.ExecuteNonQueryAsync();
-                }
-                catch (Exception ex)
-                {
-                    await Logging.LogAdd("İletişim Gönderme İşlemi Hatalı", ex.Message, connectionString, HttpContext.Connection.RemoteIpAddress?.ToString());
-                    TempData["Type"] = "error";
-                    TempData["Message"] = "İletişim Gönderme İşlemi Hatalı";
-                }
+                await Logging.LogAdd("İletişim Gönderme İşlemi Hatalı", ex.Message);
+                TempData["Type"] = "error";
+                TempData["Message"] = "İletişim Gönderme İşlemi Hatalı";
+                return Json(new { success = false, message = "İletişim Gönderme İşlemi Hatalı" });
             }
-            return Json(new { success = true, message = "Mesajınız Başarıyla Gönderilmiştir" });
         }
         public IActionResult Error()
         {

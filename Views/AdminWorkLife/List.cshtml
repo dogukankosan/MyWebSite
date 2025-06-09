@@ -1,53 +1,57 @@
 ﻿@model List<Jobs>
 @{
-    ViewData["Title"] = "Admin Is Hayati Liste";
+    ViewData["Title"] = "Admin İş Hayatı Liste";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
 <br />
-<div class="card mb-4">
-    <div class="card-header">
-        <i class="fas fa-table me-1"></i>
-        Admin İş Hayatı
-    </div>
-    <div class="card-body">
-        <table class="table table-hover" id="datatablesSimple">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Firma Adı</th>
-                    <th>İş Ünvan</th>
-                    <th>Çalışma Yılı</th>
-                    <th>İş Hakkında</th>
-                    <th>Güncelle</th>
-                    <th>Sil</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model != null && Model.Any())
-                {
-                    @foreach (Jobs item in Model)
-                    {
-                        <tr>
-                            <td>@item.ID</td>
-                            <td>@item.JobName</td>
-                            <td>@item.JobTitle</td>
-                            <td>@item.JobYears</td>
-                            <td>@item.JobAbout</td>
-                            <td><a class="btn btn-success" href="/AdminIsHayati/Guncelle/@item.ID">Güncelle</a></td>
-                            <td>
-                                <a href="javascript:void(0)" class="btn btn-danger" onclick="confirmDelete('@item.ID')">Sil</a>
-                            </td>
-
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
-       <a class="btn btn-primary" href="/AdminIsHayati/Ekle/">Yeni İş Ekle</a>
+<h4 class="card-title">İş Hayatı Bilgileri</h4>
+<hr />
+<div class="row mb-2">
+    <div class="col text-right">
+        <select id="exportOptions" class="form-control form-control-sm w-100 mb-2 d-md-inline-block">
+            <option value="">Dışa Aktar</option>
+            <option value="excel">📥 Excel</option>
+            <option value="pdf">📄 PDF</option>
+            <option value="print">🖨️ Yazdır</option>
+        </select>
     </div>
 </div>
+<div class="table-responsive">
+    <table class="table table-hover table-striped table-bordered" id="yourTableId">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Firma Adı</th>
+                <th>İş Ünvan</th>
+                <th>Çalışma Yılı</th>
+                <th>İş Hakkında</th>
+                <th class="no-export">İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ID</td>
+                    <td>@item.JobName</td>
+                    <td>@item.JobTitle</td>
+                    <td>@item.JobYears</td>
+                    <td>@item.JobAbout</td>
+                    <td>
+                        <a class="btn btn-outline-info btn-sm" href="/AdminIsHayati/Guncelle/@item.ID">
+                            <i class="fa fa-pencil-alt"></i>
+                        </a>
+                        <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm" onclick="confirmDelete('@item.ID')">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <a class="btn btn-primary mt-3" href="/AdminIsHayati/Ekle/">Yeni İş Ekle</a>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script>
     function confirmDelete(id) {
         Swal.fire({
@@ -61,35 +65,22 @@
             cancelButtonText: 'Hayır, iptal et'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Silme işlemi onaylandıysa silme URL'sine yönlendir
                 window.location.href = '/AdminIsHayati/Sil/' + id;
             }
         });
     }
-</script>
-@if (TempData["Type"] != null && !string.IsNullOrEmpty(TempData["Type"].ToString()))
-{
-    var title = "";
-    var icon = "";
-    var message = TempData["Message"]?.ToString() ?? "";
-    if (TempData["Type"].ToString() == "error")
-    {
-        title = "Hata";
-        icon = "error";
-    }
-    else if (TempData["Type"].ToString() == "success")
-    {
-        title = "Başarılı";
-        icon = "success";
-    }
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function () {
+        const type = '@TempData["Type"]';
+        const message = @Html.Raw(Json.Serialize(TempData["Message"]));
+
+        if (type && message && performance.getEntriesByType("navigation")[0].type === "navigate") {
             Swal.fire({
-                title: '@Html.Raw(title)',
-                text: '@Html.Raw(message)',
-                icon: '@Html.Raw(icon)',
-                confirmButtonText: 'Tamam'
+                icon: type === 'success' ? 'success' : 'error',
+                title: type === 'success' ? 'Başarılı' : 'Hata',
+                text: message,
+                timer: 3000,
+                showConfirmButton: false
             });
-        });
-    </script>
-}
+        }
+    });
+</script>

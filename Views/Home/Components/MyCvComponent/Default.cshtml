@@ -1,0 +1,12 @@
+﻿@model string
+
+@if (!string.IsNullOrEmpty(Model))
+{
+    <a href="data:application/pdf;base64,@Model" download="DogukanKosanCV.pdf" target="_blank" class="btn btn-primary btn-sm-square me-3">
+        <i class="fas fa-file-pdf text-white"></i>
+    </a>
+}
+else
+{
+    <p class="text-muted">Henüz CV yüklenmemiş.</p>
+}

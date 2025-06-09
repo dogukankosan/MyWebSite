@@ -16,6 +16,13 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link href="~/AdminThema/css/styles.css" rel="stylesheet" />
+    <link href="~/AdminThema/table/style.css" rel="stylesheet" />
+    <link href="~/adminthema/table/datatables.bootstrap4.min.css" rel="stylesheet" />
+    <style>
+        ::selection {
+            background-color: aqua;
+            color: black;
+        }</style>
 </head>
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -69,6 +76,14 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-user-friends"></i></div>
                             Siteye Giren Kişiler
                         </a>
+                        <a class="nav-link" href="/AdminTemizlik/Temizlik">
+                            <div class="sb-nav-link-icon"><i class="fas fa-broom"></i></div>
+                            Temizlik
+                        </a>
+                        <a class="nav-link" href="/AdminCv/Cv">
+                            <div class="sb-nav-link-icon"><i class="fas fa-file-pdf"></i></div>
+                            CV
+                        </a>
                         <a class="nav-link" href="/">
                             <div class="sb-nav-link-icon"><i class="fas fa-globe"></i></div>
                             Siteye Dön
@@ -83,14 +98,14 @@
         </div>
         <div id="layoutSidenav_content">
             <main>
-                <div class="container-fluid px-4">
+                <div class="container-fluid px-4" style="  background-color: white;">
                     @RenderBody()
                 </div>
             </main>
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Doğukan Koşan 2024</div>
+                        <div class="text-muted">Copyright &copy; Doğukan Koşan @DateTime.Now.Year</div>
                     </div>
                 </div>
             </footer>
@@ -101,11 +116,19 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous" defer></script>
     <script src="~/AdminThema/js/scripts.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous" defer></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/mvc/5.2.3/jquery.validate.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/mvc/5.2.3/jquery.validate.unobtrusive.min.js"></script>
+    <script src="/adminThema/table/jquery.dataTables.min.js"></script>
+    <script src="/adminThema/table/dataTables.bootstrap4.min.js"></script>
+    <script src="/adminThema/table/datatable-basic.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="~/AdminThema/js/datatables-simple-demo.js" defer></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -159,7 +182,7 @@
             }
         });
     </script>
-    <script>
+<script>
         var dataFromController1 = @Html.Raw(Json.Serialize(ViewBag.MonthlyWebLog));
         var ctx = document.getElementById('myChart1').getContext('2d');
         var myChart = new Chart(ctx, {
@@ -179,6 +202,84 @@
                     y: {
                         beginAtZero: true
                     }
+                }
+            }
+        });
+    </script>
+<script>
+        $(document).ready(function () {
+            const titleText = $('h4.card-title').text().trim();
+            const table = $('#yourTableId').DataTable();
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        className: 'buttons-excel',
+                        text: 'Excel',
+                        filename: titleText.replace(/\s+/g, '_') + '_rapor',
+                        title: titleText,
+                        exportOptions: {
+                            columns: ':not(.no-export)'
+                        }
+
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        className: 'buttons-pdf',
+                        text: 'PDF',
+                        orientation: 'landscape',
+                        pageSize: 'A4',
+                        filename: titleText.replace(/\s+/g, '_') + '_rapor',
+                        title: titleText,
+                        exportOptions: {
+                            columns: ':not(.no-export)'
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        className: 'buttons-print',
+                        text: 'Yazdır',
+                        title: titleText,
+                        exportOptions: {
+                            columns: ':not(.no-export)'
+                        }
+                    }
+                ]
+            });
+            $('#exportOptions').on('change', function () {
+                const val = this.value;
+                if (val === 'excel') table.button('.buttons-excel').trigger();
+                else if (val === 'pdf') table.button('.buttons-pdf').trigger();
+                else if (val === 'print') table.button('.buttons-print').trigger();
+                this.selectedIndex = 0;
+            });
+        });
+    </script>
+<script>
+        $('#yourTableId').DataTable({
+            responsive: true,
+            language: {
+                "sDecimal": ",",
+                "sEmptyTable": "Tabloda herhangi bir veri mevcut değil",
+                "sInfo": "_TOTAL_ kayıttan _START_ - _END_ arası gösteriliyor",
+                "sInfoEmpty": "Kayıt yok",
+                "sInfoFiltered": "(_MAX_ kayıt içerisinden filtrelendi)",
+                "sInfoPostFix": "",
+                "sInfoThousands": ".",
+                "sLengthMenu": "Sayfada _MENU_ kayıt göster",
+                "sLoadingRecords": "Yükleniyor...",
+                "sProcessing": "İşleniyor...",
+                "sSearch": "Ara:",
+                "sZeroRecords": "Eşleşen kayıt bulunamadı",
+                "oPaginate": {
+                    "sFirst": "İlk",
+                    "sLast": "Son",
+                    "sNext": "Sonraki",
+                    "sPrevious": "Önceki"
+                },
+                "oAria": {
+                    "sSortAscending": ": artan sütun sıralamasını aktifleştir",
+                    "sSortDescending": ": azalan sütun sıralamasını aktifleştir"
                 }
             }
         });

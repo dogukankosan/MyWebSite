@@ -8,5 +8,6 @@
         public string ServerName { get; set; }
         public int MailPort { get; set; }
         public bool IsSSL { get; set; }
+        public string ExistingPassword { get; set; }
     }
 }

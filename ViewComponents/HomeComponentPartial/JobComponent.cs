@@ -8,47 +8,32 @@ namespace MyWebSite.ViewComponents.HomeComponentPartial
 {
     public class JobComponent : ViewComponent
     {
-        private readonly IConfiguration _configuration;
-        public JobComponent(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
-            using (SqlConnection con = new(connectionString))
+            try
             {
-                try
-                {
-                    await con.OpenAsync();
-                    SqlCommand cmd = new("JobsGet", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    List<Jobs> jobs = new();
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                string sql = "JobsGet";
+                List<SqlParameter> parameters = new List<SqlParameter>();
+                List<Jobs> jobs = await SQLCrud.ExecuteModelListAsync<Jobs>(
+                    sql,
+                    parameters,
+                    reader => new Jobs
                     {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                jobs.Add(new Jobs()
-                                {
-                                    ID = Convert.ToByte(reader["ID"]),
-                                    JobName = reader["JobName"].ToString(),
-                                    JobTitle = reader["JobTitle"].ToString(),
-                                    JobYears = reader["JobYears"].ToString(),
-                                    JobAbout = reader["JobAbout"].ToString(),
-                                });
-                            }
-                            return View(jobs);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    await Logging.LogAdd("Anasayfa Eğitim Listeleme İşlemi Hatası", ex.Message, connectionString, HttpContext.Connection.RemoteIpAddress.ToString());
-                }
+                        ID = Convert.ToByte(reader["ID"]),
+                        JobName = reader["JobName"].ToString(),
+                        JobTitle = reader["JobTitle"].ToString(),
+                        JobYears = reader["JobYears"].ToString(),
+                        JobAbout = reader["JobAbout"].ToString()
+                    },
+                    CommandType.StoredProcedure
+                );
+                return View(jobs);
             }
-            return View();
+            catch (Exception ex)
+            {
+                await Logging.LogAdd("Anasayfa Eğitim Listeleme İşlemi Hatası", ex.Message);
+                return View(new List<Jobs>());
+            }
         }
     }
 }

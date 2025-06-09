@@ -11,124 +11,51 @@ namespace MyWebSite.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminAbout : Controller
     {
-        private readonly IConfiguration _configuration;
-        public AdminAbout(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
         [Route("Liste")]
         [HttpGet]
         public async Task<IActionResult> List()
         {
-            About cs = new();
-            string base64Image1 = "", base64Image2 = "";
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
-            using (SqlConnection con = new(connectionString))
+            try
             {
-                try
+                List<About> aboutList = await SQLCrud.ExecuteModelListAsync("AboutGet", null, delegate (SqlDataReader reader)
                 {
-                    await con.OpenAsync();
-                    using (SqlCommand cmd = new("AboutGet", con))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
-                        {
-                            if (reader.HasRows)
-                            {
-                                while (await reader.ReadAsync())
-                                {
-                                    if (!Convert.IsDBNull(reader["Picture1"]))
-                                    {
-                                        byte[] imageBytes = (byte[])reader["Picture1"];
-                                        base64Image1 = Convert.ToBase64String(imageBytes);
-                                    }
-                                    if (!Convert.IsDBNull(reader["Picture2"]))
-                                    {
-                                        byte[] imageBytes = (byte[])reader["Picture2"];
-                                        base64Image2 = Convert.ToBase64String(imageBytes);
-                                    }
-                                    cs.ID = reader["ID"] != DBNull.Value ? Convert.ToByte(reader["ID"]) : default;
-                                    cs.AboutTitle = reader["AboutTitle"]?.ToString();
-                                    cs.AboutDetails1 = reader["AboutDetails1"]?.ToString();
-                                    cs.AboutAdress = reader["AboutAdress"]?.ToString();
-                                    cs.AboutMail = reader["AboutMail"]?.ToString();
-                                    cs.AboutPhone = reader["AboutPhone"]?.ToString();
-                                    cs.AboutWebSite = reader["AboutWebSite"]?.ToString();
-                                    cs.AboutName = reader["AboutName"]?.ToString();
-                                    cs.AboutDetails2 = reader["AboutDetails2"]?.ToString();
-                                    cs.IFrameAdress = reader["IFrameAdress"]?.ToString();
-                                }
-                            }
-                        }
-                    }
-                    ViewBag.Picture1 = $"data:image/jpeg;base64,{base64Image1}";
-                    ViewBag.Picture2 = $"data:image/jpeg;base64,{base64Image2}";
-                }
-                catch (Exception ex)
-                {
-                    await Logging.LogAdd("Admin Hakkında Panelde Listeleme Hatası", ex.Message, connectionString, HttpContext.Connection.RemoteIpAddress?.ToString());
-                    TempData["Type"] = "error";
-                    TempData["Message"] = "Admin Hakkında Hatalı Listeleme İşlemi";
-                    return RedirectToAction("Liste", "AdminHakkinda");
-                }
+                    SetPictureViewBags(reader);
+                    return MapAbout(reader);
+                });
+
+                About model = aboutList.FirstOrDefault() ?? new About();
+                return View(model);
             }
-            return View(cs);
+            catch (Exception ex)
+            {
+                await Logging.LogAdd("Admin Hakkında Listeleme Hatası", ex.Message);
+                TempData["Type"] = "error";
+                TempData["Message"] = "Listeleme sırasında hata oluştu.";
+                return NotFound();
+            }
         }
         [Route("Guncelle/{id:int}")]
         [HttpGet]
         public async Task<IActionResult> Update()
         {
-            string base64Image1 = "", base64Image2 = "";
-            About cs = new();
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
-            using (SqlConnection con = new(connectionString))
+            try
             {
-                try
+                List<About> aboutList = await SQLCrud.ExecuteModelListAsync("AboutGet", null, delegate (SqlDataReader reader)
                 {
-                    await con.OpenAsync();
-                    SqlCommand cmd = new("AboutGet", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
-                    {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                if (!Convert.IsDBNull(reader["Picture1"]))
-                                {
-                                    byte[] imageBytes = (byte[])reader["Picture1"];
-                                    base64Image1 = Convert.ToBase64String(imageBytes);
-                                }
-                                if (!Convert.IsDBNull(reader["Picture2"]))
-                                {
-                                    byte[] imageBytes = (byte[])reader["Picture2"];
-                                    base64Image2 = Convert.ToBase64String(imageBytes);
-                                }
-                                cs.ID = Convert.ToByte(reader["ID"]);
-                                cs.AboutTitle = reader["AboutTitle"].ToString();
-                                cs.AboutDetails1 = reader["AboutDetails1"].ToString();
-                                cs.AboutAdress = reader["AboutAdress"].ToString();
-                                cs.AboutMail = reader["AboutMail"].ToString();
-                                cs.AboutPhone = reader["AboutPhone"].ToString();
-                                cs.AboutWebSite = reader["AboutWebSite"].ToString();
-                                cs.AboutName = reader["AboutName"].ToString();
-                                cs.AboutDetails2 = reader["AboutDetails2"].ToString();
-                                cs.IFrameAdress = reader["IFrameAdress"].ToString();
-                            }
-                            ViewBag.Picture1 = $"data:image/jpeg;base64,{base64Image1}";
-                            ViewBag.Picture2 = $"data:image/jpeg;base64,{base64Image2}";
-                            return View(cs);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    await Logging.LogAdd("Admin Hakkında Panelde Güncelleme Listesi Hatası", ex.Message, connectionString, HttpContext.Connection.RemoteIpAddress.ToString());
-                    TempData["Type"] = "error";
-                    TempData["Message"] = "Admin Hakkında Hatalı Güncelleme Listeleme İşlemi";
-                }
+                    SetPictureViewBags(reader);
+                    return MapAbout(reader);
+                });
+
+                About model = aboutList.FirstOrDefault() ?? new About();
+                return View(model);
             }
-            return View(cs);
+            catch (Exception ex)
+            {
+                await Logging.LogAdd("Admin Hakkında Güncelleme Listesi Hatası", ex.Message);
+                TempData["Type"] = "error";
+                TempData["Message"] = "Güncelleme ekranı açılırken hata oluştu.";
+                return View(new About());
+            }
         }
         [Route("Guncelle")]
         [HttpPost]
@@ -136,76 +63,83 @@ namespace MyWebSite.Controllers
         {
             if (!ModelState.IsValid)
             {
-                Dictionary<string, string> errors = new();
-                if (ModelState.ContainsKey("AboutTitle"))
-                    errors["AboutTitle"] = string.Join(", ", ModelState["AboutTitle"].Errors.Select(e => e.ErrorMessage));
-                if (ModelState.ContainsKey("AboutDetails1"))
-                    errors["AboutDetails1"] = string.Join(", ", ModelState["AboutDetails1"].Errors.Select(e => e.ErrorMessage));
-                if (ModelState.ContainsKey("AboutAdress"))
-                    errors["AboutAdress"] = string.Join(", ", ModelState["AboutAdress"].Errors.Select(e => e.ErrorMessage));
-                if (ModelState.ContainsKey("AboutMail"))
-                    errors["AboutMail"] = string.Join(", ", ModelState["AboutMail"].Errors.Select(e => e.ErrorMessage));
-                if (ModelState.ContainsKey("AboutPhone"))
-                    errors["AboutPhone"] = string.Join(", ", ModelState["AboutPhone"].Errors.Select(e => e.ErrorMessage));
-                if (ModelState.ContainsKey("AboutWebSite"))
-                    errors["AboutWebSite"] = string.Join(", ", ModelState["AboutWebSite"].Errors.Select(e => e.ErrorMessage));
-                if (ModelState.ContainsKey("AboutName"))
-                    errors["AboutName"] = string.Join(", ", ModelState["AboutName"].Errors.Select(e => e.ErrorMessage));
-                if (ModelState.ContainsKey("AboutDetails2"))
-                    errors["AboutDetails2"] = string.Join(", ", ModelState["AboutDetails2"].Errors.Select(e => e.ErrorMessage));
-                if (ModelState.ContainsKey("IFrameAdress"))
-                    errors["IFrameAdress"] = string.Join(", ", ModelState["IFrameAdress"].Errors.Select(e => e.ErrorMessage));
+                Dictionary<string, string> errors = ModelState
+                    .Where(entry => entry.Value.Errors.Any())
+                    .ToDictionary(
+                        entry => entry.Key,
+                        entry => string.Join(", ", entry.Value.Errors.Select(error => error.ErrorMessage))
+                    );
                 return Json(new { success = false, errors });
             }
-            byte[] imageBytes1 = null;
-            byte[] imageBytes2 = null;
-            if (about.Picture1 != null && about.Picture1.Length > 0)
+            try
             {
-                using (var ms = new MemoryStream())
+                byte[]? imageBytes1 = await GetBytes(about.Picture1);
+                byte[]? imageBytes2 = await GetBytes(about.Picture2);
+                List<SqlParameter> parameters = new()
                 {
-                    await about.Picture1.CopyToAsync(ms);
-                    imageBytes1 = ms.ToArray();
-                }
+                    new SqlParameter("@Picture1", SqlDbType.VarBinary) { Value = (object?)imageBytes1 ?? DBNull.Value },
+                    new SqlParameter("@Picture2", SqlDbType.VarBinary) { Value = (object?)imageBytes2 ?? DBNull.Value },
+                    new SqlParameter("@AboutTitle", about.AboutTitle),
+                    new SqlParameter("@AboutDetails1", about.AboutDetails1),
+                    new SqlParameter("@AboutAdress", about.AboutAdress),
+                    new SqlParameter("@AboutMail", about.AboutMail),
+                    new SqlParameter("@AboutPhone", about.AboutPhone),
+                    new SqlParameter("@AboutWebSite", about.AboutWebSite),
+                    new SqlParameter("@AboutName", about.AboutName),
+                    new SqlParameter("@AboutDetails2", about.AboutDetails2),
+                    new SqlParameter("@IFrameAdress", about.IFrameAdress)
+                };
+                await SQLCrud.InsertUpdateDeleteAsync("AboutUpdate", parameters, CommandType.StoredProcedure);
+
+                TempData["Type"] = "success";
+                TempData["Message"] = "Başarıyla güncellendi.";
+                return Json(new { success = true, redirectUrl = Url.Action("Liste", "AdminHakkinda") });
             }
-            if (about.Picture2 != null && about.Picture2.Length > 0)
+            catch (Exception ex)
             {
-                using (var ms = new MemoryStream())
-                {
-                    await about.Picture2.CopyToAsync(ms);
-                    imageBytes2 = ms.ToArray();
-                }
+                await Logging.LogAdd("Admin Hakkında Güncelleme Hatası", ex.Message);
+                TempData["Type"] = "error";
+                TempData["Message"] = "Güncelleme sırasında hata oluştu.";
+                return Json(new { success = false });
             }
-            string connectionString = _configuration.GetConnectionString("DefaultConnection");
-            using (SqlConnection con = new(connectionString))
+        }
+        private static About MapAbout(SqlDataReader reader)
+        {
+            About about = new About
             {
-                try
-                {
-                    await con.OpenAsync();
-                    SqlCommand cmd = new("AboutUpdate", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("@Picture1", SqlDbType.VarBinary).Value = (object)imageBytes1 ?? DBNull.Value;
-                    cmd.Parameters.Add("@Picture2", SqlDbType.VarBinary).Value = (object)imageBytes2 ?? DBNull.Value;
-                    cmd.Parameters.AddWithValue("@AboutTitle", about.AboutTitle);
-                    cmd.Parameters.AddWithValue("@AboutDetails1", about.AboutDetails1);
-                    cmd.Parameters.AddWithValue("@AboutAdress", about.AboutAdress);
-                    cmd.Parameters.AddWithValue("@AboutMail", about.AboutMail);
-                    cmd.Parameters.AddWithValue("@AboutPhone", about.AboutPhone);
-                    cmd.Parameters.AddWithValue("@AboutWebSite", about.AboutWebSite);
-                    cmd.Parameters.AddWithValue("@AboutName", about.AboutName);
-                    cmd.Parameters.AddWithValue("@AboutDetails2", about.AboutDetails2);
-                    cmd.Parameters.AddWithValue("@IFrameAdress", about.IFrameAdress);
-                    await cmd.ExecuteNonQueryAsync();
-                    TempData["Type"] = "success";
-                    TempData["Message"] = "Admin Hakkında Başarılı Güncelleme İşlemi";
-                }
-                catch (Exception ex)
-                {
-                    await Logging.LogAdd("Admin Hakkında Panelde Güncelleme Hatası", ex.Message, connectionString, HttpContext.Connection.RemoteIpAddress.ToString());
-                    TempData["Type"] = "error";
-                    TempData["Message"] = "Admin Hakkında Hatalı Güncelleme İşlemi";
-                }
+                ID = reader["ID"] != DBNull.Value ? Convert.ToByte(reader["ID"]) : default,
+                AboutTitle = reader["AboutTitle"]?.ToString(),
+                AboutDetails1 = reader["AboutDetails1"]?.ToString(),
+                AboutAdress = reader["AboutAdress"]?.ToString(),
+                AboutMail = reader["AboutMail"]?.ToString(),
+                AboutPhone = reader["AboutPhone"]?.ToString(),
+                AboutWebSite = reader["AboutWebSite"]?.ToString(),
+                AboutName = reader["AboutName"]?.ToString(),
+                AboutDetails2 = reader["AboutDetails2"]?.ToString(),
+                IFrameAdress = reader["IFrameAdress"]?.ToString()
+            };
+            return about;
+        }
+        private void SetPictureViewBags(SqlDataReader reader)
+        {
+            if (!Convert.IsDBNull(reader["Picture1"]))
+            {
+                byte[] picture1 = (byte[])reader["Picture1"];
+                ViewBag.Picture1 = $"data:image/jpeg;base64,{Convert.ToBase64String(picture1)}";
             }
-            return Json(new { success = true, redirectUrl = Url.Action("Liste", "AdminHakkinda") });
+            if (!Convert.IsDBNull(reader["Picture2"]))
+            {
+                byte[] picture2 = (byte[])reader["Picture2"];
+                ViewBag.Picture2 = $"data:image/jpeg;base64,{Convert.ToBase64String(picture2)}";
+            }
+        }
+        private static async Task<byte[]?> GetBytes(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return null;
+            using MemoryStream memoryStream = new MemoryStream();
+            await file.CopyToAsync(memoryStream);
+            return memoryStream.ToArray();
         }
     }
 }

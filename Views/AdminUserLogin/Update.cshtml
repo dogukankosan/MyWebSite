@@ -1,58 +1,51 @@
 ﻿@model AdminLoginProp
 @{
-    ViewData["Title"] = "Admin Giris Guncelleme Sayfasi";
+    ViewData["Title"] = "Admin Giriş Güncelleme Sayfası";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
-<form id="loginForm" method="post">
+<form method="post" asp-controller="AdminKullanici" asp-action="Guncelle">
     <br />
     <h4>Admin Giriş Güncelleme Sayfası</h4>
     <hr />
-    <span id="resultsucc" class="text-danger" style="margin-top: 5px; display: block;"></span>
-
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <input type="hidden" asp-for="ExistingPasswordHash" />
     <div class="form-group">
-        <label for="UserName">Kullanıcı Adı:</label>
-        <input type="text" class="form-control" name="UserName" required min="3" max="50" value="@Model.UserName" placeholder="">
-        <span id="UserNameError" class="text-danger"  style="margin-top: 5px; display: block;"></span>
+        <label asp-for="UserName">Kullanıcı Adı</label>
+        <input asp-for="UserName" class="form-control"
+               required minlength="3" maxlength="50"
+               pattern="^[a-zA-Z0-9_.-]+$"
+               title="Sadece harf, rakam, nokta, alt çizgi ve tire içerebilir." />
+        <span asp-validation-for="UserName" class="text-danger" style="margin-top: 5px; display: block;"></span>
     </div>
     <br />
     <div class="form-group">
-        <label for="Password">Şifre:</label>
-        <input type="password" class="form-control" requried maxlength="50" min="8"  name="Password" value="@Model.Password" placeholder="">
-        <span id="PasswordError" class="text-danger"  style="margin-top: 5px; display: block;"></span>
+        <label asp-for="Password">Şifre (değiştirmek isterseniz doldurun):</label>
+        <div class="input-group">
+            <input asp-for="Password" class="form-control"
+                   minlength="8" maxlength="150"
+                   pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$"
+                   title="En az 1 büyük harf, 1 küçük harf, 1 rakam ve 1 özel karakter içermelidir." />
+            <button type="button" class="btn btn-outline-secondary" id="togglePassword">
+                <i class="fa fa-eye" id="toggleIcon"></i>
+            </button>
+        </div>
+        <span asp-validation-for="Password" class="text-danger" style="margin-top: 5px; display: block;"></span>
     </div>
     <br />
-    <button type="submit" class="btn btn-primary">Güncelle</button>
+    <button type="submit" class="btn btn-success">Güncelle</button>
 </form>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function () {
-        $('#loginForm').submit(function (event) {
-            event.preventDefault();
-            var formData = $(this).serialize();
-            $('#UserNameError').html('');
-            $('#PasswordError').html('');
-            $('#resultsucc').html('');
-            $.ajax({
-                url: '/AdminKullanici/Guncelle',
-                type: 'POST',
-                data: formData,
-                success: function (response) {
-                    if (response.success) {
-                        window.location.href = response.redirectUrl; 
-                    } else {
-                        if (response.errors.UserName) {
-                            $('#UserNameError').html(response.errors.UserName);
-                        }
-                        if (response.errors.Password) {
-                            $('#PasswordError').html(response.errors.Password);
-                        }
-                    }
-                },
-                error: function () {
-                    $('#resultsucc').html('<div class="alert alert-danger">Bir hata oluştu. Lütfen tekrar deneyin.</div>');
-                }
-            });
-        });
+    document.getElementById("togglePassword")?.addEventListener("click", function () {
+        const input = document.getElementById("Password");
+        const icon = document.getElementById("toggleIcon");
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+        } else {
+            input.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        }
     });
 </script>

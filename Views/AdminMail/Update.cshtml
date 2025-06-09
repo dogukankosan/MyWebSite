@@ -1,62 +1,70 @@
 ﻿@model AdminMail
 @{
-    ViewData["Title"] = "Admin Mail Guncelle";
+    ViewData["Title"] = "Admin Mail Güncelle";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
 <form id="adminMailForm" method="post">
     <br />
     <h4>Admin Mail Güncelleme Sayfası</h4>
     <hr />
+    <input type="hidden" name="ExistingPassword" value="@Model.MailPassword" />
     <span id="resultsucc" class="text-danger" style="margin-top: 5px; display: block;"></span>
-
+    <input type="hidden" name="ExistingPassword" value="@Model.MailPassword" />
     <div class="form-group">
         <label>Mail Adres:</label>
-        <input type="email"  class="form-control" name="MailAdress" value="@Model.MailAdress" id="MailAdress" placeholder="">
+        <input type="email" class="form-control" name="MailAdress" id="MailAdress"
+               value="@Model.MailAdress"
+               required minlength="5" maxlength="75" />
         <span id="MailAdressError" class="text-danger" style="margin-top: 5px; display: block;"></span>
     </div>
     <br />
     <div class="form-group">
-        <label>Mail Şifre:</label>
-        <input type="password"  class="form-control" name="MailPassword" value="@Model.MailPassword" id="MailPassword" placeholder="">
+        <label>Mail Şifre (değiştirmek isterseniz yazın):</label>
+        <div class="input-group">
+            <input type="password" class="form-control" name="MailPassword" id="MailPassword"
+                   minlength="3" maxlength="150" />
+            <button type="button" class="btn btn-outline-secondary" id="togglePassword">
+                <i class="fa fa-eye" id="toggleIcon"></i>
+            </button>
+        </div>
         <span id="MailPasswordError" class="text-danger" style="margin-top: 5px; display: block;"></span>
     </div>
     <br />
     <div class="form-group">
         <label>Server Name:</label>
-        <input type="text"  class="form-control" name="ServerName" value="@Model.ServerName" id="ServerName" placeholder="">
+        <input type="text" class="form-control" name="ServerName" id="ServerName"
+               value="@Model.ServerName"
+               required minlength="3" maxlength="20" />
         <span id="ServerNameError" class="text-danger" style="margin-top: 5px; display: block;"></span>
     </div>
     <br />
     <div class="form-group">
         <label>Port:</label>
-        <input type="number"  class="form-control" name="MailPort" value="@Model.MailPort" id="MailPort" placeholder="">
+        <input type="number" class="form-control" name="MailPort" id="MailPort"
+               value="@Model.MailPort"
+               required min="1" max="65535" />
         <span id="MailPortError" class="text-danger" style="margin-top: 5px; display: block;"></span>
     </div>
     <br />
     <div class="form-group mb-3">
         <div class="form-check">
-            <input type="checkbox" class="form-check-input" name="IsSSL" id="IsSSL" value="true" @(Model.IsSSL ? "checked" : "") />
+            <input type="checkbox" class="form-check-input" name="IsSSL" id="IsSSL"
+                   value="true" @(Model.IsSSL ? "checked" : "") />
             <label class="form-check-label" for="IsSSL">SSL</label>
         </div>
     </div>
     <br />
+
     <button type="submit" class="btn btn-primary">Güncelle</button>
 </form>
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
         $('#adminMailForm').submit(function (event) {
             event.preventDefault();
-
             var formData = $(this).serialize();
 
-            // Hata mesajlarını temizle
-            $('#MailAdressError').html('');
-            $('#MailPasswordError').html('');
-            $('#ServerNameError').html('');
-            $('#MailPortError').html('');
-            $('#resultsucc').html('');
+            $('#MailAdressError, #MailPasswordError, #ServerNameError, #MailPortError, #resultsucc').html('');
 
             $.ajax({
                 url: '/AdminMail/Guncelle',
@@ -64,9 +72,8 @@
                 data: formData,
                 success: function (response) {
                     if (response.success) {
-                        window.location.href = response.redirectUrl;  // Başarı durumunda yönlendirme
+                        window.location.href = response.redirectUrl;
                     } else {
-                        // Hataları ilgili alanlara göster
                         if (response.errors.MailAdress) {
                             $('#MailAdressError').html(response.errors.MailAdress);
                         }
@@ -85,6 +92,18 @@
                     $('#resultsucc').html('<div class="alert alert-danger">Bir hata oluştu. Lütfen tekrar deneyin.</div>');
                 }
             });
+        });
+        $('#togglePassword').click(function () {
+            var input = $('#MailPassword');
+            var icon = $('#toggleIcon');
+
+            if (input.attr('type') === 'password') {
+                input.attr('type', 'text');
+                icon.removeClass('fa-eye').addClass('fa-eye-slash');
+            } else {
+                input.attr('type', 'password');
+                icon.removeClass('fa-eye-slash').addClass('fa-eye');
+            }
         });
     });
 </script>

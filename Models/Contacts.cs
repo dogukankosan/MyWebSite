@@ -2,7 +2,7 @@
 {
     public class Contacts
     {
-        public short ID { get; set; }
+        public int ID { get; set; }
         public string ContactName { get; set; }
         public string ContactMail { get; set; }
         public string ContactPhone { get; set; }
