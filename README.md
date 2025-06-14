@@ -21,7 +21,7 @@
 ## 📸 Ekran Görüntüsü
 
 <p align="center">
-![s](https://github.com/user-attachments/assets/3e5ebf7a-9839-4b73-9dfc-b06c6f388970)
+!(https://github.com/user-attachments/assets/6bfe160b-cbd5-4701-a78a-c4d40af4fa90)
 </p>
 
 ---
