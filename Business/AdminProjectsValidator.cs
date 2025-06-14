@@ -29,6 +29,14 @@ namespace MyWebSite.Business
                 .MaximumLength(75).WithMessage("Proje linki en fazla 75 karakter olabilir.")
                 .Must(link => Uri.IsWellFormedUriString(link, UriKind.Absolute))
                 .WithMessage("Geçerli bir proje linki giriniz.");
+            RuleFor(x => x.ProjectImg)
+                .Must((model, file) =>
+                {
+                    if (file != null && file.Length > 0)
+                        return true;
+                    return !string.IsNullOrEmpty(model.Base64Pictures);
+                })
+                .WithMessage("En az bir görsel yüklenmelidir.");
         }
     }
 }

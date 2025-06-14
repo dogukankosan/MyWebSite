@@ -1,0 +1,80 @@
+﻿@model List<Icons>
+
+@{
+    ViewData["Title"] = "Admin İkonlar Liste";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+<br />
+<h4 class="card-title">İkonlar</h4>
+<hr />
+<div class="row mb-2">
+    <div class="col text-right">
+        <select id="exportOptions" class="form-control form-control-sm w-100 mb-2 d-md-inline-block">
+            <option value="">Dışa Aktar</option>
+            <option value="excel">📥 Excel</option>
+            <option value="pdf">📄 PDF</option>
+            <option value="print">🖨️ Yazdır</option>
+        </select>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-hover table-striped table-bordered" id="yourTableId">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>İkon</th>
+                <th class="no-export">İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ID</td>
+                    <td><i class="@item.Icon"></i> <span class="ml-2">@item.Icon</span></td>
+                    <td>
+                        <a class="btn btn-outline-info btn-sm" href="/AdminIcon/Guncelle/@item.ID">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                        <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm" onclick="confirmDelete('@item.ID')">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <a class="btn btn-primary mt-3" href="/AdminIcon/Ekle">Yeni İkon Ekle</a>
+</div>
+<br />
+<script>
+    function confirmDelete(id) {
+        Swal.fire({
+            title: 'Emin misiniz?',
+            text: "Bu işlemi geri alamazsınız!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Evet, sil!',
+            cancelButtonText: 'Hayır, iptal et'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/AdminIcon/Sil/' + id;
+            }
+        });
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+        const type = '@TempData["Type"]';
+        const message = @Html.Raw(Json.Serialize(TempData["Message"]));
+        if (type && message && performance.getEntriesByType("navigation")[0].type === "navigate") {
+            Swal.fire({
+                icon: type === 'success' ? 'success' : 'error',
+                title: type === 'success' ? 'Başarılı' : 'Hata',
+                text: message,
+                timer: 3000,
+                showConfirmButton: false
+            });
+        }
+    });
+</script>

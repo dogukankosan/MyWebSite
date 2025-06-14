@@ -64,6 +64,18 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Ib21lXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminIcons/Add.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5JY29uc1xBZGQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminIcons/List.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5JY29uc1xMaXN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminIcons/Update.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5JY29uc1xVcGRhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminLogin/Panel.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Mb2dpblxQYW5lbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -162,6 +174,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/DOGUKAN/source/repos/MyWebSite/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/Shared/Components/IconSelect/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcSWNvblNlbGVjdFxEZWZhdWx0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/DOGUKAN/source/repos/MyWebSite/Views/Shared/_adminLayout.cshtml]

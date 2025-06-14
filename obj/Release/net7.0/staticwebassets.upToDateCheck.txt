@@ -9,7 +9,6 @@ wwwroot\AdminThema\js\scripts.js
 wwwroot\css\404-error.png
 wwwroot\css\admin-panel.png
 wwwroot\AdminThema\table\style.css.map
-wwwroot\css\software-developer.png
 wwwroot\AdminThema\table\style.css
 wwwroot\AdminThema\table\select.dataTables.min.css
 wwwroot\js\site.js
@@ -195,7 +194,7 @@ wwwroot\AdminThema\table\dataTables.bootstrap4.min.css
 wwwroot\AdminThema\table\datatable-basic.min.js
 wwwroot\userThema\img\my.jpg
 wwwroot\AdminThema\table\buttons.bootstrap4.min.css
-wwwroot\userThema\img\reshot-icon-computer-UGMT6YVCE5.svg
+wwwroot\userThema\css\style.css
 wwwroot\userThema\img\Thumbs.db
 wwwroot\userThema\js\main.js
 wwwroot\userThema\lib\animate\animate.css
@@ -308,5 +307,5 @@ wwwroot\userThema\scss\bootstrap\scss\_utilities.scss
 wwwroot\userThema\scss\bootstrap\scss\_variables.scss
 wwwroot\css\site.css
 wwwroot\css\style.css
-wwwroot\userThema\css\style.css
+wwwroot\userThema\img\reshot-icon-computer-UGMT6YVCE5.svg
 wwwroot\userThema\img\dogukan.jpeg

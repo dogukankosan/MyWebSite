@@ -25,7 +25,7 @@
         }</style>
 </head>
 <body class="sb-nav-fixed">
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color:#212529">
         <a class="navbar-brand ps-3" href="/Admin/Anasayfa">Admin Panel</a>
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
@@ -62,6 +62,15 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
                             Giriş Ayarları
                         </a>
+                        <a class="nav-link" href="/AdminIcon/Liste">
+                            <div class="sb-nav-link-icon"><i class="fas fa-icons"></i></div>
+                            İkonlar
+                        </a>
+                        <a class="nav-link" href="/AdminCv/Cv">
+                            <div class="sb-nav-link-icon"><i class="fas fa-file-pdf"></i>
+                            </div>
+                            CV
+                        </a>
                         <a class="nav-link" href="/AdminHataLog/Liste">
                             <div class="sb-nav-link-icon">
                                 <i class="fas fa-bug"></i>
@@ -79,10 +88,6 @@
                         <a class="nav-link" href="/AdminTemizlik/Temizlik">
                             <div class="sb-nav-link-icon"><i class="fas fa-broom"></i></div>
                             Temizlik
-                        </a>
-                        <a class="nav-link" href="/AdminCv/Cv">
-                            <div class="sb-nav-link-icon"><i class="fas fa-file-pdf"></i></div>
-                            CV
                         </a>
                         <a class="nav-link" href="/">
                             <div class="sb-nav-link-icon"><i class="fas fa-globe"></i></div>
@@ -105,7 +110,7 @@
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Doğukan Koşan @DateTime.Now.Year</div>
+                        <div class="text-muted" style="font-size:small">Copyright &copy; Doğukan Koşan @DateTime.Now.Year</div>
                     </div>
                 </div>
             </footer>

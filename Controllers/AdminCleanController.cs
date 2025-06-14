@@ -19,12 +19,11 @@ namespace MyWebSite.Controllers
         {
             try
             {
-                bool temizlendi = await SQLCrud.InsertUpdateDeleteAsync("CleanDatabase",null, System.Data.CommandType.StoredProcedure);
                 bool tablolarSilindi = await SQLCrud.InsertUpdateDeleteAsync(@"
                     TRUNCATE TABLE AdminLogs;
                     TRUNCATE TABLE AdminLoginError;
                     TRUNCATE TABLE WebLog;", null, System.Data.CommandType.Text);
-                if (temizlendi && tablolarSilindi)
+                if ( tablolarSilindi)
                 {
                     TempData["FromCleanup"] = "True";
                     TempData["Type"] = "success";

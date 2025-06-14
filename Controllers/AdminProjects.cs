@@ -98,15 +98,28 @@ namespace MyWebSite.Controllers
                 await projects.ProjectImg.CopyToAsync(ms);
                 imageBytes = ms.ToArray();
             }
-            List<SqlParameter> parameters = new List<SqlParameter>
+            else if (!string.IsNullOrEmpty(projects.Base64Pictures))
             {
-                new SqlParameter("@ID", projects.ID),
-                new SqlParameter("@ProjectName", projects.ProjectName),
-                new SqlParameter("@ProjectDescription", projects.ProjectDescription),
-                new SqlParameter("@ProjectImg", SqlDbType.VarBinary) { Value = (object)imageBytes ?? DBNull.Value },
-                new SqlParameter("@ProjectGithubLink", projects.ProjectGithubLink),
-                new SqlParameter("@ProjectLink", projects.ProjectLink)
-            };
+                try
+                {
+                    imageBytes = Convert.FromBase64String(projects.Base64Pictures);
+                }
+                catch
+                {
+                    return Json(new { success = false, errors = new { ProjectImg = "Görsel çözümlemede hata oluştu." } });
+                }
+            }
+            else
+                return Json(new { success = false, errors = new { ProjectImg = "En az bir görsel yüklenmelidir." } });
+            List<SqlParameter> parameters = new List<SqlParameter>
+    {
+        new SqlParameter("@ID", projects.ID),
+        new SqlParameter("@ProjectName", projects.ProjectName),
+        new SqlParameter("@ProjectDescription", projects.ProjectDescription),
+        new SqlParameter("@ProjectImg", SqlDbType.VarBinary) { Value = (object)imageBytes ?? DBNull.Value },
+        new SqlParameter("@ProjectGithubLink", projects.ProjectGithubLink),
+        new SqlParameter("@ProjectLink", projects.ProjectLink)
+    };
             try
             {
                 await SQLCrud.InsertUpdateDeleteAsync("ProjectsUpdate", parameters);

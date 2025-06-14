@@ -8,14 +8,14 @@ namespace MyWebSite.Controllers
 {
     [Route("AdminBeceriler")]
     [Authorize(Roles = "Admin")]
-    public class AdminSkills : Controller
+    public class AdminSkillsController : Controller
     {
         [Route("Liste")]
         public async Task<IActionResult> List()
         {
             try
             {
-                List<SqlParameter> parameters = null; 
+                List<SqlParameter> parameters = new List<SqlParameter>();
                 List<Skills> skills = await SQLCrud.ExecuteModelListAsync(
                     "SkillsGet",
                     parameters,
@@ -42,12 +42,16 @@ namespace MyWebSite.Controllers
         public IActionResult Add() => View();
 
         [HttpPost("Ekle")]
-        public async Task<IActionResult> Ekle(Skills skills)
+        public async Task<IActionResult> Add(Skills skills)
         {
             if (!ModelState.IsValid)
             {
-                var errors = ModelState.Where(x => x.Value.Errors.Any())
-                    .ToDictionary(k => k.Key, v => string.Join(", ", v.Value.Errors.Select(e => e.ErrorMessage)));
+                var errors = ModelState
+                    .Where(x => x.Value.Errors.Any())
+                    .ToDictionary(
+                        k => k.Key.Contains('.') ? k.Key.Split('.').Last() : k.Key,
+                        v => string.Join(", ", v.Value.Errors.Select(e => e.ErrorMessage))
+                    );
                 return Json(new { success = false, errors });
             }
             try
@@ -62,6 +66,7 @@ namespace MyWebSite.Controllers
                 TempData["Type"] = "success";
                 TempData["Message"] = "Admin Beceri Başarılı Ekleme İşlemi";
                 return Json(new { success = true, redirectUrl = Url.Action("Liste", "AdminBeceriler") });
+
             }
             catch (Exception ex)
             {
@@ -109,7 +114,7 @@ namespace MyWebSite.Controllers
                 await Logging.LogAdd("Admin Beceriler Panelde Güncelleme Listesi Hatası", ex.Message);
                 TempData["Type"] = "error";
                 TempData["Message"] = "Admin Beceriler Hatalı Güncelleme Listesi İşlemi";
-                return View(new Skills());
+                return Json(new { success = false });
             }
         }
         [HttpPost("Guncelle")]

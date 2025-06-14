@@ -28,6 +28,7 @@
         <br />
         <img id="previewImage" src="#" alt="Önizleme" class="mt-2" style="max-height: 150px; display: none;" />
     </div>
+    <span id="ProjectImage" class="text-danger"></span>
     <br />
     <div class="form-group">
         <label for="ProjectGithubLink">Github Link:</label>
@@ -46,6 +47,7 @@
     <button type="submit" class="btn btn-primary">Ekle</button>
 </form>
 <div id="resultsucc" class="mt-3"></div>
+<br/>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
@@ -86,6 +88,9 @@
                         }
                         if (response.errors.ProjectLink) {
                             $('#ProjectLinkError').html(response.errors.ProjectLink);
+                        }
+                         if (response.errors.ProjectImg) {
+                            $('#ProjectImage').html(response.errors.ProjectImg);
                         }
                     }
                 },

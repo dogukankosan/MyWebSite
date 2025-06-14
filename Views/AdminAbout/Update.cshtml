@@ -3,8 +3,10 @@
     ViewData["Title"] = "Admin Hakkinda Guncelle";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
+<br />
 <form id="aboutForm" enctype="multipart/form-data" method="post" class="p-3 bg-light rounded shadow-sm">
     <h4 class="mb-4">Hakkında Güncelleme Sayfası</h4>
+    <hr/>
     <input type="hidden" name="ExistingPicture1" value="@ViewBag.Picture1" />
     <input type="hidden" name="ExistingPicture2" value="@ViewBag.Picture2" />
     <div class="form-group mb-3">
@@ -13,7 +15,7 @@
         <div class="mt-2">
             <img id="preview1" src="@ViewBag.Picture1" width="60" height="60" class="border rounded" alt="Resim 1" />
         </div>
-   </div>
+    </div>
     <div class="form-group mb-3">
         <label for="Picture2">Resim 2 Seçiniz:</label>
         <input type="file" class="form-control" name="Picture2" id="Picture2" accept="image/*" @(ViewBag.Picture2 == null ? "required" : "") />
@@ -75,6 +77,7 @@
     <span id="resultsucc" class="text-danger mb-3 d-block"></span>
     <button type="submit" class="btn btn-success mt-3">Güncelle</button>
 </form>
+<br />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {

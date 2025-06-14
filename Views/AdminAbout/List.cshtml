@@ -33,7 +33,7 @@
                 <th>İsim</th>
                 <th>Hakkında Detay 2</th>
                 <th>Harita</th>
-                <th class="no-export">Güncelle</th>
+                <th class="no-export">İşlemler</th>
             </tr>
         </thead>
         <tbody>
@@ -87,11 +87,9 @@
     document.addEventListener('DOMContentLoaded', function () {
         const el = document.getElementById('tempDataMessages');
         if (!el) return;
-
         const type = el.getAttribute('data-type');
         const message = el.getAttribute('data-message');
         const fromUpdate = sessionStorage.getItem("updated");
-
         if (type && message && type === "success" && fromUpdate === "1") {
             Swal.fire({
                 icon: 'success',
@@ -102,7 +100,6 @@
             });
             sessionStorage.removeItem("updated");
         }
-
         if (type && message && type === "error") {
             Swal.fire({
                 icon: 'error',

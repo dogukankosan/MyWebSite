@@ -19,38 +19,39 @@
 <div class="table-responsive">
     <table class="table table-hover table-striped table-bordered" id="yourTableId">
         <thead>
-            <tr>
-                <th>#</th>
-                <th>Firma Adı</th>
-                <th>İş Ünvan</th>
-                <th>Çalışma Yılı</th>
-                <th>İş Hakkında</th>
-                <th class="no-export">İşlemler</th>
-            </tr>
+        <tr>
+            <th>#</th>
+            <th>Firma Adı</th>
+            <th>İş Ünvan</th>
+            <th>Çalışma Yılı</th>
+            <th>İş Hakkında</th>
+            <th class="no-export">İşlemler</th>
+        </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.ID</td>
-                    <td>@item.JobName</td>
-                    <td>@item.JobTitle</td>
-                    <td>@item.JobYears</td>
-                    <td>@item.JobAbout</td>
-                    <td>
-                        <a class="btn btn-outline-info btn-sm" href="/AdminIsHayati/Guncelle/@item.ID">
-                            <i class="fa fa-pencil-alt"></i>
-                        </a>
-                        <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm" onclick="confirmDelete('@item.ID')">
-                            <i class="fa fa-trash"></i>
-                        </a>
-                    </td>
-                </tr>
-            }
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ID</td>
+                <td>@item.JobName</td>
+                <td>@item.JobTitle</td>
+                <td>@item.JobYears</td>
+                <td>@item.JobAbout</td>
+                <td>
+                    <a class="btn btn-outline-info btn-sm" href="/AdminIsHayati/Guncelle/@item.ID">
+                        <i class="fa fa-pencil-alt"></i>
+                    </a>
+                    <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm" onclick="confirmDelete('@item.ID')">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+        }
         </tbody>
     </table>
     <a class="btn btn-primary mt-3" href="/AdminIsHayati/Ekle/">Yeni İş Ekle</a>
 </div>
+<br />
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     function confirmDelete(id) {

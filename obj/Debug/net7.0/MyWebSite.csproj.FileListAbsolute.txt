@@ -229,3 +229,4 @@ C:\Users\DOGUKAN\source\repos\MyWebSite\bin\Debug\net7.0\MyWebSite.staticwebasse
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Debug\net7.0\staticwebassets.build.json.cache
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Debug\net7.0\staticwebassets.build.endpoints.json
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Debug\net7.0\staticwebassets.upToDateCheck.txt
+C:\Users\DOGUKAN\source\repos\MyWebSite\bin\Debug\net7.0\wwwroot\userThema\img\reshot-icon-computer-UGMT6YVCE5.svg

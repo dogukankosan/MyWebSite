@@ -7,7 +7,7 @@ namespace MyWebSite.Business
     {
         public AdminMailValidator()
         {
-            RuleFor(mail => mail.MailAdress)
+            RuleFor(mail => mail.MailAdress).NotEmpty().WithMessage("Mail adresi boş geçilemez.")
                 .MaximumLength(75).WithMessage("Mail adresi en fazla 75 karakter olabilir.")
                 .MinimumLength(5).WithMessage("Mail adresi en az 5 karakter olmalıdır.")
                 .EmailAddress().WithMessage("Geçerli bir mail adresi giriniz.");

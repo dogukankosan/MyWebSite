@@ -25,16 +25,16 @@
     <br />
     <div class="form-group">
         <label for="ProjectImg">Proje Resim Seçiniz:</label>
-        <input type="file" name="ProjectImg" id="ProjectImg" class="form-control" accept="image/*" />
+        <input type="hidden" name="Base64Pictures" value="@Model.Base64Pictures" />
+        <input type="file" name="ProjectImg" id="ProjectImg" value="@Model.Base64Pictures" class="form-control" accept="image/*"/>
+        <span class="text-muted small">Desteklenen: jpg, jpeg, png</span>
         <br />
-        @if (ViewData["picture"] != null)
-        {
-            <img id="previewImage" src="@ViewData["picture"]" alt="Mevcut Resim" style="max-height: 150px;" />
-        }
-        else
-        {
-            <img id="previewImage" src="#" alt="Önizleme" style="max-height: 150px; display: none;" />
-        }
+        <img id="previewImage"
+             src="@((ViewData["picture"] ?? "#").ToString())"
+             alt="Önizleme"
+             style="max-height: 150px; @(ViewData["picture"] != null ? "" : "display:none;")" />
+
+        <span id="ProjectImage" class="text-danger"></span>
     </div>
     <br />
     <div class="form-group">
@@ -56,6 +56,7 @@
     <button type="submit" class="btn btn-primary">Güncelle</button>
 </form>
 <div id="resultsucc" class="mt-3"></div>
+<br/>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
@@ -94,6 +95,9 @@
                         }
                         if (response.errors.ProjectLink) {
                             $('#ProjectLinkError').html(response.errors.ProjectLink);
+                        }
+                           if (response.errors.ProjectImg) {
+                            $('#ProjectImage').html(response.errors.ProjectImg);
                         }
                     }
                 },
