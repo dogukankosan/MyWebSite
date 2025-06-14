@@ -20,9 +20,7 @@
 
 ## 📸 Ekran Görüntüsü
 
-<p align="center">
-!(https://github.com/user-attachments/assets/6bfe160b-cbd5-4701-a78a-c4d40af4fa90)
-</p>
+![s](https://github.com/user-attachments/assets/aef9c94b-5b2a-419e-93bd-e7800d08ee1c)
 
 ---
 
