@@ -4,34 +4,33 @@
 ![Stars](https://img.shields.io/github/stars/dogukankosan/MyWebSite)
 ![Last Commit](https://img.shields.io/github/last-commit/dogukankosan/MyWebSite)
 
-> **MyWebSite**: Kişisel veya kurumsal kullanım için geliştirilen modern, mobil uyumlu ve hızlı bir web sitesi projesi.
+> **MyWebSite**: Kişisel veya kurumsal portföy, blog ve içerik yönetimi için geliştirilmiş, mobil uyumlu ve modern bir web sitesi projesi.
 
 ---
 
 ## 🚀 Özellikler
 
-- ⚡ Hızlı ve mobil uyumlu tasarım (responsive)
-- 🛠️ Modern web teknolojileri: HTML5, CSS3, JavaScript, Bootstrap (ve/veya Tailwind, varsa belirt)
-- 🎨 Kolayca özelleştirilebilir tema ve içerik
-- 📄 Çoklu sayfa ve dinamik içerik desteği
-- 🌍 SEO ve performans optimizasyonu
-- 💾 Statik dosya tabanlı veya (varsa) backend entegrasyonu
-- 🔒 Güvenlik için temel en iyi uygulamalar (XSS, CSRF için önlemler)
-- 🧩 Modüler ve ölçeklenebilir yapı
+- ⚡ Hızlı ve responsive (mobil uyumlu) tasarım
+- 🛠️ Modern web teknolojileri: HTML5, CSS3, JavaScript, Bootstrap
+- 👤 Yönetici paneliyle içerik ve proje yönetimi
+- 🖼️ Proje ekleme/güncelleme, görsel yükleme ve dinamik portföy listesi
+- 💬 Blog, CV, sosyal medya ve iletişim bölümleri
+- 📧 SMTP üzerinden mail gönderme ve test maili
+- 🔒 Admin paneli için yetkilendirme (role-based)
+- 🌍 SEO ve erişilebilirlik desteği
+- 🧩 Temiz, modüler ve kolay genişletilebilir kod yapısı
 
 ---
 
 ## 🏗️ Teknik Altyapı
 
-- **HTML5 & CSS3:** Semantik ve modern web standartları kullanıldı.
-- **JavaScript:** Vanilla JS veya jQuery ile etkileşimli bileşenler.
-- **CSS Framework:** (Varsa) Bootstrap, TailwindCSS veya özel yazılmış SASS/SCSS desteği.
-- **Responsive Design:** Mobil, tablet ve masaüstü tüm cihazlarda sorunsuz görüntüleme.
-- **SEO:** Meta etiketler, Open Graph, hızlı yükleme ve erişilebilirlik (a11y) uyumluluğu.
-- **Optimize Edilmiş Görseller:** WebP/JPEG sıkıştırma ve lazy loading.
-- **Dizin Yapısı:** Tüm sayfa ve varlıklar (css, js, img, vs.) ayrı klasörlerde düzenli tutulur.
-- **(Veya) Backend Entegrasyonu:** (Varsa, ör: PHP, Node.js veya ASP.NET ile REST API bağlantısı veya formlar için mail gönderme gibi ek fonksiyonlar.)
-- **Kod Standartları:** ES6+, Prettier/ESLint desteği (kod kalitesini artırmak için).
+- **Backend:** ASP.NET Core MVC (C#)
+- **Frontend:** Bootstrap tabanlı responsive tasarım, Razor view’lar, modern HTML/CSS
+- **Veritabanı:** SQL Server, işlemler için stored procedure kullanımı
+- **Mail Servisi:** SMTP ile entegre, yönetici panelinden ayarlanabilir (AdminMailController ve MailSender.cs ile)
+- **Güvenlik:** Yetkilendirme ([Authorize]) ile sadece admin erişimli bölümler
+- **Kod Standartları:** Temiz ve okunabilir C#, validator’larla model doğrulama (FluentValidation)
+- **Statik Dosyalar:** wwwroot altında organize JS, CSS ve görseller
 
 ---
 
@@ -46,19 +45,20 @@
 ```bash
 git clone https://github.com/dogukankosan/MyWebSite.git
 cd MyWebSite
-# Eğer bir framework veya bağımlılık varsa:
-# npm install
-# veya
-# yarn install
+# Gerekli NuGet paketlerini yükleyin:
+dotnet restore
+# Geliştirme ortamında çalıştırmak için:
+dotnet run
 ```
+> Veritabanı bağlantı stringi ve mail ayarlarını `appsettings.json` dosyasından yapılandırmayı unutmayın.
 
 ---
 
 ## ⚡ Kullanım
 
-- Proje dosyalarını doğrudan bir web sunucusunda (ör: Apache, Nginx) veya VSCode Live Server/Brackets gibi lokal geliştirici araçlarıyla açabilirsiniz.
-- Kendi içeriklerinizi eklemek için ilgili HTML/CSS/JS dosyalarını düzenleyin.
-- (Veya) Backend ile entegrasyon için örnek bir API endpoint veya mail servis bilgisi ekleyin.
+- Siteyi başlatınca yönetici paneli (/Admin...) ile içerik, proje ve kullanıcı yönetimini kolayca yapabilirsiniz.
+- Proje ekleme/güncelleme formlarında görsel yükleyebilir, proje detaylarını ve linklerini girebilirsiniz.
+- İletişim ve mail işlemleri için SMTP ayarlarını admin panelinden güncelleyebilirsiniz.
 
 ---
 
@@ -66,17 +66,16 @@ cd MyWebSite
 
 ```
 MyWebSite/
-├── index.html
-├── about.html
-├── contact.html
-├── css/
-│   └── style.css
-├── js/
-│   └── main.js
-├── img/
-│   └── ... (görseller)
-├── assets/
-│   └── ... (varsa font, icon, ek kaynak)
+├── Controllers/           # MVC controller'lar (Admin paneli, mail, proje vs.)
+├── Models/                # Veri modelleri (Projeler, kullanıcılar, mail ayarları)
+├── Views/                 # Razor view dosyaları (Kullanıcı ve admin arayüzleri)
+├── Classes/               # Yardımcı sınıflar (SQLCrud, MailSender vb.)
+├── Business/              # Validator ve iş kuralları
+├── wwwroot/               # JS, CSS ve görseller
+│   ├── AdminThema/
+│   ├── js/
+│   └── img/
+├── appsettings.json       # Ayar dosyası
 └── README.md
 ```
 
@@ -84,7 +83,7 @@ MyWebSite/
 
 ## 🤝 Katkı
 
-Katkı sağlamak isterseniz lütfen fork’layın ve ardından bir pull request gönderin.
+Katkı sağlamak isterseniz lütfen forklayın ve ardından bir pull request gönderin.
 
 ---
 
@@ -93,7 +92,3 @@ Katkı sağlamak isterseniz lütfen fork’layın ve ardından bir pull request 
 Bu proje [MIT Lisansı](LICENSE) ile lisanslanmıştır.
 
 ---
-
-<p align="center">
-  <b>⭐ Projeyi beğendiyseniz yıldız vermeyi unutmayın!</b>
-</p>
