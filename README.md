@@ -21,7 +21,7 @@
 ## 📸 Ekran Görüntüsü
 
 <p align="center">
-  <img src="https://placehold.co/900x400?text=MyWebSite+Screenshot" alt="MyWebSite Screenshot" width="700"/>
+![s](https://github.com/user-attachments/assets/3e5ebf7a-9839-4b73-9dfc-b06c6f388970)
 </p>
 
 ---
@@ -68,7 +68,3 @@ Katkı sağlamak isterseniz lütfen fork’layın ve ardından bir pull request 
 Bu proje [MIT Lisansı](LICENSE) ile lisanslanmıştır.
 
 ---
-
-<p align="center">
-  <b>⭐ Projeyi beğendiyseniz yıldız vermeyi unutmayın!</b>
-</p>
