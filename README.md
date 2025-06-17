@@ -79,16 +79,22 @@ MyWebSite/
 └── README.md
 ```
 
----
-
 ## 🤝 Katkı
 
-Katkı sağlamak isterseniz lütfen forklayın ve ardından bir pull request gönderin.
+Katkı sağlamak için projeyi forklayabilir ve pull request gönderebilirsiniz.
 
 ---
 
 ## 📄 Lisans
 
-Bu proje [MIT Lisansı](LICENSE) ile lisanslanmıştır.
+MIT License
 
 ---
+
+## 📬 İletişim
+
+- 👨‍💻 Geliştirici: [@dogukankosan](https://github.com/dogukankosan)  
+- 🐞 Suggestions or issues: [Issues sekmesi](https://github.com/dogukankosan/LogoWhatsappEntegrasyon/issues)
+
+---
+
