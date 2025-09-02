@@ -36,7 +36,7 @@
 
 ## 📸 Ekran Görüntüsü
 
-![s](https://github.com/user-attachments/assets/aef9c94b-5b2a-419e-93bd-e7800d08ee1c)
+<img width="1898" height="972" alt="image" src="https://github.com/user-attachments/assets/b7f05679-a0cf-4a63-9401-c84ea4d42cb3" />
 
 ---
 
