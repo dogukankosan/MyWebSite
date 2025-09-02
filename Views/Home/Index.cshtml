@@ -42,6 +42,7 @@
     </script>
 </head>
 <body>
+    @await Component.InvokeAsync("MyCvComponent")
     @{
         string formattedNumber = @ViewBag.AboutPhone.Replace("(", "")
         .Replace(")", "")
@@ -66,6 +67,7 @@
             </div>
         </nav>
     </div>
+
     <div class="container-fluid" id="pigraHome">
         <div class="container">
             <div class="row g-0">
@@ -117,7 +119,6 @@
                                     <p class="text-dark mb-0"><a href="/">@ViewBag.AboutWebSite</a></p>
                                 </div>
                                 <div class="d-flex">
-                                    @await Component.InvokeAsync("MyCvComponent")
                                     <a class="btn btn-primary btn-sm-square me-3" href="@ViewBag.FacebookLink" target="_blank"><i class="fab fa-facebook-f text-white"></i></a>
                                     <a class="btn btn-primary btn-sm-square me-3" href="@ViewBag.GithubLink" target="_blank"><i class="fab fa-github text-white"></i></a>
                                     <a class="btn btn-primary btn-sm-square me-3" href="@ViewBag.InstagramLink" target="_blank"><i class="fab fa-instagram text-white"></i></a>
@@ -229,6 +230,7 @@
                                     </div>
                                 </div>
                                 @await Component.InvokeAsync("ContactUserComponent")
+                                <br />
                                 <div class="col-12 wow fadeInUp" data-wow-delay="0.5s">
                                     <div class="rounded">
                                         <iframe class="rounded w-100"
@@ -351,45 +353,88 @@
         });
     </script>
     <script>
-        $(document).ready(function () {
-            $('#contactForm').submit(function (event) {
-                event.preventDefault();
-                $('#nameError').html('');
-                $('#emailError').html('');
-                $('#phoneError').html('');
-                $('#subjectError').html('');
-                $('#messageError').html('');
-                $('#resultsucc').html('');
-                $.ajax({
-                    url: '@Url.Action("ContactAdd", "Home")',
-                    type: 'POST',
-                    data: $(this).serialize(),
-                    success: function (response) {
-                        if (response.success) {
-                            $('#resultsucc').html('<div class="alert alert-success">Mesaj Başarıyla Gönderildi.</div>');
-                            $('#contactForm')[0].reset();
-                        } else {
-                            if (response.errors.ContactName) {
-                                $('#nameError').html(response.errors.ContactName);
-                            }
-                            if (response.errors.ContactMail) {
-                                $('#emailError').html(response.errors.ContactMail);
-                            }
-                            if (response.errors.ContactPhone) {
-                                $('#phoneError').html(response.errors.ContactPhone);
-                            }
-                            if (response.errors.ContactSubject) {
-                                $('#subjectError').html(response.errors.ContactSubject);
-                            }
-                            if (response.errors.ContactMessage) {
-                                $('#messageError').html(response.errors.ContactMessage);
-                            }
-                        }
-                    },
-                    error: function () {
-                        $('#resultsucc').html('<div class="alert alert-danger">Bir hata oluştu. Lütfen tekrar deneyin.</div>');
+        $(document).ready(function() {
+            generateMathQuestion();
+        });
+        var correctAnswer;
+        function generateMathQuestion() {
+            var num1 = Math.floor(Math.random() * 20) + 1;
+            var num2 = Math.floor(Math.random() * 10) + 1;
+            var operations = ['+', '-', '×'];
+            var operation = operations[Math.floor(Math.random() * operations.length)];
+            switch(operation) {
+                case '+':
+                    correctAnswer = num1 + num2;
+                    break;
+                case '-':
+                    if (num1 < num2) {
+                        var temp = num1;
+                        num1 = num2;
+                        num2 = temp;
                     }
-                });
+                    correctAnswer = num1 - num2;
+                    break;
+                case '×':
+                    num1 = Math.floor(Math.random() * 10) + 1;
+                    num2 = Math.floor(Math.random() * 10) + 1;
+                    correctAnswer = num1 * num2;
+                    break;
+            }
+            $('#mathQuestion').text(num1 + ' ' + operation + ' ' + num2);
+        }
+        $('#contactForm').submit(function (event) {
+            event.preventDefault();
+          var $honeypot = $(this).find('input[name="website"]');
+        if ($honeypot.length && $honeypot.val().trim() !== '') {
+            $('#resultsucc').html('<div class="alert alert-danger">Spam tespit edildi.</div>');
+            return;
+        }
+            var userAnswer = parseInt($('#mathCaptcha').val());
+            if (isNaN(userAnswer) || userAnswer !== correctAnswer) {
+                $('#mathError').html('❌ Matematik işlemi yanlış! Tekrar deneyin.');
+                generateMathQuestion();
+                $('#mathCaptcha').val('').focus();
+                return;
+            }
+            $('#mathError').html('✅ Doğru!');
+            $('#nameError').html('');
+            $('#emailError').html('');
+            $('#phoneError').html('');
+            $('#subjectError').html('');
+            $('#messageError').html('');
+            $('#resultsucc').html('');
+            $.ajax({
+                url: '@Url.Action("ContactAdd", "Home")',
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        $('#resultsucc').html('<div class="alert alert-success">✅ Mesaj Başarıyla Gönderildi.</div>');
+                        $('#contactForm')[0].reset();
+                        generateMathQuestion(); 
+                    } else {
+                        if (response.errors.ContactName) {
+                            $('#nameError').html(response.errors.ContactName);
+                        }
+                        if (response.errors.ContactMail) {
+                            $('#emailError').html(response.errors.ContactMail);
+                        }
+                        if (response.errors.ContactPhone) {
+                            $('#phoneError').html(response.errors.ContactPhone);
+                        }
+                        if (response.errors.ContactSubject) {
+                            $('#subjectError').html(response.errors.ContactSubject);
+                        }
+                        if (response.errors.ContactMessage) {
+                            $('#messageError').html(response.errors.ContactMessage);
+                        }
+                        generateMathQuestion();
+                    }
+                },
+                error: function () {
+                    $('#resultsucc').html('<div class="alert alert-danger">❌ Bir hata oluştu.</div>');
+                    generateMathQuestion();
+                }
             });
         });
     </script>

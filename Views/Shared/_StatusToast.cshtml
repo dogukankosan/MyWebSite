@@ -1,0 +1,15 @@
+﻿@{
+    string? type = TempData["Type"]?.ToString();
+    string? msg = TempData["Message"]?.ToString();
+    string css = type switch
+    {
+        "success" => "alert alert-success",
+        "error" => "alert alert-danger",
+        "warning" => "alert alert-warning",
+        _ => "alert alert-info"
+    };
+}
+@if (!string.IsNullOrWhiteSpace(msg))
+{
+    <div class="@css" role="alert">@msg</div>
+}

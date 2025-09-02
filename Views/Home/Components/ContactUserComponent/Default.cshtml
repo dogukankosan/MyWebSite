@@ -1,4 +1,15 @@
 ﻿@model Contacts
+<style>
+#mathQuestion {
+    font-weight: bold;
+    color: #0d6efd;
+    font-size: 1.1em;
+}
+
+#mathCaptcha:focus {
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+</style>
 <div class="col-xl-7 wow fadeInUp" data-wow-delay="0.3s">
     <div>
         <div id="resultsucc"></div>
@@ -22,8 +33,7 @@
                         <span id="nameError" class="text-danger" style="margin-top: 5px; display: block;"></span>
                     </div>
                 </div>
-
-                <div class="col-lg-12 col-xl-6">
+                <div class="col-lg-12 col-xl-12">
                     <div class="form-floating">
                         <input type="email" 
                                class="form-control border-0" 
@@ -39,22 +49,248 @@
                         <span id="emailError" class="text-danger" style="margin-top: 5px; display: block;"></span>
                     </div>
                 </div>
-                <div class="col-lg-12 col-xl-6">
+                <div class="col-lg-12 col-xl-12">
                     <div class="form-floating">
-                        <input type="tel" 
-                               class="form-control border-0" 
-                               id="phone" 
-                               name="ContactPhone" 
-                               placeholder="Telefon"
-                               required 
-                               pattern="^\d{10}$"
-                               maxlength="10"
-                        />
-                        <label for="phone">Telefon</label>
-                        <span id="phoneError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+                        <select class="form-select" id="countryCodeSelect" required>
+                            <option value="+90" selected>🇹🇷 Türkiye (+90)</option>
+                            <option value="+93">🇦🇫 Afganistan (+93)</option>
+                            <option value="+355">🇦🇱 Arnavutluk (+355)</option>
+                            <option value="+213">🇩🇿 Cezayir (+213)</option>
+                            <option value="+376">🇦🇩 Andorra (+376)</option>
+                            <option value="+244">🇦🇴 Angola (+244)</option>
+                            <option value="+1264">🇦🇮 Anguilla (+1264)</option>
+                            <option value="+1268">🇦🇬 Antigua ve Barbuda (+1268)</option>
+                            <option value="+54">🇦🇷 Arjantin (+54)</option>
+                            <option value="+374">🇦🇲 Ermenistan (+374)</option>
+                            <option value="+297">🇦🇼 Aruba (+297)</option>
+                            <option value="+61">🇦🇺 Avustralya (+61)</option>
+                            <option value="+43">🇦🇹 Avusturya (+43)</option>
+                            <option value="+994">🇦🇿 Azerbaycan (+994)</option>
+                            <option value="+1242">🇧🇸 Bahamalar (+1242)</option>
+                            <option value="+973">🇧🇭 Bahreyn (+973)</option>
+                            <option value="+880">🇧🇩 Bangladeş (+880)</option>
+                            <option value="+1246">🇧🇧 Barbados (+1246)</option>
+                            <option value="+375">🇧🇾 Belarus (+375)</option>
+                            <option value="+32">🇧🇪 Belçika (+32)</option>
+                            <option value="+501">🇧🇿 Belize (+501)</option>
+                            <option value="+229">🇧🇯 Benin (+229)</option>
+                            <option value="+1441">🇧🇲 Bermuda (+1441)</option>
+                            <option value="+975">🇧🇹 Butan (+975)</option>
+                            <option value="+591">🇧🇴 Bolivya (+591)</option>
+                            <option value="+387">🇧🇦 Bosna-Hersek (+387)</option>
+                            <option value="+267">🇧🇼 Botsvana (+267)</option>
+                            <option value="+55">🇧🇷 Brezilya (+55)</option>
+                            <option value="+673">🇧🇳 Brunei (+673)</option>
+                            <option value="+359">🇧🇬 Bulgaristan (+359)</option>
+                            <option value="+226">🇧🇫 Burkina Faso (+226)</option>
+                            <option value="+257">🇧🇮 Burundi (+257)</option>
+                            <option value="+238">🇨🇻 Cape Verde (+238)</option>
+                            <option value="+855">🇰🇭 Kamboçya (+855)</option>
+                            <option value="+237">🇨🇲 Kamerun (+237)</option>
+                            <option value="+1">🇨🇦 Kanada (+1)</option>
+                            <option value="+236">🇨🇫 Orta Afrika Cumhuriyeti (+236)</option>
+                            <option value="+235">🇹🇩 Çad (+235)</option>
+                            <option value="+56">🇨🇱 Şili (+56)</option>
+                            <option value="+86">🇨🇳 Çin (+86)</option>
+                            <option value="+57">🇨🇴 Kolombiya (+57)</option>
+                            <option value="+269">🇰🇲 Komorlar (+269)</option>
+                            <option value="+242">🇨🇬 Kongo (+242)</option>
+                            <option value="+682">🇨🇰 Cook Adaları (+682)</option>
+                            <option value="+506">🇨🇷 Kosta Rika (+506)</option>
+                            <option value="+385">🇭🇷 Hırvatistan (+385)</option>
+                            <option value="+53">🇨🇺 Küba (+53)</option>
+                            <option value="+357">🇨🇾 Kıbrıs (+357)</option>
+                            <option value="+420">🇨🇿 Çek Cumhuriyeti (+420)</option>
+                            <option value="+243">🇨🇩 Kongo Demokratik Cumhuriyeti (+243)</option>
+                            <option value="+45">🇩🇰 Danimarka (+45)</option>
+                            <option value="+253">🇩🇯 Cibuti (+253)</option>
+                            <option value="+1767">🇩🇲 Dominika (+1767)</option>
+                            <option value="+1809">🇩🇴 Dominik Cumhuriyeti (+1809)</option>
+                            <option value="+593">🇪🇨 Ekvador (+593)</option>
+                            <option value="+20">🇪🇬 Mısır (+20)</option>
+                            <option value="+503">🇸🇻 El Salvador (+503)</option>
+                            <option value="+240">🇬🇶 Ekvator Ginesi (+240)</option>
+                            <option value="+291">🇪🇷 Eritre (+291)</option>
+                            <option value="+372">🇪🇪 Estonya (+372)</option>
+                            <option value="+251">🇪🇹 Etiyopya (+251)</option>
+                            <option value="+500">🇫🇰 Falkland Adaları (+500)</option>
+                            <option value="+298">🇫🇴 Faroe Adaları (+298)</option>
+                            <option value="+679">🇫🇯 Fiji (+679)</option>
+                            <option value="+358">🇫🇮 Finlandiya (+358)</option>
+                            <option value="+33">🇫🇷 Fransa (+33)</option>
+                            <option value="+594">🇬🇫 Fransız Guyanası (+594)</option>
+                            <option value="+689">🇵🇫 Fransız Polinezyası (+689)</option>
+                            <option value="+241">🇬🇦 Gabon (+241)</option>
+                            <option value="+220">🇬🇲 Gambiya (+220)</option>
+                            <option value="+995">🇬🇪 Gürcistan (+995)</option>
+                            <option value="+49">🇩🇪 Almanya (+49)</option>
+                            <option value="+233">🇬🇭 Gana (+233)</option>
+                            <option value="+350">🇬🇮 Cebelitarık (+350)</option>
+                            <option value="+30">🇬🇷 Yunanistan (+30)</option>
+                            <option value="+299">🇬🇱 Grönland (+299)</option>
+                            <option value="+1473">🇬🇩 Grenada (+1473)</option>
+                            <option value="+590">🇬🇵 Guadeloupe (+590)</option>
+                            <option value="+1671">🇬🇺 Guam (+1671)</option>
+                            <option value="+502">🇬🇹 Guatemala (+502)</option>
+                            <option value="+224">🇬🇳 Gine (+224)</option>
+                            <option value="+245">🇬🇼 Gine-Bissau (+245)</option>
+                            <option value="+592">🇬🇾 Guyana (+592)</option>
+                            <option value="+509">🇭🇹 Haiti (+509)</option>
+                            <option value="+504">🇭🇳 Honduras (+504)</option>
+                            <option value="+852">🇭🇰 Hong Kong (+852)</option>
+                            <option value="+36">🇭🇺 Macaristan (+36)</option>
+                            <option value="+354">🇮🇸 İzlanda (+354)</option>
+                            <option value="+91">🇮🇳 Hindistan (+91)</option>
+                            <option value="+62">🇮🇩 Endonezya (+62)</option>
+                            <option value="+98">🇮🇷 İran (+98)</option>
+                            <option value="+964">🇮🇶 Irak (+964)</option>
+                            <option value="+353">🇮🇪 İrlanda (+353)</option>
+                            <option value="+972">🇮🇱 İsrail (+972)</option>
+                            <option value="+39">🇮🇹 İtalya (+39)</option>
+                            <option value="+1876">🇯🇲 Jamaika (+1876)</option>
+                            <option value="+81">🇯🇵 Japonya (+81)</option>
+                            <option value="+962">🇯🇴 Ürdün (+962)</option>
+                            <option value="+7">🇰🇿 Kazakistan (+7)</option>
+                            <option value="+254">🇰🇪 Kenya (+254)</option>
+                            <option value="+686">🇰🇮 Kiribati (+686)</option>
+                            <option value="+965">🇰🇼 Kuveyt (+965)</option>
+                            <option value="+996">🇰🇬 Kırgızistan (+996)</option>
+                            <option value="+856">🇱🇦 Laos (+856)</option>
+                            <option value="+371">🇱🇻 Letonya (+371)</option>
+                            <option value="+961">🇱🇧 Lübnan (+961)</option>
+                            <option value="+266">🇱🇸 Lesotho (+266)</option>
+                            <option value="+231">🇱🇷 Liberya (+231)</option>
+                            <option value="+218">🇱🇾 Libya (+218)</option>
+                            <option value="+423">🇱🇮 Lihtenştayn (+423)</option>
+                            <option value="+370">🇱🇹 Litvanya (+370)</option>
+                            <option value="+352">🇱🇺 Lüksemburg (+352)</option>
+                            <option value="+853">🇲🇴 Makao (+853)</option>
+                            <option value="+389">🇲🇰 Kuzey Makedonya (+389)</option>
+                            <option value="+261">🇲🇬 Madagaskar (+261)</option>
+                            <option value="+265">🇲🇼 Malavi (+265)</option>
+                            <option value="+60">🇲🇾 Malezya (+60)</option>
+                            <option value="+960">🇲🇻 Maldivler (+960)</option>
+                            <option value="+223">🇲🇱 Mali (+223)</option>
+                            <option value="+356">🇲🇹 Malta (+356)</option>
+                            <option value="+596">🇲🇶 Martinik (+596)</option>
+                            <option value="+222">🇲🇷 Moritanya (+222)</option>
+                            <option value="+230">🇲🇺 Mauritius (+230)</option>
+                            <option value="+262">🇾🇹 Mayotte (+262)</option>
+                            <option value="+52">🇲🇽 Meksika (+52)</option>
+                            <option value="+373">🇲🇩 Moldova (+373)</option>
+                            <option value="+377">🇲🇨 Monako (+377)</option>
+                            <option value="+976">🇲🇳 Moğolistan (+976)</option>
+                            <option value="+382">🇲🇪 Karadağ (+382)</option>
+                            <option value="+1664">🇲🇸 Montserrat (+1664)</option>
+                            <option value="+212">🇲🇦 Fas (+212)</option>
+                            <option value="+258">🇲🇿 Mozambik (+258)</option>
+                            <option value="+95">🇲🇲 Myanmar (+95)</option>
+                            <option value="+264">🇳🇦 Namibya (+264)</option>
+                            <option value="+674">🇳🇷 Nauru (+674)</option>
+                            <option value="+977">🇳🇵 Nepal (+977)</option>
+                            <option value="+31">🇳🇱 Hollanda (+31)</option>
+                            <option value="+687">🇳🇨 Yeni Kaledonya (+687)</option>
+                            <option value="+64">🇳🇿 Yeni Zelanda (+64)</option>
+                            <option value="+505">🇳🇮 Nikaragua (+505)</option>
+                            <option value="+227">🇳🇪 Nijer (+227)</option>
+                            <option value="+234">🇳🇬 Nijerya (+234)</option>
+                            <option value="+683">🇳🇺 Niue (+683)</option>
+                            <option value="+850">🇰🇵 Kuzey Kore (+850)</option>
+                            <option value="+1670">🇲🇵 Kuzey Mariana Adaları (+1670)</option>
+                            <option value="+47">🇳🇴 Norveç (+47)</option>
+                            <option value="+968">🇴🇲 Umman (+968)</option>
+                            <option value="+92">🇵🇰 Pakistan (+92)</option>
+                            <option value="+680">🇵🇼 Palau (+680)</option>
+                            <option value="+970">🇵🇸 Filistin (+970)</option>
+                            <option value="+507">🇵🇦 Panama (+507)</option>
+                            <option value="+675">🇵🇬 Papua Yeni Gine (+675)</option>
+                            <option value="+595">🇵🇾 Paraguay (+595)</option>
+                            <option value="+51">🇵🇪 Peru (+51)</option>
+                            <option value="+63">🇵🇭 Filipinler (+63)</option>
+                            <option value="+48">🇵🇱 Polonya (+48)</option>
+                            <option value="+351">🇵🇹 Portekiz (+351)</option>
+                            <option value="+1787">🇵🇷 Porto Riko (+1787)</option>
+                            <option value="+974">🇶🇦 Katar (+974)</option>
+                            <option value="+262">🇷🇪 Réunion (+262)</option>
+                            <option value="+40">🇷🇴 Romanya (+40)</option>
+                            <option value="+7">🇷🇺 Rusya (+7)</option>
+                            <option value="+250">🇷🇼 Ruanda (+250)</option>
+                            <option value="+290">🇸🇭 Saint Helena (+290)</option>
+                            <option value="+1869">🇰🇳 Saint Kitts ve Nevis (+1869)</option>
+                            <option value="+1758">🇱🇨 Saint Lucia (+1758)</option>
+                            <option value="+508">🇵🇲 Saint Pierre ve Miquelon (+508)</option>
+                            <option value="+1784">🇻🇨 Saint Vincent ve Grenadinler (+1784)</option>
+                            <option value="+685">🇼🇸 Samoa (+685)</option>
+                            <option value="+378">🇸🇲 San Marino (+378)</option>
+                            <option value="+239">🇸🇹 Sao Tome ve Principe (+239)</option>
+                            <option value="+966">🇸🇦 Suudi Arabistan (+966)</option>
+                            <option value="+221">🇸🇳 Senegal (+221)</option>
+                            <option value="+381">🇷🇸 Sırbistan (+381)</option>
+                            <option value="+248">🇸🇨 Seyşeller (+248)</option>
+                            <option value="+232">🇸🇱 Sierra Leone (+232)</option>
+                            <option value="+65">🇸🇬 Singapur (+65)</option>
+                            <option value="+421">🇸🇰 Slovakya (+421)</option>
+                            <option value="+386">🇸🇮 Slovenya (+386)</option>
+                            <option value="+677">🇸🇧 Solomon Adaları (+677)</option>
+                            <option value="+252">🇸🇴 Somali (+252)</option>
+                            <option value="+27">🇿🇦 Güney Afrika (+27)</option>
+                            <option value="+82">🇰🇷 Güney Kore (+82)</option>
+                            <option value="+211">🇸🇸 Güney Sudan (+211)</option>
+                            <option value="+34">🇪🇸 İspanya (+34)</option>
+                            <option value="+94">🇱🇰 Sri Lanka (+94)</option>
+                            <option value="+249">🇸🇩 Sudan (+249)</option>
+                            <option value="+597">🇸🇷 Surinam (+597)</option>
+                            <option value="+268">🇸🇿 Svaziland (+268)</option>
+                            <option value="+46">🇸🇪 İsveç (+46)</option>
+                            <option value="+41">🇨🇭 İsviçre (+41)</option>
+                            <option value="+963">🇸🇾 Suriye (+963)</option>
+                            <option value="+886">🇹🇼 Tayvan (+886)</option>
+                            <option value="+992">🇹🇯 Tacikistan (+992)</option>
+                            <option value="+255">🇹🇿 Tanzanya (+255)</option>
+                            <option value="+66">🇹🇭 Tayland (+66)</option>
+                            <option value="+670">🇹🇱 Doğu Timor (+670)</option>
+                            <option value="+228">🇹🇬 Togo (+228)</option>
+                            <option value="+690">🇹🇰 Tokelau (+690)</option>
+                            <option value="+676">🇹🇴 Tonga (+676)</option>
+                            <option value="+1868">🇹🇹 Trinidad ve Tobago (+1868)</option>
+                            <option value="+216">🇹🇳 Tunus (+216)</option>
+                            <option value="+993">🇹🇲 Türkmenistan (+993)</option>
+                            <option value="+1649">🇹🇨 Turks ve Caicos Adaları (+1649)</option>
+                            <option value="+688">🇹🇻 Tuvalu (+688)</option>
+                            <option value="+256">🇺🇬 Uganda (+256)</option>
+                            <option value="+380">🇺🇦 Ukrayna (+380)</option>
+                            <option value="+971">🇦🇪 Birleşik Arap Emirlikleri (+971)</option>
+                            <option value="+44">🇬🇧 İngiltere (+44)</option>
+                            <option value="+1">🇺🇸 Amerika (+1)</option>
+                            <option value="+598">🇺🇾 Uruguay (+598)</option>
+                            <option value="+998">🇺🇿 Özbekistan (+998)</option>
+                            <option value="+678">🇻🇺 Vanuatu (+678)</option>
+                            <option value="+379">🇻🇦 Vatikan (+379)</option>
+                            <option value="+58">🇻🇪 Venezuela (+58)</option>
+                            <option value="+84">🇻🇳 Vietnam (+84)</option>
+                            <option value="+1340">🇻🇮 Virgin Adaları (ABD) (+1340)</option>
+                            <option value="+1284">🇻🇬 Virgin Adaları (İngiliz) (+1284)</option>
+                            <option value="+681">🇼🇫 Wallis ve Futuna (+681)</option>
+                            <option value="+967">🇾🇪 Yemen (+967)</option>
+                            <option value="+260">🇿🇲 Zambiya (+260)</option>
+                            <option value="+263">🇿🇼 Zimbabve (+263)</option>
+                        </select>
+                        <label for="countryCodeSelect">Ülke Kodu</label>
                     </div>
                 </div>
-
+                    <div class="col-lg-12 col-xl-12">
+                    <div class="form-floating">
+                        <input type="text"
+                               name="ContactPhone"
+                               id="MessagePhone"
+                               class="form-control"
+                               placeholder="Telefon Numaranız..."
+                               required
+                               inputmode="numeric" />
+                        <label for="MessagePhone">Telefon</label>
+                    </div>
+                    <span id="phoneError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+                </div>
                 <div class="col-12">
                     <div class="form-floating">
                         <input type="text" 
@@ -70,7 +306,6 @@
                         <span id="subjectError" class="text-danger" style="margin-top: 5px; display: block;"></span>
                     </div>
                 </div>
-
                 <div class="col-12">
                     <div class="form-floating">
                         <textarea class="form-control border-0" 
@@ -85,10 +320,103 @@
                         <span id="messageError" class="text-danger" style="margin-top: 5px; display: block;"></span>
                     </div>
                 </div>
+                <div style="position: absolute; left: -9999px; opacity: 0; pointer-events: none;">
+                </div><div class="col-12 mb-3">
+                    <div class="form-floating">
+                        <input type="number"
+                               class="form-control border-0"
+                               id="mathCaptcha"
+                               name="MathCaptcha"
+                               placeholder="Sonuç"
+                               required>
+                        <label for="mathCaptcha">
+                            🧮 <span id="mathQuestion"></span> = ?
+                        </label>
+                        <span id="mathError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+                    </div>
+                </div>
                 <div class="col-12">
                     <button type="submit" class="btn btn-primary w-100 py-3">Mesaj Gönder</button>
                 </div>
+                <br />  
+            </div> 
+            <div style="position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;" aria-hidden="true">
+                <label for="hp_website">Bu alanı boş bırakın</label>
+                <input type="text" name="website" style="display:none;" autocomplete="off" tabindex="-1" value="">
+
             </div>
+
         </form>
     </div>
 </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const phoneInput = document.getElementById('MessagePhone');
+        const countrySelect = document.getElementById('countryCodeSelect');
+        const phoneFormats = {
+            "+90": { max: 10, pattern: [3, 3, 2, 2] },      // Türkiye: 555 123 45 67
+            "+1": { max: 10, pattern: [3, 3, 4] },            // ABD/Kanada: 555 123 4567
+            "+44": { max: 10, pattern: [4, 3, 3] },           // İngiltere: 7123 456 789
+            "+49": { max: 11, pattern: [3, 3, 2, 3] },        // Almanya: 171 123 45 678
+            "+33": { max: 9, pattern: [1, 2, 2, 2, 2] },      // Fransa: 1 23 45 67 89
+            "+39": { max: 10, pattern: [3, 3, 4] },           // İtalya: 312 345 6789
+            "+7": { max: 10, pattern: [3, 2, 2, 3] },         // Rusya: 912 34 56 789
+            "+86": { max: 11, pattern: [3, 4, 4] },           // Çin: 131 2345 6789
+            "+91": { max: 10, pattern: [4, 3, 3] },           // Hindistan: 9876 543 210
+            "+81": { max: 10, pattern: [3, 4, 3] },           // Japonya: 90 1234 5678
+            "+82": { max: 10, pattern: [3, 3, 4] },           // Güney Kore: 10 234 5678
+            "+966": { max: 9, pattern: [2, 3, 4] },           // Suudi Arabistan: 55 123 4567
+            "+971": { max: 9, pattern: [2, 3, 4] },           // BAE: 50 123 4567
+            "+20": { max: 10, pattern: [2, 3, 3, 2] },        // Mısır: 12 345 678 90
+            "+27": { max: 9, pattern: [2, 3, 4] },            // Güney Afrika: 12 345 6789
+            "+55": { max: 11, pattern: [2, 5, 4] },           // Brezilya: 11 98765 4321
+            "+52": { max: 10, pattern: [2, 4, 4] },           // Meksika: 55 1234 5678
+
+            "_default": { max: 15, pattern: [3, 3, 3, 3] }    // Varsayılan: 123 456 789 012
+        };
+        function formatPhoneNumber(number, code) {
+            const config = phoneFormats[code] || phoneFormats._default;
+            const digitsOnly = number.replace(/\D/g, '').substring(0, config.max);
+            let formattedNumber = code + ' ';
+            let position = 0;
+            for (const partLength of config.pattern) {
+                if (position >= digitsOnly.length) break;
+                const part = digitsOnly.substr(position, partLength);
+                if (part.length > 0) {
+                    formattedNumber += part + ' ';
+                    position += partLength;
+                }
+            }
+            if (position < digitsOnly.length) {
+                formattedNumber += digitsOnly.substr(position) + ' ';
+            }
+            return formattedNumber.trim();
+        }
+        function updateFormattedPhone() {
+            const code = countrySelect.value;
+            let current = phoneInput.value.replace(new RegExp(`^\\${code}\\s?`), '').replace(/\D/g, '');
+            phoneInput.value = formatPhoneNumber(current, code);
+        }
+        countrySelect.addEventListener('change', function() {
+            if (!phoneInput.value.startsWith(this.value)) {
+                phoneInput.value = this.value + ' ';
+            }
+        });
+        phoneInput.addEventListener('input', function(e) {
+            if ((e.inputType === 'deleteContentBackward' || e.inputType === 'deleteContentForward') &&
+                phoneInput.value.replace(/\D/g, '') === countrySelect.value.replace(/\D/g, '')) {
+                phoneInput.value = countrySelect.value + ' ';
+                return;
+            }
+            updateFormattedPhone();
+        });
+        if (!phoneInput.value.trim() || !phoneInput.value.startsWith(countrySelect.value)) {
+            phoneInput.value = countrySelect.value + ' ';
+        }
+        phoneInput.addEventListener('focus', function() {
+            setTimeout(() => {
+                phoneInput.setSelectionRange(phoneInput.value.length, phoneInput.value.length);
+            }, 0);
+        });
+    });
+</script>

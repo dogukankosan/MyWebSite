@@ -1,4 +1,5 @@
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\MyWebSite.exe
+C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\web.config
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\appsettings.Development.json
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\appsettings.json
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\MyWebSite.dll

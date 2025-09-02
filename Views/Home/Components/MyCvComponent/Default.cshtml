@@ -1,9 +1,126 @@
 ﻿@model string
+<style>
+    .cv-fab {
+        position: fixed;
+        right: 20px;
+        bottom: 96px; 
+        z-index: 1100;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: linear-gradient(135deg,#0d6efd 0%,#5aa3ff 100%);
+        color: #fff;
+        text-decoration: none;
+        font-weight: 700;
+        letter-spacing: .2px;
+        box-shadow: 0 10px 30px rgba(13,110,253,.35);
+        backdrop-filter: saturate(140%) blur(2px);
+        border: 1px solid rgba(255,255,255,.25);
+        transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+        -webkit-tap-highlight-color: transparent;
+    }
+        .cv-fab:hover,
+        .cv-fab:focus-visible {
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 14px 36px rgba(13,110,253,.45);
+            filter: brightness(1.03);
+        }
+        .cv-fab i {
+            font-size: 18px;
+            line-height: 1;
+        }
+    .cv-label {
+        letter-spacing: .2px;
+    }
+    .cv-fab::before {
+        content: "";
+        position: absolute;
+        inset: -6px;
+        border-radius: inherit;
+        box-shadow: 0 0 0 0 rgba(13,110,253,.35);
+        animation: cvPulse 2.4s ease-out infinite;
+        z-index: -1;
+    }
+    @@keyframes cvPulse {
+        0%
 
+    {
+        box-shadow: 0 0 0 0 rgba(13,110,253,.35);
+    }
+
+    70% {
+        box-shadow: 0 0 0 14px rgba(13,110,253,0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(13,110,253,0);
+    }
+
+    }
+    .cv-fab[data-tip] {
+        position: fixed; 
+    }
+        .cv-fab[data-tip]::after {
+            content: attr(data-tip);
+            position: absolute;
+            right: 100%;
+            margin-right: 10px;
+            bottom: 50%;
+            transform: translateY(50%) scale(.98);
+            opacity: 0;
+            pointer-events: none;
+            background: #111827; 
+            color: #fff;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 10px;
+            border-radius: 6px;
+            white-space: nowrap;
+            box-shadow: 0 10px 30px rgba(0,0,0,.25);
+            transition: opacity .15s ease, transform .15s ease;
+        }
+    .cv-fab:hover::after,
+    .cv-fab:focus-visible::after {
+        opacity: 1;
+        transform: translateY(50%) scale(1);
+    }
+    @@media (max-width: 576px) {
+        .cv-fab {
+            padding: 12px;
+            border-radius: 50%;
+        }
+        .cv-label {
+            display: none !important;
+        }
+    }
+    @@media (prefers-reduced-motion: reduce) {
+        .cv-fab,
+        .cv-fab:hover,
+        .cv-fab:focus-visible {
+            transition: none;
+            transform: none;
+        }
+
+            .cv-fab::before {
+                animation: none;
+            }
+    }
+</style>
 @if (!string.IsNullOrEmpty(Model))
 {
-    <a href="data:application/pdf;base64,@Model" download="DogukanKosanCV.pdf" target="_blank" class="btn btn-primary btn-sm-square me-3">
-        <i class="fas fa-file-pdf text-white"></i>
+    <a href="data:application/pdf;base64,@Model"
+       download="DogukanKosanCV.pdf"
+       class="cv-fab"
+       target="_blank"
+       rel="noopener"
+       title="CV’yi indir / görüntüle"
+       data-tip="CV’yi indir"
+       aria-label="CV / Özgeçmiş (PDF)">
+        <i class="fas fa-file-alt" aria-hidden="true"></i>
+        <span class="cv-label d-none d-md-inline">CV</span>
     </a>
 }
 else

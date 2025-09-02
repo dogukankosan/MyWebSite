@@ -26,7 +26,7 @@
 </head>
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color:#212529">
-        <a class="navbar-brand ps-3" href="/Admin/Anasayfa">Admin Panel</a>
+        <a class="navbar-brand ps-3" href="/Admin/Anasayfa">Site Yönetim Paneli</a>
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
         </ul>
@@ -35,8 +35,8 @@
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
+                    <br />
                     <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Sİte İşlemlerİ</div>
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                             <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                             Sayfalar
@@ -44,59 +44,96 @@
                         </a>
                         <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="/AdminHakkinda/Liste">Hakkında</a>
-                                <a class="nav-link" href="~/AdminSosyalMedya/Liste">Sosyal Medya</a>
-                                <a class="nav-link" href="~/AdminEgitim/Liste">Eğitim</a>
-                                <a class="nav-link" href="~/AdminIsHayati/Liste">İş Hayatı</a>
-                                <a class="nav-link" href="/AdminBeceriler/Liste">Beceriler</a>
-                                <a class="nav-link" href="/AdminProje/Liste">Projeler</a>
-                                <a class="nav-link" href="/AdminIletisim/Liste">İletişim</a>
+                                <a class="nav-link" href="/AdminHakkinda/Liste">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-info-circle"></i></div>
+                                    Hakkında
+                                </a>
+
+                                <a class="nav-link" href="~/AdminSosyalMedya/Liste">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-share-alt"></i></div>
+                                    Sosyal Medya
+                                </a>
+
+                                <a class="nav-link" href="~/AdminEgitim/Liste">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-graduation-cap"></i></div>
+                                    Eğitim
+                                </a>
+
+                                <a class="nav-link" href="~/AdminIsHayati/Liste">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-briefcase"></i></div>
+                                    İş Hayatı
+                                </a>
+
+                                <a class="nav-link" href="/AdminBeceriler/Liste">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-lightbulb"></i></div>
+                                    Beceriler
+                                </a>
+
+                                <a class="nav-link" href="/AdminProje/Liste">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-tasks"></i></div>
+                                    Projeler
+                                </a>
+
+                                <a class="nav-link" href="/AdminIletisim/Liste">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-envelope-open-text"></i></div>
+                                    İletişim
+                                </a>
+
                             </nav>
                         </div>
-                        <div class="sb-sidenav-menu-heading">Ayarlar</div>
-                        <a class="nav-link" href="/AdminMail/Liste">
-                            <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
-                            Admin Mail Ayarları
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseSettings" aria-expanded="false" aria-controls="collapseSettings">
+                            <div class="sb-nav-link-icon"><i class="fas fa-cogs"></i></div>
+                            Ayarlar
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
-                        <a class="nav-link" href="/AdminKullanici/Liste">
-                            <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
-                            Giriş Ayarları
-                        </a>
-                        <a class="nav-link" href="/AdminIcon/Liste">
-                            <div class="sb-nav-link-icon"><i class="fas fa-icons"></i></div>
-                            İkonlar
-                        </a>
-                        <a class="nav-link" href="/AdminCv/Cv">
-                            <div class="sb-nav-link-icon"><i class="fas fa-file-pdf"></i>
-                            </div>
-                            CV
-                        </a>
-                        <a class="nav-link" href="/AdminHataLog/Liste">
-                            <div class="sb-nav-link-icon">
-                                <i class="fas fa-bug"></i>
-                            </div>
-                            Admin Alınan Hata Kayıtları
-                        </a>
-                        <a class="nav-link" href="/AdminHataliGiris/Liste">
-                            <div class="sb-nav-link-icon"><i class="fas fa-exclamation-triangle"></i></div>
-                            Admin Hatalı Giriş
-                        </a>
-                        <a class="nav-link" href="/AdminWebLog/Liste">
-                            <div class="sb-nav-link-icon"><i class="fas fa-user-friends"></i></div>
-                            Siteye Giren Kişiler
-                        </a>
-                        <a class="nav-link" href="/AdminTemizlik/Temizlik">
-                            <div class="sb-nav-link-icon"><i class="fas fa-broom"></i></div>
-                            Temizlik
-                        </a>
-                        <a class="nav-link" href="/">
-                            <div class="sb-nav-link-icon"><i class="fas fa-globe"></i></div>
-                            Siteye Dön
-                        </a>
-                        <a class="nav-link" href="~/Admin/CikisYap">
-                            <div class="sb-nav-link-icon"><i class="fas fa-sign-out-alt"></i></div>
-                            Çıkış Yap
-                        </a>
+                        <div class="collapse" id="collapseSettings" aria-labelledby="headingSettings" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="/AdminMail/Liste">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
+                                    Admin Mail Ayarları
+                                </a>
+                                <a class="nav-link" href="/AdminKullanici/Liste">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
+                                    Giriş Ayarları
+                                </a>
+                                <a class="nav-link" href="/AdminIcon/Liste">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-icons"></i></div>
+                                    İkonlar
+                                </a>
+                                <a class="nav-link" href="/AdminCv/Cv">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-file-pdf"></i></div>
+                                    CV
+                                </a>
+                                <a class="nav-link" href="/AdminDosya/Liste">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-download"></i></div>
+                                    Dosya Yönetimi
+                                </a>
+                                <a class="nav-link" href="/AdminHataLog/Liste">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-bug"></i></div>
+                                    Admin Alınan Hata Kayıtları
+                                </a>
+                                <a class="nav-link" href="/AdminHataliGiris/Liste">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                                    Admin Hatalı Giriş
+                                </a>
+                                <a class="nav-link" href="/AdminWebLog/Liste">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-user-friends"></i></div>
+                                    Siteye Giren Kişiler
+                                </a>
+                                <a class="nav-link" href="/AdminTemizlik/Temizlik">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-broom"></i></div>
+                                    Temizlik
+                                </a>
+                                <a class="nav-link" href="/">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-globe"></i></div>
+                                    Siteye Dön
+                                </a>
+                                <a class="nav-link" href="~/Admin/CikisYap">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-sign-out-alt"></i></div>
+                                    Çıkış Yap
+                                </a>
+                            </nav>
+                        </div>
                     </div>
                 </div>
             </nav>

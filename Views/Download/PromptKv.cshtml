@@ -1,0 +1,74 @@
+﻿@model MyWebSite.Models.DownloadPromptVm
+@{
+    ViewData["Title"] = $"İndirme • {Model.PackageKey} {Model.Version}";
+    bool hasFile = !string.IsNullOrWhiteSpace(Model.FileNameStored);
+}
+<div class="card shadow-sm mt-4">
+    <div class="card-body">
+        <h5 class="card-title mb-3">
+            Paket: <strong>@Model.PackageKey</strong> •
+            Sürüm: <strong>@Model.Version</strong>
+            @if (hasFile)
+            {
+                <span> • Dosya: <strong>@Model.FileNameStored</strong></span>
+            }
+        </h5>
+        <form asp-action="DownloadKv"
+              asp-route-packageKey="@Model.PackageKey"
+              asp-route-version="@Model.Version"
+              method="post"
+              class="needs-validation" novalidate>
+            @Html.AntiForgeryToken()
+            @if (hasFile)
+            {
+                <input type="hidden" name="fileName" value="@Model.FileNameStored" />
+            }
+            <div class="mb-3">
+                <label for="password" class="form-label">İndirme Şifresi</label>
+                <div class="input-group">
+                    <input type="password"
+                           class="form-control"
+                           id="password"
+                           name="password"
+                           placeholder="Şifreyi giriniz"
+                           required
+                           autocomplete="current-password"
+                           autofocus />
+                    <button type="button" class="btn btn-outline-secondary" id="togglePwd" tabindex="-1">Göster</button>
+                    <div class="invalid-feedback">Şifre zorunludur.</div>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">İndir</button>
+                <a class="btn btn-outline-secondary" asp-action="Index">Listeye Dön</a>
+            </div>
+        </form>
+        <div class="text-muted mt-3 small">
+            <em>Not:</em> Yanlış parola denemeleri log’lanır.
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        (() => {
+          'use strict';
+          const forms = document.querySelectorAll('.needs-validation');
+          Array.from(forms).forEach(form => {
+            form.addEventListener('submit', e => {
+              if (!form.checkValidity()) { e.preventDefault(); e.stopPropagation(); }
+              form.classList.add('was-validated');
+            }, false);
+          });
+          const pwd = document.getElementById('password');
+          const btn = document.getElementById('togglePwd');
+          if (pwd && btn) {
+            btn.addEventListener('click', () => {
+              const isPwd = pwd.getAttribute('type') === 'password';
+              pwd.setAttribute('type', isPwd ? 'text' : 'password');
+              btn.textContent = isPwd ? 'Gizle' : 'Göster';
+              pwd.focus();
+            });
+          }
+        })();
+    </script>
+}

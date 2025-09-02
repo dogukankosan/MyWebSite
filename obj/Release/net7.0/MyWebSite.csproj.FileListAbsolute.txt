@@ -230,3 +230,8 @@ C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\staticwebassets.build
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\staticwebassets.build.endpoints.json
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\staticwebassets.upToDateCheck.txt
 C:\Users\DOGUKAN\source\repos\MyWebSite\bin\Release\net7.0\wwwroot\userThema\img\reshot-icon-computer-UGMT6YVCE5.svg
+C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\rpswa.dswa.cache.json
+C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\rjimswa.dswa.cache.json
+C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\rjsmrazor.dswa.cache.json
+C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\rjsmcshtml.dswa.cache.json
+C:\Users\DOGUKAN\source\repos\MyWebSite\bin\Release\net7.0\web.config

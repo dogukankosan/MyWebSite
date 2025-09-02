@@ -111,8 +111,13 @@ namespace MyWebSite.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<JsonResult> ContactAdd(Contacts c)
+        public async Task<JsonResult> ContactAdd(Contacts c, string website, int? MathCaptcha)
         {
+            if (!string.IsNullOrEmpty(website))
+            {
+                await Logging.LogAdd("Spam Tespit Edildi", $"IP: {HttpContext.Connection.RemoteIpAddress}, Website field: {website}");
+                return Json(new { success = false, message = "Spam tespit edildi." });
+            }
             if (!ModelState.IsValid)
             {
                 Dictionary<string, string> errors = new();
@@ -137,18 +142,20 @@ namespace MyWebSite.Controllers
                     JObject json = JObject.Parse(response);
                     geo = json["city"] + ", " + json["country"];
                 }
+
                 string sql = "ContactAdd";
                 List<SqlParameter> parameters = new List<SqlParameter>
-                {
-                    new SqlParameter("@ContactName", c.ContactName),
-                    new SqlParameter("@ContactMail", c.ContactMail),
-                    new SqlParameter("@ContactPhone", c.ContactPhone),
-                    new SqlParameter("@ContactSubject", c.ContactSubject),
-                    new SqlParameter("@ContactMessage", c.ContactMessage),
-                    new SqlParameter("@IPAdress", HttpContext.Connection.RemoteIpAddress?.ToString()),
-                    new SqlParameter("@UserGeo", geo),
-                    new SqlParameter("@UserInfo", Request.Headers["User-Agent"].ToString())
-                };
+        {
+            new SqlParameter("@ContactName", c.ContactName),
+            new SqlParameter("@ContactMail", c.ContactMail),
+            new SqlParameter("@ContactPhone", c.ContactPhone),
+            new SqlParameter("@ContactSubject", c.ContactSubject),
+            new SqlParameter("@ContactMessage", c.ContactMessage),
+            new SqlParameter("@IPAdress", HttpContext.Connection.RemoteIpAddress?.ToString()),
+            new SqlParameter("@UserGeo", geo),
+            new SqlParameter("@UserInfo", Request.Headers["User-Agent"].ToString())
+        };
+
                 await SQLCrud.InsertUpdateDeleteAsync(sql, parameters);
                 return Json(new { success = true, message = "Mesajınız Başarıyla Gönderilmiştir" });
             }

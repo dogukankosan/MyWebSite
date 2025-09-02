@@ -2,6 +2,12 @@
 @{
     ViewData["Title"] = "Admin Iletisim Liste";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
+    string NormalizePhone(string rawPhone)
+    {
+        if (string.IsNullOrWhiteSpace(rawPhone)) return "";
+        var digitsOnly = new string(rawPhone.Where(char.IsDigit).ToArray());
+        return digitsOnly;
+    }
 }
 <br />
 <title>İletişim Mesajları</title>
@@ -37,9 +43,11 @@
         <tbody>
             @if (Model != null && Model.Any())
             {
-                foreach (var item in Model)
+                @foreach (var item in Model)
                 {
-                    string wp = "https://wa.me/90" + item.ContactPhone;
+                    string normalizedPhone = NormalizePhone(item.ContactPhone);
+                    string wp = "https://wa.me/" + normalizedPhone;
+
                     <tr>
                         <td>@item.ID</td>
                         <td>@item.ContactName</td>

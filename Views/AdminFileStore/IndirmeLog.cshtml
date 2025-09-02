@@ -1,0 +1,136 @@
+﻿@model IEnumerable<MyWebSite.Models.DownloadLogItem>
+@{
+    ViewData["Title"] = "İndirme Logları";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+<style>
+    .ua-cell, .file-cell {
+        max-width: 420px;
+    }
+    .ua-cell {
+        font-size: .9rem;
+        color: #6c757d;
+    }
+    td.no-export {
+        vertical-align: middle;
+    }
+</style>
+<br />
+<h4 class="card-title">İndirme Logları</h4>
+<hr />
+<div class="row mb-2">
+    <div class="col text-right">
+        <select id="exportOptions" class="form-control form-control-sm w-100 mb-2 d-md-inline-block">
+            <option value="">Dışa Aktar</option>
+            <option value="excel">📥 Excel</option>
+            <option value="pdf">📄 PDF</option>
+            <option value="print">🖨️ Yazdır</option>
+        </select>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-hover table-striped table-bordered align-middle" id="yourTableId">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Dosya</th>
+                <th>Paket</th>
+                <th>Versiyon</th>
+                <th>İndirme Zamanı (UTC)</th>
+                <th>IP</th>
+                <th>Şehir</th>
+                <th>UA</th>
+                <th>Index</th>
+                <th class="no-export">İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model == null || !Model.Any())
+            {
+                <tr><td colspan="10" class="text-center text-muted py-4">Kayıt bulunamadı.</td></tr>
+            }
+            else
+            {
+                int row = 0;
+                foreach (DownloadLogItem x in Model)
+                {
+                    row++;
+                    <tr>
+                        <td>@row</td>
+                        <td class="file-cell text-truncate" title="@x.FileNameStored">@x.FileNameStored</td>
+                        <td>@x.PackageKey</td>
+                        <td><span class="badge text-bg-secondary">@x.Version</span></td>
+                        <td>@x.DownloadUtc.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td><span class="badge text-bg-light border">@x.ClientIp</span></td>
+                        <td>@(string.IsNullOrWhiteSpace(x.City) ? "-" : x.City)</td>
+                        <td class="ua-cell text-truncate" title="@x.UserAgent">@x.UserAgent</td>
+                        <td><span class="badge text-bg-info">@x.DownloadIndex</span></td>
+                        <td class="no-export">
+                            <form asp-action="DeleteDownloadLog"
+                                  asp-controller="AdminDosya"
+                                  asp-route-id="@x.Id"
+                                  method="post"
+                                  class="d-inline delete-form mb-0">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-danger" title="Logu Sil">
+                                    <i class="bi bi-trash"></i> Sil
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<br />
+<br />
+<div id="tempDataMessages"
+     data-type="@TempData["Type"]"
+     data-message="@TempData["Message"]">
+</div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const el = document.getElementById('tempDataMessages');
+      if (el) {
+        const type = el.getAttribute('data-type');
+        const message = el.getAttribute('data-message');
+        if (type && message) {
+          Swal.fire({
+            icon: type === "success" ? "success" : "error",
+            title: type === "success" ? "Başarılı!" : "Hata!",
+            text: message,
+            timer: 3000,
+            showConfirmButton: false
+          });
+          el.setAttribute('data-type', '');
+          el.setAttribute('data-message', '');
+        }
+      }
+      document.querySelectorAll('.delete-form').forEach(form => {
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          Swal.fire({
+            title: 'Emin misiniz?',
+            text: "Bu indirme logu kalıcı olarak silinecek!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Evet, sil!',
+            cancelButtonText: 'Vazgeç'
+          }).then((result) => { if (result.isConfirmed) form.submit(); });
+        });
+      });
+    });
+    window.addEventListener('pageshow', function (evt) {
+      if (evt.persisted) {
+        const el = document.getElementById('tempDataMessages');
+        if (el) {
+          el.setAttribute('data-type', '');
+          el.setAttribute('data-message', '');
+        }
+      }
+    });
+</script>
