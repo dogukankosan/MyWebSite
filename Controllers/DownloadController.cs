@@ -8,7 +8,10 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -19,6 +22,7 @@ namespace MyWebSite.Controllers
     {
         private readonly IWebHostEnvironment _env;
         private readonly IHttpContextAccessor _http;
+        private readonly IHttpClientFactory _httpClientFactory;
         private const string SP_ADMIN_LOGS_ADD = "dbo.AdminLogsAdd";
         private const string SP_PUBLIC_LIST = "dbo.FileStore_PublicList";
         private const string SP_GET_BY_KV = "dbo.FileStore_GetByKeyVersion";
@@ -30,10 +34,11 @@ namespace MyWebSite.Controllers
             new(@"^[^\\/:*?""<>|]+\.(zip|rar)$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
         private static readonly Regex PackageKeyAllowed =
             new(@"^[A-Za-z0-9._-]{1,64}$", RegexOptions.CultureInvariant);
-        public DownloadController(IWebHostEnvironment env, IHttpContextAccessor http)
+        public DownloadController(IWebHostEnvironment env, IHttpContextAccessor http, IHttpClientFactory httpClientFactory)
         {
             _env = env;
             _http = http;
+            _httpClientFactory = httpClientFactory;
         }
         private async Task SafeAdminLog(string logType, string message)
         {
@@ -184,6 +189,8 @@ namespace MyWebSite.Controllers
             if (string.IsNullOrWhiteSpace(city))
             {
                 string? ip = GetClientIp(HttpContext);
+                if (!string.IsNullOrWhiteSpace(ip) && IsPublicIp(ip))
+                    city = await ResolveCityFromIpAsync(ip);
             }
             await SQLCrud.InsertUpdateDeleteAsync("dbo.FileStore_RegisterDownload", new()
 {
@@ -205,6 +212,56 @@ namespace MyWebSite.Controllers
                 $"attachment; filename=\"{ascii}\"; filename*=UTF-8''{Uri.EscapeDataString(file.FileNameStored)}";
             string contentType = GetContentType(file.ArchiveType);
             return PhysicalFile(fullNorm, contentType, file.FileNameStored, enableRangeProcessing: true);
+        }
+        private async Task<string?> ResolveCityFromIpAsync(string ip)
+        {
+            if (string.IsNullOrWhiteSpace(ip)) return null;
+            if (!IsPublicIp(ip)) return null;
+            string url = $"http://ip-api.com/json/{ip}?fields=status,city";
+            try
+            {
+                HttpClient client = _httpClientFactory.CreateClient();
+                client.Timeout = TimeSpan.FromSeconds(3);
+                using HttpResponseMessage resp = await client.GetAsync(url);
+                if (!resp.IsSuccessStatusCode) return null;
+                using Stream stream = await resp.Content.ReadAsStreamAsync();
+                using JsonDocument doc = await JsonDocument.ParseAsync(stream);
+                JsonElement root = doc.RootElement;
+                if (root.TryGetProperty("status", out var st) &&
+                    st.GetString()?.Equals("success", StringComparison.OrdinalIgnoreCase) == true &&
+                    root.TryGetProperty("city", out var cityEl))
+                {
+                    string city = cityEl.GetString();
+                    return string.IsNullOrWhiteSpace(city) ? null : city;
+                }
+            }
+            catch
+            {
+                
+            }
+            return null;
+        }
+        private static bool IsPublicIp(string ipString)
+        {
+            if (!IPAddress.TryParse(ipString, out var ip)) return false;
+            if (ip.IsIPv4MappedToIPv6) ip = ip.MapToIPv4();
+            if (ip.AddressFamily == AddressFamily.InterNetwork) 
+            {
+                byte[] b = ip.GetAddressBytes();
+                if (b[0] == 10) return false;
+                if (b[0] == 172 && b[1] >= 16 && b[1] <= 31) return false;
+                if (b[0] == 192 && b[1] == 168) return false;
+                if (b[0] == 127) return false;
+                return true;
+            }
+            if (ip.AddressFamily == AddressFamily.InterNetworkV6) 
+            {
+                if (ip.IsIPv6LinkLocal || ip.IsIPv6Multicast || IPAddress.IsLoopback(ip)) return false;
+                byte[] b = ip.GetAddressBytes();
+                if ((b[0] & 0xFE) == 0xFC) return false;
+                return true;
+            }
+            return false;
         }
         private async Task<FileDetails?> FindFile(string packageKey, string version, string? fileName)
         {

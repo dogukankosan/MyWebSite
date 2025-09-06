@@ -7,10 +7,11 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta property="og:title" content="@ViewBag.AboutName | @ViewBag.AboutTitle" />
     <meta property="og:description" content="Veri Tabanı Yöneticisi,ERP-İş Analisti Raporlama Uzmanı,Teknik Destek,Veritabanı Yöneticisi,SQL,T-SQL,C#,Microsoft Excel VBA" />
-    <meta property="og:image" content="https://www.dogukankosan.com.tr/wwwroot/userThema/img/dogukan.jpeg" />
-    <meta property="og:url" content="https://www.dogukankosan.com.tr/" />
+    <meta property="og:image"
+          content="@($"{Context.Request.Scheme}://{Context.Request.Host}/userThema/img/my1.jpeg")" />
+    <meta property="og:url" content="@($"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}")" />
     <meta property="og:type" content="website" />
-    <link rel="canonical" href="https://www.dogukankosan.com.tr/" />
+    <link rel="canonical" href="@($"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}")" />
     <meta name="keywords" content="Doğukan Koşan, Yazılım, Teknik Destek, Veri Analizi, İş Analisti, İstanbul, Silivri, Koş, Çalışıyorum, Yazılım Çözümleri" />
     <meta name="description" content="Doğukan Koşan, Veri Tabanı Yöneticisi,Yazılım çözümleri,İş Analisti,Raporlama Uzmanı,Veri Analizi,Logo,ETA,J-Platform,Logo Flow" />
     <meta name="author" content="@ViewBag.AboutName" />
@@ -308,23 +309,25 @@
     @using System.Text.Json
     <script type="application/ld+json">
         @{
-            var jsonLd = new
-            {
-                context = "https://schema.org",
-                type = "Person",
-                name = ViewBag.AboutName,
-                jobTitle = ViewBag.AboutTitle,
-                url = "https://www.dogukankosan.com.tr",
-                sameAs = new string[] {
-                    ViewBag.FacebookLink,
-                    ViewBag.InstagramLink,
-                    ViewBag.GithubLink,
-                    ViewBag.LinkedinLink
-                }
-            };
-            var jsonString = JsonSerializer.Serialize(jsonLd)
-                .Replace("\"context\"", "\"@context\"")
-                .Replace("\"type\"", "\"@type\"");
+                string siteUrl = $"{Context.Request.Scheme}://{Context.Request.Host}";
+                var jsonLd = new
+                {
+                        context = "https://schema.org",
+                        type = "Person",
+                        name = ViewBag.AboutName,
+                        jobTitle = ViewBag.AboutTitle,
+                        url = siteUrl,
+                        sameAs = new string[]
+                        {
+                                        ViewBag.FacebookLink,
+                                        ViewBag.InstagramLink,
+                                        ViewBag.GithubLink,
+                                        ViewBag.LinkedinLink
+                        }
+                };
+                string jsonString = System.Text.Json.JsonSerializer.Serialize(jsonLd)
+                        .Replace("\"context\"", "\"@context\"")
+                        .Replace("\"type\"", "\"@type\"");
         }
         @Html.Raw(jsonString)
     </script>

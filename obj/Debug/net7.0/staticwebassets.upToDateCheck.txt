@@ -155,7 +155,7 @@ wwwroot\LoginTemp\fonts\ubuntu\Ubuntu-Medium.ttf
 wwwroot\LoginTemp\fonts\ubuntu\Ubuntu-MediumItalic.ttf
 wwwroot\LoginTemp\fonts\ubuntu\Ubuntu-Regular.ttf
 wwwroot\LoginTemp\fonts\ubuntu\UFL.txt
-wwwroot\LoginTemp\images\bg-01.jpg
+wwwroot\LoginTemp\images\a.jpg
 wwwroot\LoginTemp\images\icons\favicon.ico
 wwwroot\LoginTemp\js\main.js
 wwwroot\LoginTemp\vendor\animate\animate.css
@@ -196,8 +196,8 @@ wwwroot\LoginTemp\vendor\select2\select2.min.css
 wwwroot\LoginTemp\vendor\select2\select2.min.js
 wwwroot\userThema\css\bootstrap.min.css
 wwwroot\userThema\css\style.css
-wwwroot\userThema\img\dogukan.jpeg
 wwwroot\userThema\img\my.jpg
+wwwroot\userThema\img\my1.jpeg
 wwwroot\userThema\img\reshot-icon-computer-UGMT6YVCE5.svg
 wwwroot\userThema\img\Thumbs.db
 wwwroot\userThema\js\main.js

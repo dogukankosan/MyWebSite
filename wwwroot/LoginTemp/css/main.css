@@ -291,7 +291,7 @@ iframe {
   font-size: 18px;
   color: #999999;
 
-  content: attr(data-placeholder);
+/* content: attr(data-placeholder);*/
   display: block;
   width: 100%;
   position: absolute;

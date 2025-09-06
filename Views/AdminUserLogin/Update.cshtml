@@ -35,18 +35,51 @@
     <button type="submit" class="btn btn-success">Güncelle</button>
 </form>
 <br/>
+
+@using System.Text.Json
 <script>
-    document.getElementById("togglePassword")?.addEventListener("click", function () {
-        const input = document.getElementById("Password");
-        const icon = document.getElementById("toggleIcon");
-        if (input.type === "password") {
-            input.type = "text";
-            icon.classList.remove("fa-eye");
-            icon.classList.add("fa-eye-slash");
-        } else {
-            input.type = "password";
-            icon.classList.remove("fa-eye-slash");
-            icon.classList.add("fa-eye");
+    document.addEventListener('DOMContentLoaded', function () {
+      const pwdInput =
+        document.querySelector('input#Password') ||
+        document.querySelector('input[name="Password"]') ||
+        document.querySelector('input[id$="_Password"]') ||
+        document.querySelector('input[name$=".Password"]');
+
+      const toggleBtn  = document.getElementById('togglePassword');
+      const toggleIcon = document.getElementById('toggleIcon');
+
+      if (toggleBtn && toggleIcon && pwdInput) {
+        toggleBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          const isPassword = pwdInput.getAttribute('type') === 'password';
+          pwdInput.setAttribute('type', isPassword ? 'text' : 'password');
+          toggleIcon.classList.remove('fa-eye', 'fa-eye-slash');
+          toggleIcon.classList.add(isPassword ? 'fa-eye-slash' : 'fa-eye');
+        });
+      }
+
+      const shouldLogout = @Html.Raw(JsonSerializer.Serialize(ViewBag.LogoutAfter ?? false));
+      const type         = @Html.Raw(JsonSerializer.Serialize(TempData["Type"] ?? ""));
+      const message      = @Html.Raw(JsonSerializer.Serialize(TempData["Message"] ?? ""));
+      const logoutUrl    = @Html.Raw(JsonSerializer.Serialize(
+                                                        ViewBag.LogoutUrl ?? Url.Action("Cikis", "AdminUserLogin",
+                                                            new { returnUrl = Url.Action("Panel", "AdminGiris") })));
+      if (shouldLogout) {
+        if (typeof Swal !== 'undefined') {
+          Swal.fire({
+            icon: (type === 'success') ? 'success' : 'info',
+            title: (type === 'success') ? 'Güncelleme Başarılı' : 'Bilgi',
+            text: message || '5 saniye sonra oturum kapatılacak.',
+            timer: 5000,
+            timerProgressBar: true,
+            showConfirmButton: false,
+            allowOutsideClick: false,
+            allowEscapeKey: false
+          });
         }
+        setTimeout(function () {
+          window.location.href = logoutUrl;  
+        }, 5000);
+      }
     });
 </script>

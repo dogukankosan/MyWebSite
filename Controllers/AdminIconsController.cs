@@ -2,23 +2,34 @@
 using Microsoft.AspNetCore.Mvc;
 using MyWebSite.Classes;
 using MyWebSite.Models;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace MyWebSite.Controllers
 {
-    [Route("AdminIcon")]
+    [Route("AdminIcon")] 
     [Authorize(Roles = "Admin")]
     public class AdminIconsController : Controller
     {
+        private static bool IsUniqueViolation(Exception ex)
+        {
+            Exception? cur = ex;
+            while (cur != null)
+            {
+                if (cur is SqlException sqlEx && (sqlEx.Number == 2627 || sqlEx.Number == 2601))
+                    return true;
+                cur = cur.InnerException;
+            }
+            return false;
+        }
         [HttpGet("Liste")]
         public async Task<IActionResult> List()
         {
             try
             {
-                List<SqlParameter> parameters = new List<SqlParameter>();
-                List<Icons> icons = await SQLCrud.ExecuteModelListAsync(
+                var icons = await SQLCrud.ExecuteModelListAsync(
                     "IconsGetAll",
-                    parameters,
+                    new List<SqlParameter>(),
                     reader => new Icons
                     {
                         ID = Convert.ToInt32(reader["ID"]),
@@ -38,49 +49,62 @@ namespace MyWebSite.Controllers
         }
         [HttpGet("Ekle")]
         public IActionResult Add() => View();
-
         [HttpPost("Ekle")]
         public async Task<IActionResult> Add(Icons icon)
         {
+            icon.Icon = icon.Icon?.Trim();
             if (!ModelState.IsValid)
             {
-                var errors = ModelState
-                    .Where(x => x.Value.Errors.Any())
+                var errors = ModelState.Where(x => x.Value.Errors.Any())
                     .ToDictionary(
                         k => k.Key.Contains('.') ? k.Key.Split('.').Last() : k.Key,
                         v => string.Join(", ", v.Value.Errors.Select(e => e.ErrorMessage))
                     );
                 return Json(new { success = false, errors });
             }
-            try
+            int exists = await SQLCrud.ExecuteScalarAsync<int>(
+                "SELECT CASE WHEN EXISTS (SELECT 1 FROM dbo.Icons WHERE Icon = @p) THEN 1 ELSE 0 END",
+                new List<SqlParameter> { new("@p", icon.Icon ?? (object)DBNull.Value) },
+                0,
+                CommandType.Text
+            );
+            if (exists == 1)
             {
-                List<SqlParameter> parameters = new List<SqlParameter>
+                return Json(new
                 {
-                    new SqlParameter("@IconsString", icon.Icon ?? (object)DBNull.Value)
-                };
-                await SQLCrud.InsertUpdateDeleteAsync("IconsInsert", parameters);
-                TempData["Type"] = "success";
-                TempData["Message"] = "İkon başarıyla eklendi.";
-                return Json(new { success = true, redirectUrl = Url.Action("List", "AdminIcons") });
+                    success = false,
+                    errors = new Dictionary<string, string>
+                    {
+                        ["Icon"] = "Bu ikon zaten kayıtlı."
+                    }
+                });
             }
-            catch (Exception ex)
-            {
-                await Logging.LogAdd("Admin İkon Panelde Ekleme Hatası", ex.Message);
-                TempData["Type"] = "error";
-                TempData["Message"] = "Icon ekleme işlemi sırasında hata oluştu.";
-                return Json(new { success = false });
-            }
+            bool ok = await SQLCrud.InsertUpdateDeleteAsync(
+                "dbo.IconsInsert",
+                new List<SqlParameter> { new("@IconsString", icon.Icon ?? (object)DBNull.Value) },
+                CommandType.StoredProcedure
+            );
+            if (!ok)
+                return Json(new
+                {
+                    success = false,
+                    errors = new Dictionary<string, string>
+                    {
+                        ["_"] = "Kayıt eklenemedi."
+                    }
+                });
+            TempData["Type"] = "success";
+            TempData["Message"] = "İkon başarıyla eklendi.";
+            return Json(new { success = true, redirectUrl = Url.Action("List", "AdminIcons") });
         }
+
         [HttpGet("Guncelle/{id:int}")]
         public async Task<IActionResult> Update(int id)
         {
             try
             {
-                List<SqlParameter> parameters = new List<SqlParameter>
-        {
-            new SqlParameter("@ID", id)
-        };
-                List<Icons> icons = await SQLCrud.ExecuteModelListAsync(
+                List<SqlParameter> parameters = new List<SqlParameter> { new SqlParameter("@ID", id) };
+                var icons = await SQLCrud.ExecuteModelListAsync(
                     "IconsGetByID",
                     parameters,
                     reader => new Icons
@@ -102,45 +126,70 @@ namespace MyWebSite.Controllers
         [HttpPost("Guncelle")]
         public async Task<IActionResult> Update(Icons icon)
         {
+            icon.Icon = icon.Icon?.Trim();
             if (!ModelState.IsValid)
             {
-                var errors = ModelState
-                    .Where(x => x.Value.Errors.Any())
+                var errors = ModelState.Where(x => x.Value.Errors.Any())
                     .ToDictionary(
                         k => k.Key.Contains('.') ? k.Key.Split('.').Last() : k.Key,
                         v => string.Join(", ", v.Value.Errors.Select(e => e.ErrorMessage))
                     );
                 return Json(new { success = false, errors });
             }
-            try
+            int existsOther = await SQLCrud.ExecuteScalarAsync<int>(
+                @"SELECT CASE WHEN EXISTS (
+              SELECT 1 FROM dbo.Icons WITH (NOLOCK)
+              WHERE Icon = @p AND ID <> @id
+          ) THEN 1 ELSE 0 END",
+                new List<SqlParameter>
+                {
+            new("@p", icon.Icon ?? (object)DBNull.Value),
+            new("@id", icon.ID)
+                },
+                0,
+                CommandType.Text
+            );
+            if (existsOther == 1)
             {
-                List<SqlParameter> parameters = new List<SqlParameter>
-        {
-            new SqlParameter("@ID", icon.ID),
-            new SqlParameter("@IconsString", icon.Icon ?? (object)DBNull.Value)
-        };
-                await SQLCrud.InsertUpdateDeleteAsync("IconsUpdate", parameters);
-                TempData["Type"] = "success";
-                TempData["Message"] = "İkon başarıyla güncellendi.";
-                return Json(new { success = true, redirectUrl = Url.Action("List", "AdminIcons") });
+                return Json(new
+                {
+                    success = false,
+                    errors = new Dictionary<string, string>
+                    {
+                        ["Icon"] = "Bu ikon zaten başka kayıtta var."
+                    }
+                });
             }
-            catch (Exception ex)
+            bool ok = await SQLCrud.InsertUpdateDeleteAsync(
+                "dbo.IconsUpdate",
+                new List<SqlParameter>
+                {
+            new("@ID", icon.ID),
+            new("@IconsString", icon.Icon ?? (object)DBNull.Value)
+                },
+                CommandType.StoredProcedure
+            );
+            if (!ok)
             {
-                await Logging.LogAdd("Admin Icon Panelde Güncelleme Hatası", ex.Message);
-                TempData["Type"] = "error";
-                TempData["Message"] = "Icon güncelleme işlemi sırasında hata oluştu.";
-                return Json(new { success = false });
+                return Json(new
+                {
+                    success = false,
+                    errors = new Dictionary<string, string>
+                    {
+                        ["_"] = "Güncelleme başarısız."
+                    }
+                });
             }
+            TempData["Type"] = "success";
+            TempData["Message"] = "İkon başarıyla güncellendi.";
+            return Json(new { success = true, redirectUrl = Url.Action("List", "AdminIcons") });
         }
         [HttpGet("Sil/{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                List<SqlParameter> parameters = new List<SqlParameter>
-                {
-                    new SqlParameter("@ID", id)
-                };
+                List<SqlParameter> parameters = new List<SqlParameter> { new SqlParameter("@ID", id) };
                 await SQLCrud.InsertUpdateDeleteAsync("IconDelete", parameters);
                 TempData["Type"] = "success";
                 TempData["Message"] = "İkon başarıyla silindi.";

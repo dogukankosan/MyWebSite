@@ -84,8 +84,8 @@
                         <td class="text-truncate" style="max-width:260px" title="@i.FileNameStored">@i.FileNameStored</td>
                         <td>@((i.FileSizeBytes / 1024d / 1024d).ToString("0.##")) MB</td>
                         <td class="small text-monospace text-truncate" style="max-width:240px" title="@i.Sha256">@i.Sha256</td>
-                        <td>@i.UploadUtc.ToString("yyyy-MM-dd HH:mm")</td>
-                        <td>@i.LastModifiedUtc.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>@i.UploadUtc.ToString("dd.MM.yyyy HH:mm:ss")</td>
+                        <td>@i.LastModifiedUtc.ToString("dd.MM.yyyy HH:mm:ss")</td>
                         <td><span class="badge text-bg-info">@i.DownloadCount</span></td>
                         <td class="no-export">
                             <div class="actions-row">

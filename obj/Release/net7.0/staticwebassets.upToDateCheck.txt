@@ -69,7 +69,7 @@ wwwroot\lib\jquery\dist\jquery.js
 wwwroot\lib\jquery\dist\jquery.min.js
 wwwroot\lib\jquery\dist\jquery.min.map
 wwwroot\lib\jquery\LICENSE.txt
-wwwroot\LoginTemp\css\main.css
+wwwroot\userThema\img\my1.jpeg
 wwwroot\LoginTemp\css\util.css
 wwwroot\LoginTemp\fonts\font-awesome-4.7.0\css\font-awesome.css
 wwwroot\LoginTemp\fonts\font-awesome-4.7.0\css\font-awesome.min.css
@@ -148,7 +148,7 @@ wwwroot\LoginTemp\fonts\ubuntu\Ubuntu-Medium.ttf
 wwwroot\LoginTemp\fonts\ubuntu\Ubuntu-MediumItalic.ttf
 wwwroot\LoginTemp\fonts\ubuntu\Ubuntu-Regular.ttf
 wwwroot\LoginTemp\fonts\ubuntu\UFL.txt
-wwwroot\LoginTemp\images\bg-01.jpg
+wwwroot\LoginTemp\images\a.jpg
 wwwroot\LoginTemp\images\icons\favicon.ico
 wwwroot\LoginTemp\js\main.js
 wwwroot\LoginTemp\vendor\animate\animate.css
@@ -308,4 +308,4 @@ wwwroot\userThema\scss\bootstrap\scss\_variables.scss
 wwwroot\css\site.css
 wwwroot\css\style.css
 wwwroot\userThema\img\reshot-icon-computer-UGMT6YVCE5.svg
-wwwroot\userThema\img\dogukan.jpeg
+wwwroot\LoginTemp\css\main.css

@@ -32,6 +32,7 @@ builder.Services
         options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
         options.SlidingExpiration = true;
     });
+builder.Services.AddHttpClient();
 builder.Services.AddAuthorization();
 builder.Services.AddMemoryCache();
 builder.Services.Configure<IpRateLimitOptions>(options =>
@@ -115,6 +116,10 @@ app.UseIpRateLimiting();
 app.UseStatusCodePagesWithReExecute("/Home/Error");
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
+});
 var httpContextAccessor = app.Services.GetRequiredService<IHttpContextAccessor>();
 SQLCrud.Configure(builder.Configuration, httpContextAccessor);
 Logging.Configure(httpContextAccessor);

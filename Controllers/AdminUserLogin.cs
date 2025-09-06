@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyWebSite.Classes;
 using MyWebSite.Models;
@@ -14,39 +16,42 @@ public class AdminUserLogin : Controller
     {
         ViewBag.Type = type;
         ViewBag.Message = message;
-
-        List<Login> result = await SQLCrud.ExecuteModelListAsync<Login>(
+        var result = await SQLCrud.ExecuteModelListAsync<Login>(
             "AdminLoginGet",
             new List<SqlParameter>(),
-            reader => new Login
+            r => new Login
             {
-                UserName = reader["AdminUserName"].ToString(),
-                Password = reader["Password_"].ToString()
+                UserName = r["AdminUserName"].ToString(),
+                Password = r["Password_"].ToString()
             },
             CommandType.StoredProcedure
         );
         return View(result.FirstOrDefault() ?? new Login());
     }
     [HttpGet("Guncelle")]
-    public async Task<IActionResult> Update()
+    public async Task<IActionResult> Update(bool? logoutAfter = null)
     {
-        List<AdminLoginProp> result = await SQLCrud.ExecuteModelListAsync<AdminLoginProp>(
+        var result = await SQLCrud.ExecuteModelListAsync<AdminLoginProp>(
             "AdminLoginGet",
             null,
-            reader => new AdminLoginProp
+            r => new AdminLoginProp
             {
-                UserName = reader["AdminUserName"].ToString(),
-                ExistingPasswordHash = reader["Password_"].ToString()
+                UserName = r["AdminUserName"].ToString(),
+                ExistingPasswordHash = r["Password_"].ToString()
             },
             CommandType.StoredProcedure
         );
+        ViewBag.LogoutAfter = logoutAfter == true;
+        ViewBag.LogoutUrl = Url.Action("Cikis", "AdminUserLogin",
+            new { returnUrl = Url.Action("Panel", "AdminGiris") });
+
         return View(result.FirstOrDefault() ?? new AdminLoginProp());
     }
     [HttpPost("Guncelle")]
     public async Task<IActionResult> Update(AdminLoginProp login)
     {
-        if (!ModelState.IsValid)
-            return View(login);
+        if (!ModelState.IsValid) return View(login);
+
         try
         {
             string finalPassword = string.IsNullOrWhiteSpace(login.Password)
@@ -54,13 +59,13 @@ public class AdminUserLogin : Controller
                 : HashingControl.HashPassword(login.Password);
             List<SqlParameter> parameters = new List<SqlParameter>
             {
-                new SqlParameter("@AdminUserName", login.UserName),
-                new SqlParameter("@Password_", finalPassword)
+                new("@AdminUserName", login.UserName),
+                new("@Password_", finalPassword)
             };
             await SQLCrud.InsertUpdateDeleteAsync("AdminLoginUpdate", parameters, CommandType.StoredProcedure);
             TempData["Type"] = "success";
-            TempData["Message"] = "Admin Giriş Bilgileri Başarıyla Güncellendi";
-            return RedirectToAction("Liste");
+            TempData["Message"] = "Güncelleme başarılı. 5 saniye içinde yeniden giriş ekranına yönlendirileceksiniz.";
+            return RedirectToAction("Guncelle", "AdminKullanici", new { logoutAfter = true });
         }
         catch (Exception ex)
         {
@@ -68,5 +73,12 @@ public class AdminUserLogin : Controller
             ModelState.AddModelError("", "Güncelleme sırasında beklenmeyen bir hata oluştu.");
             return View(login);
         }
+    }
+    [HttpGet("Cikis")]
+    [AllowAnonymous] 
+    public async Task<IActionResult> Cikis(string? returnUrl = null)
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return Redirect(returnUrl ?? Url.Action("Panel", "AdminGiris"));
     }
 }

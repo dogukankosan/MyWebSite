@@ -9,26 +9,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet">
     <link rel="icon" type="image/png" href="~/LoginTemp/images/icons/favicon.ico" />
     <link rel="stylesheet" type="text/css" href="~/LoginTemp/css/util.css" />
     <link rel="stylesheet" type="text/css" href="~/LoginTemp/css/main.css" />
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        .container-login100::before {
+            background: transparent !important; 
+        }
+    </style>
+    <style>
+        .wrap-login100 {
+            background: rgba(128,128,128,0.25) !important;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+            width: 480px;
+            max-width: 90vw;
+            padding: 40px 36px;
+        }
+        .login100-form,
+        .container-login100-form-btn,
+        .wrap-input100 {
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+        .input100 {
+            background: rgba(255,255,255,0.15) !important;
+            border: 1px solid rgba(255,255,255,0.25) !important;
+            color: #fff !important;
+        }
+            .input100::placeholder {
+                color: rgba(255,255,255,0.7) !important;
+            }
+        .login100-form-title {
+            color: #fff !important;
+        }
+    </style>
 </head>
 <body>
     <div class="limiter">
-        <div class="container-login100" style="background-image: url('@Url.Content("~/LoginTemp/images/bg-01.jpg")');">
+            <div class="container-login100" style="background-image: url('@Url.Content("~/LoginTemp/images/a.jpg")');">
             <div class="wrap-login100 p-t-80 p-b-80">
-                <span class="login100-form-title p-b-41">Admin Giriş Ekranı</span>
+                <span class="login100-form-title p-b-41">Admin Giriş Ekranı </span>
+                <hr style="border: none; height: 2px; background-color: #B03AA3;" />
+           <br />
                 <form id="loginForm" class="login100-form validate-form p-b-33 p-t-5">
                     <div class="wrap-input100 validate-input" data-validate="Kullanıcı Adı Boş Geçilemez">
-                        <input class="input100" type="text" name="UserName" placeholder="Kullanıcı Adınız.." required autocomplete="off"
+                        <input class="input100" type="text" name="UserName" placeholder="👨‍💻 Kullanıcı Adınız.." required autocomplete="off"
                                pattern="^[a-zA-Z0-9_.-]+$" title="Yalnızca harf, rakam, nokta, tire ve alt çizgi">
                         <span class="focus-input100" data-placeholder="&#xe82a;"></span>
                         <span id="UserNameError" class="text-danger" style="color:red;display:block;margin-top:5px;margin-left:15px;"></span>
                     </div>
                     <div class="wrap-input100 validate-input" data-validate="Şifre Boş Geçilemez" style="position: relative;">
-                        <input class="input100" type="password" id="Password" name="Password" placeholder="Şifreniz.." required autocomplete="off"
+                        <input class="input100" type="password" id="Password" name="Password" placeholder="🔐 Şifreniz.." required autocomplete="off"
                                pattern=".{8,}" title="En az 8 karakter olmalı">
                         <span class="focus-input100" data-placeholder="&#xe80f;"></span>
                         <span id="PasswordError" class="text-danger" style="color:red;display:block;margin-top:5px;margin-left:15px;"></span>
@@ -47,7 +86,7 @@
                     </div>
 
                     <div class="container-login100-form-btn m-t-32">
-                        <button type="submit" class="login100-form-btn">Giriş Yap</button>
+                        <button type="submit" class="login100-form-btn">🔥 Ateşle</button>
                     </div>
                 </form>
             </div>
@@ -114,8 +153,6 @@
                 Swal.fire('Hata', 'Sunucuya erişilemedi.', 'error');
             }
         });
-
-
             });
 
         });

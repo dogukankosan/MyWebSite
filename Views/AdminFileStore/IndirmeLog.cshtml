@@ -36,7 +36,7 @@
                 <th>Dosya</th>
                 <th>Paket</th>
                 <th>Versiyon</th>
-                <th>İndirme Zamanı (UTC)</th>
+                <th>İndirme Zamanı</th>
                 <th>IP</th>
                 <th>Şehir</th>
                 <th>UA</th>
@@ -60,7 +60,7 @@
                         <td class="file-cell text-truncate" title="@x.FileNameStored">@x.FileNameStored</td>
                         <td>@x.PackageKey</td>
                         <td><span class="badge text-bg-secondary">@x.Version</span></td>
-                        <td>@x.DownloadUtc.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td>@x.DownloadUtc.ToString("dd.MM.yyyy HH:mm:ss")</td>
                         <td><span class="badge text-bg-light border">@x.ClientIp</span></td>
                         <td>@(string.IsNullOrWhiteSpace(x.City) ? "-" : x.City)</td>
                         <td class="ua-cell text-truncate" title="@x.UserAgent">@x.UserAgent</td>
@@ -96,7 +96,9 @@
       if (el) {
         const type = el.getAttribute('data-type');
         const message = el.getAttribute('data-message');
-        if (type && message) {
+        const navEntry = performance.getEntriesByType("navigation")[0];
+        const navType = navEntry ? navEntry.type : "navigate";
+        if (type && message && navType === "navigate") {
           Swal.fire({
             icon: type === "success" ? "success" : "error",
             title: type === "success" ? "Başarılı!" : "Hata!",

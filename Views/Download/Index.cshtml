@@ -262,7 +262,9 @@
                                                                             <td class="text-truncate file-cell" title="@x.FileNameStored">@x.FileNameStored</td>
                                                                             <td><span class="badge bg-outline border">@x.ArchiveType</span></td>
                                                                             <td>@SizeFmt(x.FileSizeBytes)</td>
-                                                                            <td>@x.UploadUtc.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                                                                            <td>
+                                                                                @x.UploadUtc.ToString("dddd, dd MMMM yyyy HH:mm:ss", new System.Globalization.CultureInfo("tr-TR"))
+                                                                            </td>
                                                                             <td class="text-end">
                                                                                 <div class="btn-group">
                                                                                     <a class="btn btn-primary btn-sm"
@@ -291,7 +293,9 @@
                                                                             <div class="file-meta mt-1">
                                                                                 <span class="chip me-2 text-primary">@x.ArchiveType.ToUpper()</span>
                                                                                 <span class="me-2">@SizeFmt(x.FileSizeBytes)</span>
-                                                                                <span>@x.UploadUtc.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</span>
+                                                                                <span>
+                                                                                    @x.UploadUtc.ToString("dddd, dd MMMM yyyy HH:mm:ss", new System.Globalization.CultureInfo("tr-TR"))
+                                                                                </span>
                                                                             </div>
                                                                         </div>
                                                                         <div class="ms-2 text-nowrap">
@@ -328,7 +332,6 @@
             </div>
         }
     </main>
-
     <footer class="border-top bg-white py-3 mt-4">
         <div class="container small text-muted">
             © @DateTime.Now.Year Doğukan Koşan • Dosya Merkezi

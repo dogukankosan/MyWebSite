@@ -1,9 +1,15 @@
 ﻿@model string
+
+@{
+    string host = Context.Request.Host.Host;             
+    string[] parts = host.Replace("www.", "").Split('.');  
+    string domainName = parts[0];                     
+}
 <style>
     .cv-fab {
         position: fixed;
         right: 20px;
-        bottom: 96px; 
+        bottom: 96px;
         z-index: 1100;
         display: inline-flex;
         align-items: center;
@@ -21,6 +27,7 @@
         transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
         -webkit-tap-highlight-color: transparent;
     }
+
         .cv-fab:hover,
         .cv-fab:focus-visible {
             color: #fff;
@@ -28,13 +35,16 @@
             box-shadow: 0 14px 36px rgba(13,110,253,.45);
             filter: brightness(1.03);
         }
+
         .cv-fab i {
             font-size: 18px;
             line-height: 1;
         }
+
     .cv-label {
         letter-spacing: .2px;
     }
+
     .cv-fab::before {
         content: "";
         position: absolute;
@@ -60,9 +70,11 @@
     }
 
     }
+
     .cv-fab[data-tip] {
-        position: fixed; 
+        position: fixed;
     }
+
         .cv-fab[data-tip]::after {
             content: attr(data-tip);
             position: absolute;
@@ -72,7 +84,7 @@
             transform: translateY(50%) scale(.98);
             opacity: 0;
             pointer-events: none;
-            background: #111827; 
+            background: #111827;
             color: #fff;
             font-size: 12px;
             font-weight: 600;
@@ -82,37 +94,43 @@
             box-shadow: 0 10px 30px rgba(0,0,0,.25);
             transition: opacity .15s ease, transform .15s ease;
         }
+
     .cv-fab:hover::after,
     .cv-fab:focus-visible::after {
         opacity: 1;
         transform: translateY(50%) scale(1);
     }
     @@media (max-width: 576px) {
-        .cv-fab {
-            padding: 12px;
-            border-radius: 50%;
-        }
-        .cv-label {
-            display: none !important;
-        }
+        .cv-fab
+
+    {
+        padding: 12px;
+        border-radius: 50%;
+    }
+
+    .cv-label {
+        display: none !important;
+    }
+
     }
     @@media (prefers-reduced-motion: reduce) {
-        .cv-fab,
-        .cv-fab:hover,
-        .cv-fab:focus-visible {
-            transition: none;
-            transform: none;
-        }
+        .cv-fab, .cv-fab:hover, .cv-fab:focus-visible
 
-            .cv-fab::before {
-                animation: none;
-            }
+    {
+        transition: none;
+        transform: none;
+    }
+
+    .cv-fab::before {
+        animation: none;
+    }
+
     }
 </style>
 @if (!string.IsNullOrEmpty(Model))
 {
     <a href="data:application/pdf;base64,@Model"
-       download="DogukanKosanCV.pdf"
+       download="@($"{domainName}CV.pdf")"
        class="cv-fab"
        target="_blank"
        rel="noopener"
