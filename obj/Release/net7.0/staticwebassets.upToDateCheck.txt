@@ -6,7 +6,7 @@ wwwroot\AdminThema\assets\img\error-404-monochrome.svg
 wwwroot\AdminThema\css\styles.css
 wwwroot\AdminThema\js\datatables-simple-demo.js
 wwwroot\AdminThema\js\scripts.js
-wwwroot\css\404-error.png
+wwwroot\favicon.ico
 wwwroot\css\admin-panel.png
 wwwroot\AdminThema\table\style.css.map
 wwwroot\AdminThema\table\style.css
@@ -309,3 +309,4 @@ wwwroot\css\site.css
 wwwroot\css\style.css
 wwwroot\userThema\img\reshot-icon-computer-UGMT6YVCE5.svg
 wwwroot\LoginTemp\css\main.css
+wwwroot\404-error.ico

@@ -1,3 +1,4 @@
+wwwroot\404-error.ico
 wwwroot\AdminThema\assets\demo\chart-area-demo.js
 wwwroot\AdminThema\assets\demo\chart-bar-demo.js
 wwwroot\AdminThema\assets\demo\chart-pie-demo.js
@@ -14,10 +15,9 @@ wwwroot\AdminThema\table\jquery.dataTables.min.js
 wwwroot\AdminThema\table\select.dataTables.min.css
 wwwroot\AdminThema\table\style.css
 wwwroot\AdminThema\table\style.css.map
-wwwroot\css\404-error.png
-wwwroot\css\admin-panel.png
 wwwroot\css\site.css
 wwwroot\css\style.css
+wwwroot\favicon.ico
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map
