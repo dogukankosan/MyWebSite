@@ -1,127 +1,136 @@
 ﻿@model string
 
 @{
-    string host = Context.Request.Host.Host;             
-    string[] parts = host.Replace("www.", "").Split('.');  
-    string domainName = parts[0];                     
+    string host = Context.Request.Host.Host;
+    string[] parts = host.Replace("www.", "").Split('.');
+    string domainName = parts[0];
 }
 <style>
     .cv-fab {
         position: fixed;
         right: 20px;
-        bottom: 96px;
+        bottom: 90px;
         z-index: 1100;
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        padding: 10px 14px;
-        border-radius: 999px;
-        background: linear-gradient(135deg,#0d6efd 0%,#5aa3ff 100%);
+        gap: 10px;
+        padding: 12px 16px;
+        border-radius: 50px;
+        background: linear-gradient(135deg, #0d6efd, #5aa3ff);
         color: #fff;
+        font-weight: 600;
+        letter-spacing: 0.3px;
         text-decoration: none;
-        font-weight: 700;
-        letter-spacing: .2px;
-        box-shadow: 0 10px 30px rgba(13,110,253,.35);
-        backdrop-filter: saturate(140%) blur(2px);
-        border: 1px solid rgba(255,255,255,.25);
-        transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
-        -webkit-tap-highlight-color: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        box-shadow: 0 8px 28px rgba(13, 110, 253, 0.35);
+        backdrop-filter: saturate(140%) blur(3px);
+        transition: all 0.25s ease;
+        overflow: hidden;
     }
-
-        .cv-fab:hover,
-        .cv-fab:focus-visible {
-            color: #fff;
-            transform: translateY(-2px);
-            box-shadow: 0 14px 36px rgba(13,110,253,.45);
-            filter: brightness(1.03);
-        }
 
         .cv-fab i {
-            font-size: 18px;
+            font-size: 19px;
             line-height: 1;
+            transition: transform 0.25s ease;
         }
 
-    .cv-label {
-        letter-spacing: .2px;
-    }
+        .cv-fab:hover {
+            color: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 14px 34px rgba(13, 110, 253, 0.45);
+            filter: brightness(1.05);
+        }
 
+            .cv-fab:hover i {
+                transform: scale(1.15) rotate(-5deg);
+            }
+
+    .cv-label {
+        font-size: 15px;
+        font-weight: 700;
+    }
     .cv-fab::before {
         content: "";
         position: absolute;
         inset: -6px;
         border-radius: inherit;
-        box-shadow: 0 0 0 0 rgba(13,110,253,.35);
-        animation: cvPulse 2.4s ease-out infinite;
+        box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.4);
+        animation: pulseFab 2.5s ease-out infinite;
         z-index: -1;
     }
-    @@keyframes cvPulse {
+
+    @@keyframes pulseFab {
         0%
 
     {
-        box-shadow: 0 0 0 0 rgba(13,110,253,.35);
+        box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.4);
     }
 
     70% {
-        box-shadow: 0 0 0 14px rgba(13,110,253,0);
+        box-shadow: 0 0 0 16px rgba(13, 110, 253, 0);
     }
 
     100% {
-        box-shadow: 0 0 0 0 rgba(13,110,253,0);
+        box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
     }
 
     }
 
-    .cv-fab[data-tip] {
-        position: fixed;
+    @@media (hover: hover) {
+        .cv-fab[data-tip]::after
+
+    {
+        content: attr(data-tip);
+        position: absolute;
+        right: 100%;
+        margin-right: 10px;
+        bottom: 50%;
+        transform: translateY(50%) scale(0.95);
+        opacity: 0;
+        pointer-events: none;
+        background: #111827;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 6px 10px;
+        border-radius: 6px;
+        white-space: nowrap;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        transition: opacity 0.2s ease, transform 0.2s ease;
     }
 
-        .cv-fab[data-tip]::after {
-            content: attr(data-tip);
-            position: absolute;
-            right: 100%;
-            margin-right: 10px;
-            bottom: 50%;
-            transform: translateY(50%) scale(.98);
-            opacity: 0;
-            pointer-events: none;
-            background: #111827;
-            color: #fff;
-            font-size: 12px;
-            font-weight: 600;
-            padding: 6px 10px;
-            border-radius: 6px;
-            white-space: nowrap;
-            box-shadow: 0 10px 30px rgba(0,0,0,.25);
-            transition: opacity .15s ease, transform .15s ease;
-        }
-
-    .cv-fab:hover::after,
-    .cv-fab:focus-visible::after {
+    .cv-fab:hover::after {
         opacity: 1;
         transform: translateY(50%) scale(1);
     }
-    @@media (max-width: 576px) {
+
+    }
+   @@media (max-width: 576px) {
         .cv-fab
 
     {
-        padding: 12px;
-        border-radius: 50%;
+        right: 16px;
+        bottom: 80px;
+        padding: 12px 18px;
+        border-radius: 999px;
+        gap: 8px;
     }
 
     .cv-label {
-        display: none !important;
+        display: inline;
+        font-size: 14px;
+    }
+
+    .cv-fab i {
+        font-size: 18px;
     }
 
     }
     @@media (prefers-reduced-motion: reduce) {
-        .cv-fab, .cv-fab:hover, .cv-fab:focus-visible
+        .cv-fab, .cv-fab::before, .cv-fab:hover
 
     {
         transition: none;
-        transform: none;
-    }
-
-    .cv-fab::before {
         animation: none;
     }
 
@@ -129,19 +138,16 @@
 </style>
 @if (!string.IsNullOrEmpty(Model))
 {
-    <a href="data:application/pdf;base64,@Model"
-       download="@($"{domainName}CV.pdf")"
+    <a href="/Home/DownloadCV"
        class="cv-fab"
-       target="_blank"
-       rel="noopener"
        title="CV’yi indir / görüntüle"
        data-tip="CV’yi indir"
        aria-label="CV / Özgeçmiş (PDF)">
         <i class="fas fa-file-alt" aria-hidden="true"></i>
-        <span class="cv-label d-none d-md-inline">CV</span>
+        <span class="cv-label">CV</span>
     </a>
 }
 else
 {
-    <p class="text-muted">Henüz CV yüklenmemiş.</p>
+    <p class="text-muted text-center mt-3">Henüz CV yüklenmemiş.</p>
 }

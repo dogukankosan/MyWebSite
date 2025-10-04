@@ -1,0 +1,113 @@
+﻿@model List<CvDownloadLog>
+@{
+    ViewData["Title"] = "CV Yönetimi";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+<br />
+<h4 class="card-title mb-4">📄 CV Yönetimi</h4>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-primary text-white">
+                CV Güncelle
+            </div>
+            <div class="card-body">
+                <form asp-action="CvGuncelle" asp-controller="AdminCv" method="post" enctype="multipart/form-data">
+                    <div class="form-group mb-3">
+                        <label for="pdfFile">Yeni CV (PDF):</label>
+                        <input type="file" class="form-control" id="pdfFile" name="pdfFile" accept="application/pdf" />
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Yükle</button>
+                </form>
+                <hr />
+                <a href="/AdminCv/MevcutCv" target="_blank" class="btn btn-outline-success w-100 mt-2">
+                    <i class="fa fa-file-pdf-o"></i> Mevcut CV'yi Gör / İndir
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                <span>CV İndirme Logları</span>
+                <span class="badge bg-light text-dark">@Model.Count adet kayıt</span>
+            </div>
+            <div class="card-body table-responsive">
+                <table class="table table-hover table-striped align-middle" id="logTable">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>IP</th>
+                            <th>Konum</th>
+                            <th>Kullanıcı Bilgisi</th>
+                            <th>Tarih</th>
+                            <th>İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (CvDownloadLog log in Model)
+                        {
+                            <tr>
+                                <td>@log.ID</td>
+                                <td>@log.IPAdress</td>
+                                <td>@log.UserGeo</td>
+                                <td>@log.UserInfo</td>
+                                <td>@log.DownloadDate.ToString("dd MMMM dddd HH:mm:ss", new System.Globalization.CultureInfo("tr-TR"))</td>
+                                <td>
+                                    <form asp-action="LogSil" asp-route-id="@log.ID" method="post" class="deleteForm" style="display:inline;">
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="fa fa-trash"></i> Sil
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="tempDataMessages"
+     data-type="@TempData["Type"]"
+     data-message="@TempData["Message"]">
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const el = document.getElementById('tempDataMessages');
+        if (el) {
+            const type = el.getAttribute('data-type');
+            const message = el.getAttribute('data-message');
+            if (type && message) {
+                Swal.fire({
+                    icon: type,
+                    title: type === "success" ? "Başarılı!" : "Hata!",
+                    text: message,
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            }
+        }
+        const deleteForms = document.querySelectorAll(".deleteForm");
+        deleteForms.forEach(form => {
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+                Swal.fire({
+                    title: "Emin misiniz?",
+                    text: "Bu log kalıcı olarak silinecek!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    confirmButtonText: "Evet, sil!",
+                    cancelButtonText: "Vazgeç"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    });
+</script>

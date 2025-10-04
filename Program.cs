@@ -92,7 +92,7 @@ app.Use(async (ctx, next) =>
 {
     ctx.Response.OnStarting(() =>
     {
-        var h = ctx.Response.Headers;
+        IHeaderDictionary? h = ctx.Response.Headers;
         if (!h.ContainsKey("X-Content-Type-Options")) h["X-Content-Type-Options"] = "nosniff";
         if (!h.ContainsKey("Referrer-Policy")) h["Referrer-Policy"] = "no-referrer";
         if (!h.ContainsKey("Content-Security-Policy")) h["Content-Security-Policy"] = "frame-ancestors 'self'";
@@ -120,7 +120,7 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
 });
-var httpContextAccessor = app.Services.GetRequiredService<IHttpContextAccessor>();
+IHttpContextAccessor httpContextAccessor = app.Services.GetRequiredService<IHttpContextAccessor>();
 SQLCrud.Configure(builder.Configuration, httpContextAccessor);
 Logging.Configure(httpContextAccessor);
 app.MapControllerRoute(

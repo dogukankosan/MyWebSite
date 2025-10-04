@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MyWebSite.Classes;
 using MyWebSite.Models;
 using Newtonsoft.Json.Linq;
@@ -7,6 +8,7 @@ using System.Data.SqlClient;
 
 namespace MyWebSite.Controllers
 {
+    [AllowAnonymous]
     public class HomeController : Controller
     {
         public async Task<IActionResult> Index()
@@ -170,6 +172,50 @@ namespace MyWebSite.Controllers
         public IActionResult Error()
         {
             return View();
+        }
+        [HttpGet]
+        public async Task<IActionResult> DownloadCV()
+        {
+            try
+            {
+                string? ip = HttpContext.Connection.RemoteIpAddress?.ToString();
+                string geo = "";
+                using (HttpClient client = new HttpClient())
+                {
+                    string response = await client.GetStringAsync($"http://ip-api.com/json/{ip}");
+                    JObject json = JObject.Parse(response);
+                    geo = $"{json["city"]}, {json["country"]}";
+                }
+                string sqlLog = "CvDownloadLogAdd";
+                List<SqlParameter> logParams = new List<SqlParameter>
+        {
+            new SqlParameter("@IPAdress", ip ?? (object)DBNull.Value),
+            new SqlParameter("@UserGeo", geo ?? (object)DBNull.Value),
+            new SqlParameter("@UserInfo", Request.Headers["User-Agent"].ToString())
+        };
+                await SQLCrud.InsertUpdateDeleteAsync(sqlLog, logParams);
+                string sql = "MyCVGet";
+                byte[]? cvFile = null;
+                var cvList = await SQLCrud.ExecuteModelListAsync<MyCV>(
+                    sql,
+                    null,
+                    reader => new MyCV
+                    {
+                        ID = Convert.ToInt32(reader["ID"]),
+                        CV = reader["CV"] as byte[]
+                    },
+                    CommandType.StoredProcedure
+                );
+                MyCV? cv = cvList.FirstOrDefault();
+                if (cv == null || cv.CV == null)
+                    return NotFound("CV bulunamadı");
+                return File(cv.CV, "application/pdf", "CV.pdf");
+            }
+            catch (Exception ex)
+            {
+                await Logging.LogAdd("CV indirme hatası", ex.ToString());
+                return NotFound("CV indirilemedi");
+            }
         }
     }
 }

@@ -7,7 +7,6 @@ wwwroot\AdminThema\css\styles.css
 wwwroot\AdminThema\js\datatables-simple-demo.js
 wwwroot\AdminThema\js\scripts.js
 wwwroot\favicon.ico
-wwwroot\css\admin-panel.png
 wwwroot\AdminThema\table\style.css.map
 wwwroot\AdminThema\table\style.css
 wwwroot\AdminThema\table\select.dataTables.min.css
