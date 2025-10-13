@@ -4,9 +4,11 @@
     ViewData["Title"] = "Admin İkonlar Liste";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
+
 <br />
 <h4 class="card-title">İkonlar</h4>
 <hr />
+
 <div class="row mb-2">
     <div class="col text-right">
         <select id="exportOptions" class="form-control form-control-sm w-100 mb-2 d-md-inline-block">
@@ -17,21 +19,37 @@
         </select>
     </div>
 </div>
+
 <div class="table-responsive">
     <table class="table table-hover table-striped table-bordered" id="yourTableId">
         <thead>
             <tr>
                 <th>#</th>
                 <th>İkon</th>
+                <th>Durum</th>
                 <th class="no-export">İşlemler</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (Icons item in Model)
             {
-                <tr>
+                string rowClass = item.Status ? "" : "table-secondary text-muted";
+                <tr class="@rowClass">
                     <td>@item.ID</td>
                     <td><i class="@item.Icon"></i> <span class="ml-2">@item.Icon</span></td>
+
+                    <td class="text-center align-middle">
+                        <div class="status-toggle" data-id="@item.ID">
+                            <div class="toggle-wrapper @(item.Status ? "active" : "")">
+                                <div class="toggle-switch"></div>
+                            </div>
+                            <div class="status-label mt-1 small fw-semibold">
+                                <i class="bi @(item.Status ? "bi-check-circle-fill text-success" : "bi-x-circle-fill text-secondary")"></i>
+                                <span>@(item.Status ? "Aktif" : "Pasif")</span>
+                            </div>
+                        </div>
+                    </td>
+
                     <td>
                         <a class="btn btn-outline-info btn-sm" href="/AdminIcon/Guncelle/@item.ID">
                             <i class="fa fa-pencil"></i>
@@ -46,35 +64,140 @@
     </table>
     <a class="btn btn-primary mt-3" href="/AdminIcon/Ekle">Yeni İkon Ekle</a>
 </div>
+
 <br />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+    .status-toggle {
+        cursor: pointer;
+        user-select: none;
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .toggle-wrapper {
+        width: 46px;
+        height: 24px;
+        border-radius: 12px;
+        background-color: #ccc;
+        position: relative;
+        transition: background-color 0.3s ease;
+    }
+
+        .toggle-wrapper.active {
+            background-color: #198754;
+        }
+
+    .toggle-switch {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: #fff;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        transition: left 0.3s ease;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .toggle-wrapper.active .toggle-switch {
+        left: 24px;
+    }
+
+    .status-label {
+        transition: color 0.3s ease, transform 0.2s ease;
+    }
+
+    .status-toggle:hover .status-label span {
+        transform: scale(1.05);
+    }
+</style>
+
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const type = sessionStorage.getItem("swalType");
+        const message = sessionStorage.getItem("swalMessage");
+        if (type && message) {
+            Swal.fire({
+                icon: type,
+                title: type === "success" ? "Başarılı!" : "Hata!",
+                text: message,
+                timer: 2000,
+                showConfirmButton: false
+            });
+            sessionStorage.removeItem("swalType");
+            sessionStorage.removeItem("swalMessage");
+        }
+        document.getElementById("yourTableId").addEventListener("click", async function (evt) {
+            const toggle = evt.target.closest(".status-toggle");
+            if (!toggle) return;
+
+            const id = toggle.dataset.id;
+            const wrapper = toggle.querySelector(".toggle-wrapper");
+            const label = toggle.querySelector(".status-label span");
+            const icon = toggle.querySelector(".status-label i");
+            const isActive = wrapper.classList.toggle("active");
+
+            label.textContent = isActive ? "Aktif" : "Pasif";
+            icon.className = isActive
+                ? "bi bi-check-circle-fill text-success"
+                : "bi bi-x-circle-fill text-secondary";
+
+            try {
+                const response = await fetch(`/AdminIcon/DurumGuncelle`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ id: parseInt(id), status: isActive })
+                });
+
+                const result = await response.json();
+                if (!response.ok || !result.success) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Hata!",
+                        text: result.message || `Durum güncellenemedi.`
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Başarılı!",
+                        text: "Durum güncellendi.",
+                        timer: 1200,
+                        showConfirmButton: false
+                    });
+                }
+            } catch (err) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Sunucu Hatası",
+                    text: "Durum güncellenirken bir hata oluştu."
+                });
+            }
+        });
+    });
+
     function confirmDelete(id) {
         Swal.fire({
             title: 'Emin misiniz?',
-            text: "Bu işlemi geri alamazsınız!",
+            text: "Bu ikon kalıcı olarak silinecek!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
             confirmButtonText: 'Evet, sil!',
-            cancelButtonText: 'Hayır, iptal et'
+            cancelButtonText: 'Vazgeç'
         }).then((result) => {
             if (result.isConfirmed) {
+
+                sessionStorage.setItem("swalType", "success");
+                sessionStorage.setItem("swalMessage", "İkon başarıyla silindi.");
                 window.location.href = '/AdminIcon/Sil/' + id;
             }
         });
     }
-    document.addEventListener('DOMContentLoaded', function () {
-        const type = '@TempData["Type"]';
-        const message = @Html.Raw(Json.Serialize(TempData["Message"]));
-        if (type && message && performance.getEntriesByType("navigation")[0].type === "navigate") {
-            Swal.fire({
-                icon: type === 'success' ? 'success' : 'error',
-                title: type === 'success' ? 'Başarılı' : 'Hata',
-                text: message,
-                timer: 3000,
-                showConfirmButton: false
-            });
-        }
-    });
 </script>

@@ -3,48 +3,143 @@
     ViewData["Title"] = "Admin İş Güncelle";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
-<form id="jobUpdateForm" method="post" autocomplete="off">
+
+<form id="jobUpdateForm" onsubmit="return false;" autocomplete="off">
     <br />
     <h4>Admin İş Güncelleme Sayfası</h4>
     <hr />
+
     <input type="hidden" name="ID" value="@Model.ID" />
     <div id="resultsucc" class="text-danger mb-2"></div>
+
     <div class="form-group">
         <label for="JobName">Firma Adı:</label>
         <input type="text" class="form-control" name="JobName" id="JobName"
-               maxlength="75" minlength="3" required
-               placeholder="Örn: ABC Teknoloji" value="@Model.JobName">
+               maxlength="75" minlength="3" required placeholder="Örn: ABC Teknoloji"
+               value="@Model.JobName">
         <span id="JobNameError" class="text-danger mt-1 d-block"></span>
     </div>
+
     <div class="form-group mt-3">
         <label for="JobTitle">İş Ünvan:</label>
         <input type="text" class="form-control" name="JobTitle" id="JobTitle"
-               maxlength="75" minlength="3" required
-               placeholder="Örn: Yazılım Geliştirici" value="@Model.JobTitle">
+               maxlength="75" minlength="3" required placeholder="Örn: Yazılım Geliştirici"
+               value="@Model.JobTitle">
         <span id="JobTitleError" class="text-danger mt-1 d-block"></span>
     </div>
+
     <div class="form-group mt-3">
         <label for="JobYears">Çalışma Yılı:</label>
         <input type="text" class="form-control" name="JobYears" id="JobYears"
                maxlength="12" pattern="^\d{4}-[A-Za-z0-9ÇçĞğİıÖöŞşÜü]+$"
-               required placeholder="Örn: 2020-2025 | 2020-AKTİF" value="@Model.JobYears">
+               required placeholder="Örn: 2020-2025 | 2020-AKTİF"
+               value="@Model.JobYears">
         <span id="JobYearsError" class="text-danger mt-1 d-block"></span>
     </div>
+
     <div class="form-group mt-3">
         <label for="JobAbout">İş Hakkında:</label>
-        <textarea class="form-control" name="JobAbout" id="JobAbout"
-                  rows="3" required placeholder="Yaptığınız iş hakkında kısa açıklama...">@Model.JobAbout</textarea>
+        <textarea class="form-control" name="JobAbout" id="JobAbout" rows="3" required
+                  placeholder="Yaptığınız iş hakkında kısa açıklama...">@Model.JobAbout</textarea>
         <span id="JobAboutError" class="text-danger mt-1 d-block"></span>
     </div>
-    <button type="submit" class="btn btn-primary mt-4">Güncelle</button>
+
+    <div class="form-group mt-4">
+        <label class="d-block mb-2">Durum:</label>
+        <label class="switch">
+            <input type="checkbox" id="Status" name="Status" value="true" @(Model.Status ? "checked" : "")>
+            <span class="slider round"></span>
+        </label>
+        <span id="statusText" class="ml-2 font-weight-bold @(Model.Status ? "text-success" : "text-secondary")">
+            @(Model.Status ? "Aktif" : "Pasif")
+        </span>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 mt-4">
+        <button type="submit" class="btn btn-success px-4">
+            <i class="fas fa-save me-2"></i> Güncelle
+        </button>
+        <a href="/AdminIsHayati/Liste" class="btn btn-outline-secondary px-4">
+            <i class="fas fa-list me-2"></i> Listeye Dön
+        </a>
+    </div>
+
+    <style>
+        .btn {
+            transition: all 0.2s ease-in-out;
+        }
+
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+            .switch input {
+                display: none;
+            }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 30px;
+        }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 22px;
+                width: 22px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                transition: .4s;
+                border-radius: 50%;
+            }
+
+        input:checked + .slider {
+            background-color: #28a745;
+        }
+
+            input:checked + .slider:before {
+                transform: translateX(30px);
+            }
+    </style>
 </form>
+
 <br />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     $(function () {
+        $('#Status').change(function () {
+            if (this.checked) {
+                $('#statusText').text('Aktif').removeClass('text-secondary').addClass('text-success');
+            } else {
+                $('#statusText').text('Pasif').removeClass('text-success').addClass('text-secondary');
+            }
+        });
+
         $('#jobUpdateForm').on('submit', function (event) {
             event.preventDefault();
             $('#JobNameError, #JobTitleError, #JobYearsError, #JobAboutError, #resultsucc').html('');
+
+            if (!$('#Status').is(':checked')) {
+                $('<input>').attr({ type: 'hidden', name: 'Status', value: 'false' }).appendTo('#jobUpdateForm');
+            }
             var formData = $(this).serialize();
             $.ajax({
                 url: '/AdminIsHayati/Guncelle',
@@ -52,14 +147,16 @@
                 data: formData,
                 success: function (response) {
                     if (response.success) {
-                        window.location.href = response.redirectUrl;
-                    } else {
-                        if (response.errors) {
-                            if (response.errors.JobName) $('#JobNameError').html(response.errors.JobName);
-                            if (response.errors.JobTitle) $('#JobTitleError').html(response.errors.JobTitle);
-                            if (response.errors.JobYears) $('#JobYearsError').html(response.errors.JobYears);
-                            if (response.errors.JobAbout) $('#JobAboutError').html(response.errors.JobAbout);
-                        }
+   
+                        sessionStorage.setItem("jobs_updated", "1");
+                        sessionStorage.setItem("jobs_updated_message", "Güncelleme işlemi başarılı.");
+ 
+                        window.location.replace(response.redirectUrl || '/AdminIsHayati/Liste');
+                    } else if (response.errors) {
+                        if (response.errors.JobName) $('#JobNameError').html(response.errors.JobName);
+                        if (response.errors.JobTitle) $('#JobTitleError').html(response.errors.JobTitle);
+                        if (response.errors.JobYears) $('#JobYearsError').html(response.errors.JobYears);
+                        if (response.errors.JobAbout) $('#JobAboutError').html(response.errors.JobAbout);
                     }
                 },
                 error: function () {

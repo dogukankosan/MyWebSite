@@ -202,12 +202,9 @@ C:\Users\DOGUKAN\source\repos\MyWebSite\bin\Debug\net7.0\ru\Microsoft.CodeAnalys
 C:\Users\DOGUKAN\source\repos\MyWebSite\bin\Debug\net7.0\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\bin\Debug\net7.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\bin\Debug\net7.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\DOGUKAN\source\repos\MyWebSite\bin\Debug\net7.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\bin\Debug\net7.0\runtimes\win-arm64\native\sni.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\bin\Debug\net7.0\runtimes\win-x86\native\sni.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\bin\Debug\net7.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
-C:\Users\DOGUKAN\source\repos\MyWebSite\bin\Debug\net7.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
-C:\Users\DOGUKAN\source\repos\MyWebSite\bin\Debug\net7.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\bin\Debug\net7.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\bin\Debug\net7.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Debug\net7.0\MyWebSite.csproj.AssemblyReference.cache
@@ -235,3 +232,11 @@ C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Debug\net7.0\refint\MyWebSite.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Debug\net7.0\MyWebSite.pdb
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Debug\net7.0\MyWebSite.genruntimeconfig.cache
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Debug\net7.0\ref\MyWebSite.dll
+C:\Users\DOGUKAN\source\repos\MyWebSite\bin\Debug\net7.0\Ghostscript.NET.dll
+C:\Users\DOGUKAN\source\repos\MyWebSite\bin\Debug\net7.0\System.IO.Abstractions.dll
+C:\Users\DOGUKAN\source\repos\MyWebSite\bin\Debug\net7.0\TestableIO.System.IO.Abstractions.dll
+C:\Users\DOGUKAN\source\repos\MyWebSite\bin\Debug\net7.0\TestableIO.System.IO.Abstractions.Wrappers.dll
+C:\Users\DOGUKAN\source\repos\MyWebSite\bin\Debug\net7.0\Testably.Abstractions.FileSystem.Interface.dll
+C:\Users\DOGUKAN\source\repos\MyWebSite\bin\Debug\net7.0\runtimes\win\lib\net7.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\DOGUKAN\source\repos\MyWebSite\bin\Debug\net7.0\wwwroot\ghostscript\bin\gsdll64.dll
+C:\Users\DOGUKAN\source\repos\MyWebSite\bin\Debug\net7.0\wwwroot\ghostscript\bin\gswin64c.exe

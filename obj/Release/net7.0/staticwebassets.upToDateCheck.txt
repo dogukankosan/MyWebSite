@@ -309,3 +309,9 @@ wwwroot\css\style.css
 wwwroot\userThema\img\reshot-icon-computer-UGMT6YVCE5.svg
 wwwroot\LoginTemp\css\main.css
 wwwroot\404-error.ico
+wwwroot\back.png
+wwwroot\cv\cv.pdf
+wwwroot\ghostscript\bin\gsdll64.dll
+wwwroot\ghostscript\bin\gsdll64.lib
+wwwroot\ghostscript\bin\gswin64.exe
+wwwroot\ghostscript\bin\gswin64c.exe

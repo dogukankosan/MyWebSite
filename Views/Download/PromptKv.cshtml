@@ -3,6 +3,13 @@
     ViewData["Title"] = $"İndirme • {Model.PackageKey} {Model.Version}";
     bool hasFile = !string.IsNullOrWhiteSpace(Model.FileNameStored);
 }
+<style>
+    ::selection {
+        background-color: aqua;
+        color: black;
+    }
+</style>
+<link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon" />
 <div class="card shadow-sm mt-4">
     <div class="card-body">
         <h5 class="card-title mb-3">

@@ -27,7 +27,7 @@
 <!doctype html>
 <html lang="tr">
 <head>
-    <link rel="icon" type="image/png" href="@Url.Content("~/css/software-developer.png")" />
+    <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
@@ -42,6 +42,11 @@
     <style>
         body {
             background: #f7f7fb;
+        }
+
+        ::selection {
+            background-color: aqua;
+            color: black;
         }
         .navbar-brand {
             font-weight: 600;
@@ -334,9 +339,17 @@
     </main>
     <footer class="border-top bg-white py-3 mt-4">
         <div class="container small text-muted">
-            © @DateTime.Now.Year Doğukan Koşan • Dosya Merkezi
+            © @DateTime.Now.Year @Context.Request.Host • Dosya Merkezi
+            <br />
+            <a href="/Cerez-Politikasi" class="text-decoration-none text-secondary">
+                🍪 Çerez Politikası
+            </a>
+            <a href="/Gizlilik-Politikasi" class="text-decoration-none text-secondary">
+                🔒 Gizlilik Politikası
+            </a>
         </div>
     </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             crossorigin="anonymous"></script>

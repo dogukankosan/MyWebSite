@@ -2,23 +2,26 @@
     ViewData["Title"] = "Admin İş Ekle";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
-<form id="jobAddForm" method="post" autocomplete="off">
+<form id="jobAddForm" onsubmit="return false;" autocomplete="off">
     <br />
     <h4>Admin İş Ekleme Sayfası</h4>
     <hr />
     <div id="resultsucc" class="text-danger mb-2"></div>
+
     <div class="form-group">
         <label for="JobName">Firma Adı:</label>
         <input type="text" class="form-control" name="JobName" id="JobName"
                maxlength="75" minlength="3" required placeholder="Örn: ABC Teknoloji">
         <span id="JobNameError" class="text-danger mt-1 d-block"></span>
     </div>
+
     <div class="form-group mt-3">
         <label for="JobTitle">İş Ünvan:</label>
         <input type="text" class="form-control" name="JobTitle" id="JobTitle"
                maxlength="75" minlength="3" required placeholder="Örn: Yazılım Geliştirici">
         <span id="JobTitleError" class="text-danger mt-1 d-block"></span>
     </div>
+
     <div class="form-group mt-3">
         <label for="JobYears">Çalışma Yılı:</label>
         <input type="text" class="form-control" name="JobYears" id="JobYears"
@@ -26,44 +29,129 @@
                required placeholder="Örn: 2020-2025 | 2020-AKTİF">
         <span id="JobYearsError" class="text-danger mt-1 d-block"></span>
     </div>
+
     <div class="form-group mt-3">
         <label for="JobAbout">İş Hakkında:</label>
-        <textarea class="form-control" name="JobAbout" id="JobAbout"
-                  rows="3" required placeholder="Yaptığınız iş hakkında kısa açıklama..."></textarea>
+        <textarea class="form-control" name="JobAbout" id="JobAbout" rows="3" required
+                  placeholder="Yaptığınız iş hakkında kısa açıklama..."></textarea>
         <span id="JobAboutError" class="text-danger mt-1 d-block"></span>
     </div>
-    <button type="submit" class="btn btn-primary mt-4">Ekle</button>
+    <div class="form-group mt-4">
+        <label class="d-block mb-2">Durum:</label>
+        <label class="switch">
+            <input type="checkbox" id="Status" name="Status" value="true">
+            <span class="slider round"></span>
+        </label>
+        <span id="statusText" class="ml-2 font-weight-bold text-secondary">Pasif</span>
+    </div>
+    <div class="d-flex justify-content-end gap-2 mt-4">
+        <button type="submit" class="btn btn-success px-4">
+            <i class="fas fa-save me-2"></i> Ekle
+        </button>
+        <a href="/AdminIsHayati/Liste" class="btn btn-outline-secondary px-4">
+            <i class="fas fa-list me-2"></i> Listeye Dön
+        </a>
+    </div>
+
+    <style>
+        .btn {
+            transition: all 0.2s ease-in-out;
+        }
+
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            }
+    </style>
 </form>
+
 <br />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<style>
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 30px;
+    }
+
+        .switch input {
+            display: none;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 30px;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+    input:checked + .slider {
+        background-color: #28a745;
+    }
+
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+</style>
+
 <script>
     $(function () {
+        $('#Status').change(function () {
+            if (this.checked) {
+                $('#statusText').text('Aktif').removeClass('text-secondary').addClass('text-success');
+            } else {
+                $('#statusText').text('Pasif').removeClass('text-success').addClass('text-secondary');
+            }
+        });
         $('#jobAddForm').on('submit', function (event) {
             event.preventDefault();
-
             $('#JobNameError, #JobTitleError, #JobYearsError, #JobAboutError, #resultsucc').html('');
-            var formData = $(this).serialize();
 
-            $.ajax({
-                url: '/AdminIsHayati/Ekle',
-                type: 'POST',
-                data: formData,
-                success: function (response) {
-                    if (response.success) {
-                        window.location.href = response.redirectUrl;
-                    } else {
-                        if (response.errors) {
-                            if (response.errors.JobName) $('#JobNameError').html(response.errors.JobName);
-                            if (response.errors.JobTitle) $('#JobTitleError').html(response.errors.JobTitle);
-                            if (response.errors.JobYears) $('#JobYearsError').html(response.errors.JobYears);
-                            if (response.errors.JobAbout) $('#JobAboutError').html(response.errors.JobAbout);
-                        }
-                    }
-                },
-                error: function () {
-                    $('#resultsucc').html('<div class="alert alert-danger">Bir hata oluştu. Lütfen tekrar deneyin.</div>');
-                }
-            });
+            if (!$('#Status').is(':checked')) {
+                $('<input>').attr({ type: 'hidden', name: 'Status', value: 'false' }).appendTo('#jobAddForm');
+            }
+            var formData = $(this).serialize();
+           $.ajax({
+        url: '/AdminIsHayati/Ekle',
+        type: 'POST',
+        data: formData,
+        success: function (response) {
+            if (response.success) {
+                sessionStorage.setItem("jobs_added", "1");
+                sessionStorage.setItem("jobs_added_message", "İş hayatı başarıyla eklendi.");
+
+                window.location.replace(response.redirectUrl || '/AdminIsHayati/Liste');
+            } else if (response.errors) {
+                if (response.errors.JobName) $('#JobNameError').html(response.errors.JobName);
+                if (response.errors.JobTitle) $('#JobTitleError').html(response.errors.JobTitle);
+                if (response.errors.JobYears) $('#JobYearsError').html(response.errors.JobYears);
+                if (response.errors.JobAbout) $('#JobAboutError').html(response.errors.JobAbout);
+            }
+        },
+        error: function () {
+            $('#resultsucc').html('<div class="alert alert-danger">Bir hata oluştu. Lütfen tekrar deneyin.</div>');
+        }
+    });
+
         });
     });
 </script>

@@ -1,0 +1,155 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Blog | @ViewBag.AboutName</title>
+    <meta name="description" content="@ViewBag.AboutName'ın yazılım, teknoloji ve veri analizi üzerine içerik paylaşımları.">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+
+    <style>
+        body {
+            font-family: "Inter", sans-serif;
+            color: #fff;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(rgba(0, 0, 50, 0.6), rgba(0, 0, 70, 0.6)), url('/back.png') center center / 90% no-repeat fixed;
+            background-color: #001b44;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        ::selection {
+            background-color: aqua;
+            color: black;
+        }
+        @@keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        h1 {
+            font-weight: 700;
+            font-size: 2.8rem;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        p {
+            font-size: 1.1rem;
+            max-width: 650px;
+            margin: 0 auto 20px;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+        }
+
+        .spinner-border {
+            width: 3.5rem;
+            height: 3.5rem;
+            margin-bottom: 20px;
+            border-width: 0.25em;
+        }
+
+        a.btn-main {
+            background-color: #ffc107;
+            color: #001b44;
+            font-weight: 600;
+            border-radius: 50px;
+            padding: 10px 28px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 0 12px rgba(255, 193, 7, 0.4);
+        }
+
+            a.btn-main:hover {
+                background-color: #fff;
+                color: #0d6efd;
+                box-shadow: 0 0 18px rgba(255, 255, 255, 0.6);
+            }
+
+        .social-links {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+            .social-links a {
+                color: #ffc107;
+                font-size: 1.3rem;
+                transition: all 0.3s ease;
+            }
+
+                .social-links a:hover {
+                    color: #fff;
+                    transform: translateY(-3px);
+                }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(4px);
+        }
+
+            footer a {
+                color: #ffc107;
+                text-decoration: none;
+                transition: color 0.3s ease;
+            }
+
+                footer a:hover {
+                    text-decoration: underline;
+                    color: #fff;
+                }
+    </style>
+</head>
+<body>
+    <div class="text-center">
+        <div class="spinner-border text-warning" role="status"></div>
+        <h1><i class="bi bi-code-slash text-warning"></i> Blog Yapım Aşamasında</h1>
+        <p>
+            <strong>@ViewBag.AboutName</strong> olarak, yakında yazılım, veri analizi, ERP sistemleri ve teknoloji alanında
+            özgün içerikler paylaşacağım.
+            Takipte kalmak için <a href="/" target="_blank" class="text-warning fw-semibold">anasayfamı</a> ziyaret edebilirsin.
+        </p>
+        <a href="/" class="btn-main mt-3">
+            <i class="bi bi-house-door-fill"></i> Ana Sayfaya Dön
+        </a>
+        <div class="social-links mt-4">
+            <a href="@ViewBag.GithubLink" target="_blank"><i class="bi bi-github"></i></a>
+            <a href="@ViewBag.LinkedinLink" target="_blank"><i class="bi bi-linkedin"></i></a>
+            <a href="@ViewBag.InstagramLink" target="_blank"><i class="bi bi-instagram"></i></a>
+        </div>
+    </div>
+    <footer>
+        © @DateTime.Now.Year @ViewBag.AboutName • <a href="/Cerez-Politikasi">Çerez Politikası</a> • <a href="/Gizlilik-Politikasi">Gizlilik Politikası</a>
+    </footer>
+</body>
+</html>

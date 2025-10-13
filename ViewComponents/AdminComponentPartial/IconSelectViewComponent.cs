@@ -18,12 +18,14 @@ namespace MyWebSite.ViewComponents.AdminComponentPartial
                     reader => new Icons
                     {
                         ID = Convert.ToInt32(reader["ID"]),
-                        Icon = reader["Icon"].ToString()
+                        Icon = reader["Icon"].ToString(),
+                        Status = Convert.ToBoolean(reader["Status"])
                     },
                     System.Data.CommandType.StoredProcedure
                 );
-                ViewBag.SelectedIcon = selected; 
-                return View(icons);
+                var activeIcons = icons.Where(x => x.Status).ToList();
+                ViewBag.SelectedIcon = selected;
+                return View(activeIcons);
             }
             catch (Exception ex)
             {

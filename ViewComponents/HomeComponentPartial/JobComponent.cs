@@ -13,25 +13,29 @@ namespace MyWebSite.ViewComponents.HomeComponentPartial
             try
             {
                 string sql = "JobsGet";
-                List<SqlParameter> parameters = new List<SqlParameter>();
                 List<Jobs> jobs = await SQLCrud.ExecuteModelListAsync<Jobs>(
                     sql,
-                    parameters,
+                    null,
                     reader => new Jobs
                     {
                         ID = Convert.ToByte(reader["ID"]),
                         JobName = reader["JobName"].ToString(),
                         JobTitle = reader["JobTitle"].ToString(),
                         JobYears = reader["JobYears"].ToString(),
-                        JobAbout = reader["JobAbout"].ToString()
+                        JobAbout = reader["JobAbout"].ToString(),
+                        Status = reader["Status"] != DBNull.Value && Convert.ToBoolean(reader["Status"])
                     },
                     CommandType.StoredProcedure
                 );
-                return View(jobs);
+                var activeJobs = jobs
+                    .Where(x => x.Status)
+                    .OrderByDescending(x => x.ID) 
+                    .ToList();
+                return View(activeJobs);
             }
             catch (Exception ex)
             {
-                await Logging.LogAdd("Anasayfa Eğitim Listeleme İşlemi Hatası", ex.Message);
+                await Logging.LogAdd("Anasayfa İş Hayatı Listeleme İşlemi Hatası", ex.Message);
                 return View(new List<Jobs>());
             }
         }

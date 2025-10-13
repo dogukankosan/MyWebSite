@@ -10,6 +10,7 @@ C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\AspNetCore
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\FluentValidation.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\FluentValidation.AspNetCore.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\FluentValidation.DependencyInjectionExtensions.dll
+C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\Ghostscript.NET.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\Humanizer.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\Microsoft.AspNetCore.Razor.Language.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\Microsoft.Bcl.AsyncInterfaces.dll
@@ -54,10 +55,14 @@ C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\System.Com
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\System.Configuration.ConfigurationManager.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\System.Data.SqlClient.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\System.Drawing.Common.dll
+C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\System.IO.Abstractions.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\System.Reflection.MetadataLoadContext.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\System.Security.Cryptography.ProtectedData.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\System.Security.Permissions.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\System.Windows.Extensions.dll
+C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\TestableIO.System.IO.Abstractions.dll
+C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\TestableIO.System.IO.Abstractions.Wrappers.dll
+C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\Testably.Abstractions.FileSystem.Interface.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\af\Humanizer.resources.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\ar\Humanizer.resources.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\az\Humanizer.resources.dll
@@ -197,13 +202,11 @@ C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\ru\Microso
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\runtimes\win\lib\net7.0\Microsoft.Win32.SystemEvents.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\runtimes\win-arm64\native\sni.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\runtimes\win-x64\native\sni.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\runtimes\win-x86\native\sni.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
-C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
-C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\runtimes\win\lib\net6.0\System.Drawing.Common.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\DOGUKAN\source\repos\MyWebSite\obj\Release\net7.0\PubTmp\Out\runtimes\win\lib\net6.0\System.Windows.Extensions.dll

@@ -9,5 +9,6 @@
         public string Base64Pictures { get; set; }
         public string ProjectGithubLink { get; set; }
         public string ProjectLink { get; set; }
+        public bool Status { get; set; } = true;
     }
 }

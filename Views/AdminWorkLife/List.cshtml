@@ -1,8 +1,57 @@
 ﻿@model List<Jobs>
+
 @{
     ViewData["Title"] = "Admin İş Hayatı Liste";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
+
+<style>
+    .status-toggle {
+        cursor: pointer;
+        user-select: none;
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .toggle-wrapper {
+        width: 46px;
+        height: 24px;
+        border-radius: 12px;
+        background-color: #ccc;
+        position: relative;
+        transition: background-color 0.3s ease;
+    }
+
+        .toggle-wrapper.active {
+            background-color: #198754;
+        }
+
+    .toggle-switch {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: #fff;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        transition: left 0.3s ease;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .toggle-wrapper.active .toggle-switch {
+        left: 24px;
+    }
+
+    .status-label {
+        transition: color 0.3s ease, transform 0.2s ease;
+    }
+
+    .status-toggle:hover .status-label span {
+        transform: scale(1.05);
+    }
+</style>
+
 <br />
 <h4 class="card-title">İş Hayatı Bilgileri</h4>
 <hr />
@@ -17,71 +66,173 @@
     </div>
 </div>
 <div class="table-responsive">
-    <table class="table table-hover table-striped table-bordered" id="yourTableId">
-        <thead>
-        <tr>
-            <th>#</th>
-            <th>Firma Adı</th>
-            <th>İş Ünvan</th>
-            <th>Çalışma Yılı</th>
-            <th>İş Hakkında</th>
-            <th class="no-export">İşlemler</th>
-        </tr>
+    <table class="table table-hover table-striped table-bordered align-middle" id="yourTableId">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Firma Adı</th>
+                <th>İş Ünvanı</th>
+                <th>Çalışma Yılı</th>
+                <th>İş Hakkında</th>
+                <th>Durum</th>
+                <th class="no-export">İşlemler</th>
+            </tr>
         </thead>
         <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.ID</td>
-                <td>@item.JobName</td>
-                <td>@item.JobTitle</td>
-                <td>@item.JobYears</td>
-                <td>@item.JobAbout</td>
-                <td>
-                    <a class="btn btn-outline-info btn-sm" href="/AdminIsHayati/Guncelle/@item.ID">
-                        <i class="fa fa-pencil-alt"></i>
-                    </a>
-                    <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm" onclick="confirmDelete('@item.ID')">
-                        <i class="fa fa-trash"></i>
-                    </a>
-                </td>
-            </tr>
-        }
+            @foreach (Jobs item in Model)
+            {
+                string rowClass = item.Status ? "" : "table-secondary text-muted";
+                <tr class="@rowClass">
+                    <td>@item.ID</td>
+                    <td>@item.JobName</td>
+                    <td>@item.JobTitle</td>
+                    <td>@item.JobYears</td>
+                    <td>@item.JobAbout</td>
+                    <td class="text-center align-middle">
+                        <div class="status-toggle" data-id="@item.ID">
+                            <div class="toggle-wrapper @(item.Status ? "active" : "")">
+                                <div class="toggle-switch"></div>
+                            </div>
+                            <div class="status-label mt-1 small fw-semibold">
+                                <i class="bi @(item.Status ? "bi-check-circle-fill text-success" : "bi-x-circle-fill text-secondary")"></i>
+                                <span>@(item.Status ? "Aktif" : "Pasif")</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <a class="btn btn-outline-info btn-sm" href="/AdminIsHayati/Guncelle/@item.ID" title="Düzenle">
+                            <i class="fa fa-pencil-alt"></i>
+                        </a>
+                        <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm"
+                           onclick="confirmDelete('@item.ID')" title="Sil">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
-    <a class="btn btn-primary mt-3" href="/AdminIsHayati/Ekle/">Yeni İş Ekle</a>
+
+    <a class="btn btn-primary mt-3" href="/AdminIsHayati/Ekle/">
+        <i class="fa fa-plus"></i> Yeni İş Ekle
+    </a>
+    <br /> <br /> <br />
 </div>
-<br />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.addEventListener("click", async function (e) {
+        const toggle = e.target.closest(".status-toggle");
+        if (!toggle || !toggle.dataset.id) return;
+
+        const id = toggle.dataset.id;
+        const wrapper = toggle.querySelector(".toggle-wrapper");
+        const label = toggle.querySelector(".status-label span");
+        const icon = toggle.querySelector(".status-label i");
+        const isActive = wrapper.classList.toggle("active");
+
+        label.textContent = isActive ? "Aktif" : "Pasif";
+        icon.className = isActive
+            ? "bi bi-check-circle-fill text-success"
+            : "bi bi-x-circle-fill text-secondary";
+
+        try {
+            const response = await fetch(`/AdminIsHayati/DurumGuncelle`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id: parseInt(id), status: isActive })
+            });
+            const result = await response.json();
+            if (!result.success) {
+                Swal.fire({ icon: "error", title: "Hata!", text: "Durum güncellenemedi." });
+            } else {
+                Swal.fire({
+                    icon: "success",
+                    title: "Başarılı!",
+                    text: "Durum başarıyla güncellendi.",
+                    timer: 1200,
+                    showConfirmButton: false
+                });
+            }
+        } catch {
+            Swal.fire({ icon: "error", title: "Sunucu Hatası", text: "Durum güncellenemedi." });
+        }
+    });
+</script>
+
 <script>
     function confirmDelete(id) {
         Swal.fire({
             title: 'Emin misiniz?',
-            text: "Bu işlemi geri alamazsınız!",
+            text: "Bu kaydı kalıcı olarak silmek üzeresiniz!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
             confirmButtonText: 'Evet, sil!',
-            cancelButtonText: 'Hayır, iptal et'
+            cancelButtonText: 'Vazgeç'
         }).then((result) => {
             if (result.isConfirmed) {
+                sessionStorage.setItem("deleted", "1");
                 window.location.href = '/AdminIsHayati/Sil/' + id;
             }
         });
     }
-    document.addEventListener('DOMContentLoaded', function () {
-        const type = '@TempData["Type"]';
-        const message = @Html.Raw(Json.Serialize(TempData["Message"]));
+</script>
+<div id="tempDataMessages"
+     data-type="@TempData["Type"]"
+     data-message="@TempData["Message"]">
+</div>
 
-        if (type && message && performance.getEntriesByType("navigation")[0].type === "navigate") {
-            Swal.fire({
-                icon: type === 'success' ? 'success' : 'error',
-                title: type === 'success' ? 'Başarılı' : 'Hata',
-                text: message,
-                timer: 3000,
-                showConfirmButton: false
-            });
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const el = document.getElementById('tempDataMessages');
+        if (!el) return;
+
+        const type = el.getAttribute('data-type');
+        const message = el.getAttribute('data-message');
+        const fromDelete = sessionStorage.getItem("deleted");
+        const fromAdd = sessionStorage.getItem("jobs_added");
+        const fromUpdate = sessionStorage.getItem("jobs_updated");
+
+        const addMsg = sessionStorage.getItem("jobs_added_message") || "İş hayatı başarıyla eklendi.";
+        const updateMsg = sessionStorage.getItem("jobs_updated_message") || "Güncelleme işlemi başarılı.";
+        const alertKey = "lastAlertShown_AdminIsHayati";
+
+        if (performance.getEntriesByType("navigation")[0]?.type === "back_forward") return;
+        if (sessionStorage.getItem(alertKey) === "true") {
+            sessionStorage.removeItem(alertKey);
+            return;
+        }
+
+        if (type && message && type === "success" && fromDelete === "1") {
+            Swal.fire({ icon: 'success', title: 'Başarılı!', text: message, timer: 2500, showConfirmButton: false });
+            sessionStorage.removeItem("deleted");
+            sessionStorage.setItem(alertKey, "true");
+            return;
+        }
+
+        if (fromAdd === "1") {
+            Swal.fire({ icon: 'success', title: 'Başarılı!', text: addMsg, timer: 2500, showConfirmButton: false });
+            sessionStorage.removeItem("jobs_added");
+            sessionStorage.removeItem("jobs_added_message");
+            sessionStorage.setItem(alertKey, "true");
+            return;
+        }
+
+        if (fromUpdate === "1") {
+            Swal.fire({ icon: 'success', title: 'Başarılı!', text: updateMsg, timer: 2500, showConfirmButton: false });
+            sessionStorage.removeItem("jobs_updated");
+            sessionStorage.removeItem("jobs_updated_message");
+            sessionStorage.setItem(alertKey, "true");
+            return;
+        }
+
+        if (type && message && type === "error") {
+            Swal.fire({ icon: 'error', title: 'Hata!', text: message, timer: 2500, showConfirmButton: false });
+            sessionStorage.setItem(alertKey, "true");
         }
     });
 </script>

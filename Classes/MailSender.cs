@@ -29,7 +29,7 @@ namespace MyWebSite.Classes
                     From = new MailAddress(mailSettings.MailAdress),
                     Subject = subject,
                     Body = body,
-                    IsBodyHtml = false
+                    IsBodyHtml = true
                 };
                 mail.To.Add(mailSettings.MailAdress);
                 using SmtpClient smtpClient = new SmtpClient(mailSettings.ServerName, mailSettings.MailPort)

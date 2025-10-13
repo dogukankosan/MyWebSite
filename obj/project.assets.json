@@ -70,6 +70,24 @@
           }
         }
       },
+      "Ghostscript.NET/1.3.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Win32.Registry": "5.0.0",
+          "System.Drawing.Common": "8.0.8",
+          "System.IO.Abstractions": "22.0.12"
+        },
+        "compile": {
+          "lib/netstandard2.0/Ghostscript.NET.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Ghostscript.NET.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Humanizer/2.14.1": {
         "type": "package",
         "dependencies": {
@@ -1507,14 +1525,14 @@
           }
         }
       },
-      "Microsoft.Win32.Registry/4.7.0": {
+      "Microsoft.Win32.Registry/5.0.0": {
         "type": "package",
         "dependencies": {
-          "System.Security.AccessControl": "4.7.0",
-          "System.Security.Principal.Windows": "4.7.0"
+          "System.Security.AccessControl": "5.0.0",
+          "System.Security.Principal.Windows": "5.0.0"
         },
         "compile": {
-          "ref/netstandard2.0/_._": {
+          "ref/netstandard2.0/Microsoft.Win32.Registry.dll": {
             "related": ".xml"
           }
         },
@@ -1524,33 +1542,29 @@
           }
         },
         "runtimeTargets": {
-          "runtimes/unix/lib/netstandard2.0/Microsoft.Win32.Registry.dll": {
-            "assetType": "runtime",
-            "rid": "unix"
-          },
           "runtimes/win/lib/netstandard2.0/Microsoft.Win32.Registry.dll": {
             "assetType": "runtime",
             "rid": "win"
           }
         }
       },
-      "Microsoft.Win32.SystemEvents/6.0.0": {
+      "Microsoft.Win32.SystemEvents/8.0.0": {
         "type": "package",
         "compile": {
-          "lib/net6.0/Microsoft.Win32.SystemEvents.dll": {
+          "lib/net7.0/Microsoft.Win32.SystemEvents.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net6.0/Microsoft.Win32.SystemEvents.dll": {
+          "lib/net7.0/Microsoft.Win32.SystemEvents.dll": {
             "related": ".xml"
           }
         },
         "build": {
-          "buildTransitive/netcoreapp3.1/_._": {}
+          "buildTransitive/net6.0/_._": {}
         },
         "runtimeTargets": {
-          "runtimes/win/lib/net6.0/Microsoft.Win32.SystemEvents.dll": {
+          "runtimes/win/lib/net7.0/Microsoft.Win32.SystemEvents.dll": {
             "assetType": "runtime",
             "rid": "win"
           }
@@ -2254,33 +2268,23 @@
           }
         }
       },
-      "System.Drawing.Common/6.0.0": {
+      "System.Drawing.Common/8.0.8": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Win32.SystemEvents": "6.0.0"
+          "Microsoft.Win32.SystemEvents": "8.0.0"
         },
         "compile": {
-          "lib/net6.0/System.Drawing.Common.dll": {
-            "related": ".xml"
+          "lib/net7.0/System.Drawing.Common.dll": {
+            "related": ".pdb;.xml"
           }
         },
         "runtime": {
-          "lib/net6.0/System.Drawing.Common.dll": {
-            "related": ".xml"
+          "lib/net7.0/System.Drawing.Common.dll": {
+            "related": ".pdb;.xml"
           }
         },
         "build": {
-          "buildTransitive/netcoreapp3.1/_._": {}
-        },
-        "runtimeTargets": {
-          "runtimes/unix/lib/net6.0/System.Drawing.Common.dll": {
-            "assetType": "runtime",
-            "rid": "unix"
-          },
-          "runtimes/win/lib/net6.0/System.Drawing.Common.dll": {
-            "assetType": "runtime",
-            "rid": "win"
-          }
+          "buildTransitive/net6.0/_._": {}
         }
       },
       "System.Formats.Asn1/5.0.0": {
@@ -2360,6 +2364,23 @@
         },
         "compile": {
           "ref/netstandard1.5/System.IO.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "System.IO.Abstractions/22.0.12": {
+        "type": "package",
+        "dependencies": {
+          "TestableIO.System.IO.Abstractions": "22.0.12",
+          "TestableIO.System.IO.Abstractions.Wrappers": "22.0.12"
+        },
+        "compile": {
+          "lib/net6.0/System.IO.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/System.IO.Abstractions.dll": {
             "related": ".xml"
           }
         }
@@ -3468,6 +3489,51 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XDocument.dll": {}
         }
+      },
+      "TestableIO.System.IO.Abstractions/22.0.12": {
+        "type": "package",
+        "dependencies": {
+          "Testably.Abstractions.FileSystem.Interface": "9.0.0"
+        },
+        "compile": {
+          "lib/net6.0/TestableIO.System.IO.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/TestableIO.System.IO.Abstractions.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "TestableIO.System.IO.Abstractions.Wrappers/22.0.12": {
+        "type": "package",
+        "dependencies": {
+          "Testably.Abstractions.FileSystem.Interface": "9.0.0"
+        },
+        "compile": {
+          "lib/net6.0/TestableIO.System.IO.Abstractions.Wrappers.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/TestableIO.System.IO.Abstractions.Wrappers.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Testably.Abstractions.FileSystem.Interface/9.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/Testably.Abstractions.FileSystem.Interface.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Testably.Abstractions.FileSystem.Interface.dll": {
+            "related": ".xml"
+          }
+        }
       }
     }
   },
@@ -3541,6 +3607,22 @@
         "lib/netstandard2.0/FluentValidation.DependencyInjectionExtensions.xml",
         "lib/netstandard2.1/FluentValidation.DependencyInjectionExtensions.dll",
         "lib/netstandard2.1/FluentValidation.DependencyInjectionExtensions.xml"
+      ]
+    },
+    "Ghostscript.NET/1.3.0": {
+      "sha512": "UxJTV6l4Xb9HGVaPrhfkeorWDpy0cMm8K4jLCufIF9O9hlgIicE5624QzH+39LzEtwDwhhDC7OrgwsqCOh9wtw==",
+      "type": "package",
+      "path": "ghostscript.net/1.3.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Description.md",
+        "LICENSE.md",
+        "ghostscript.net.1.3.0.nupkg.sha512",
+        "ghostscript.net.nuspec",
+        "gs-icon.png",
+        "lib/netstandard2.0/Ghostscript.NET.dll",
+        "lib/netstandard2.0/Ghostscript.NET.xml"
       ]
     },
     "Humanizer/2.14.1": {
@@ -5852,13 +5934,14 @@
         "ref/xamarinwatchos10/_._"
       ]
     },
-    "Microsoft.Win32.Registry/4.7.0": {
-      "sha512": "KSrRMb5vNi0CWSGG1++id2ZOs/1QhRqROt+qgbEAdQuGjGrFcl4AOl4/exGPUYz2wUnU42nvJqon1T3U0kPXLA==",
+    "Microsoft.Win32.Registry/5.0.0": {
+      "sha512": "dDoKi0PnDz31yAyETfRntsLArTlVAVzUzCIvvEDsDsucrl33Dl8pIJG06ePTJTI3tGpeyHS9Cq7Foc/s4EeKcg==",
       "type": "package",
-      "path": "microsoft.win32.registry/4.7.0",
+      "path": "microsoft.win32.registry/5.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "Icon.png",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
         "lib/net46/Microsoft.Win32.Registry.dll",
@@ -5867,13 +5950,11 @@
         "lib/netstandard1.3/Microsoft.Win32.Registry.dll",
         "lib/netstandard2.0/Microsoft.Win32.Registry.dll",
         "lib/netstandard2.0/Microsoft.Win32.Registry.xml",
-        "microsoft.win32.registry.4.7.0.nupkg.sha512",
+        "microsoft.win32.registry.5.0.0.nupkg.sha512",
         "microsoft.win32.registry.nuspec",
         "ref/net46/Microsoft.Win32.Registry.dll",
         "ref/net461/Microsoft.Win32.Registry.dll",
         "ref/net461/Microsoft.Win32.Registry.xml",
-        "ref/net472/Microsoft.Win32.Registry.dll",
-        "ref/net472/Microsoft.Win32.Registry.xml",
         "ref/netstandard1.3/Microsoft.Win32.Registry.dll",
         "ref/netstandard1.3/Microsoft.Win32.Registry.xml",
         "ref/netstandard1.3/de/Microsoft.Win32.Registry.xml",
@@ -5887,8 +5968,6 @@
         "ref/netstandard1.3/zh-hant/Microsoft.Win32.Registry.xml",
         "ref/netstandard2.0/Microsoft.Win32.Registry.dll",
         "ref/netstandard2.0/Microsoft.Win32.Registry.xml",
-        "runtimes/unix/lib/netstandard2.0/Microsoft.Win32.Registry.dll",
-        "runtimes/unix/lib/netstandard2.0/Microsoft.Win32.Registry.xml",
         "runtimes/win/lib/net46/Microsoft.Win32.Registry.dll",
         "runtimes/win/lib/net461/Microsoft.Win32.Registry.dll",
         "runtimes/win/lib/net461/Microsoft.Win32.Registry.xml",
@@ -5899,32 +5978,38 @@
         "version.txt"
       ]
     },
-    "Microsoft.Win32.SystemEvents/6.0.0": {
-      "sha512": "hqTM5628jSsQiv+HGpiq3WKBl2c8v1KZfby2J6Pr7pEPlK9waPdgEO6b8A/+/xn/yZ9ulv8HuqK71ONy2tg67A==",
+    "Microsoft.Win32.SystemEvents/8.0.0": {
+      "sha512": "9opKRyOKMCi2xJ7Bj7kxtZ1r9vbzosMvRrdEhVhDz8j8MoBGgB+WmC94yH839NPH+BclAjtQ/pyagvi/8gDLkw==",
       "type": "package",
-      "path": "microsoft.win32.systemevents/6.0.0",
+      "path": "microsoft.win32.systemevents/8.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/Microsoft.Win32.SystemEvents.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net6.0/_._",
         "buildTransitive/netcoreapp2.0/Microsoft.Win32.SystemEvents.targets",
-        "buildTransitive/netcoreapp3.1/_._",
-        "lib/net461/Microsoft.Win32.SystemEvents.dll",
-        "lib/net461/Microsoft.Win32.SystemEvents.xml",
+        "lib/net462/Microsoft.Win32.SystemEvents.dll",
+        "lib/net462/Microsoft.Win32.SystemEvents.xml",
         "lib/net6.0/Microsoft.Win32.SystemEvents.dll",
         "lib/net6.0/Microsoft.Win32.SystemEvents.xml",
-        "lib/netcoreapp3.1/Microsoft.Win32.SystemEvents.dll",
-        "lib/netcoreapp3.1/Microsoft.Win32.SystemEvents.xml",
+        "lib/net7.0/Microsoft.Win32.SystemEvents.dll",
+        "lib/net7.0/Microsoft.Win32.SystemEvents.xml",
+        "lib/net8.0/Microsoft.Win32.SystemEvents.dll",
+        "lib/net8.0/Microsoft.Win32.SystemEvents.xml",
         "lib/netstandard2.0/Microsoft.Win32.SystemEvents.dll",
         "lib/netstandard2.0/Microsoft.Win32.SystemEvents.xml",
-        "microsoft.win32.systemevents.6.0.0.nupkg.sha512",
+        "microsoft.win32.systemevents.8.0.0.nupkg.sha512",
         "microsoft.win32.systemevents.nuspec",
         "runtimes/win/lib/net6.0/Microsoft.Win32.SystemEvents.dll",
         "runtimes/win/lib/net6.0/Microsoft.Win32.SystemEvents.xml",
-        "runtimes/win/lib/netcoreapp3.1/Microsoft.Win32.SystemEvents.dll",
-        "runtimes/win/lib/netcoreapp3.1/Microsoft.Win32.SystemEvents.xml",
+        "runtimes/win/lib/net7.0/Microsoft.Win32.SystemEvents.dll",
+        "runtimes/win/lib/net7.0/Microsoft.Win32.SystemEvents.xml",
+        "runtimes/win/lib/net8.0/Microsoft.Win32.SystemEvents.dll",
+        "runtimes/win/lib/net8.0/Microsoft.Win32.SystemEvents.xml",
         "useSharedDesignerContext.txt"
       ]
     },
@@ -7162,41 +7247,42 @@
         "system.diagnostics.tracing.nuspec"
       ]
     },
-    "System.Drawing.Common/6.0.0": {
-      "sha512": "NfuoKUiP2nUWwKZN6twGqXioIe1zVD0RIj2t976A+czLHr2nY454RwwXs6JU9Htc6mwqL6Dn/nEL3dpVf2jOhg==",
+    "System.Drawing.Common/8.0.8": {
+      "sha512": "4ZM1wvLjz9nVVExsfPAaSl/qOvU+QNedJL5rQ+2Wbow+iGeyO0e7XN07707rMBgaffEeeLrCZBwC0oHUuvRdPw==",
       "type": "package",
-      "path": "system.drawing.common/6.0.0",
+      "path": "system.drawing.common/8.0.8",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/System.Drawing.Common.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net6.0/_._",
         "buildTransitive/netcoreapp2.0/System.Drawing.Common.targets",
-        "buildTransitive/netcoreapp3.1/_._",
         "lib/MonoAndroid10/_._",
         "lib/MonoTouch10/_._",
-        "lib/net461/System.Drawing.Common.dll",
-        "lib/net461/System.Drawing.Common.xml",
+        "lib/net462/System.Drawing.Common.dll",
+        "lib/net462/System.Drawing.Common.pdb",
+        "lib/net462/System.Drawing.Common.xml",
         "lib/net6.0/System.Drawing.Common.dll",
+        "lib/net6.0/System.Drawing.Common.pdb",
         "lib/net6.0/System.Drawing.Common.xml",
-        "lib/netcoreapp3.1/System.Drawing.Common.dll",
-        "lib/netcoreapp3.1/System.Drawing.Common.xml",
+        "lib/net7.0/System.Drawing.Common.dll",
+        "lib/net7.0/System.Drawing.Common.pdb",
+        "lib/net7.0/System.Drawing.Common.xml",
+        "lib/net8.0/System.Drawing.Common.dll",
+        "lib/net8.0/System.Drawing.Common.pdb",
+        "lib/net8.0/System.Drawing.Common.xml",
         "lib/netstandard2.0/System.Drawing.Common.dll",
+        "lib/netstandard2.0/System.Drawing.Common.pdb",
         "lib/netstandard2.0/System.Drawing.Common.xml",
         "lib/xamarinios10/_._",
         "lib/xamarinmac20/_._",
         "lib/xamarintvos10/_._",
         "lib/xamarinwatchos10/_._",
-        "runtimes/unix/lib/net6.0/System.Drawing.Common.dll",
-        "runtimes/unix/lib/net6.0/System.Drawing.Common.xml",
-        "runtimes/unix/lib/netcoreapp3.1/System.Drawing.Common.dll",
-        "runtimes/unix/lib/netcoreapp3.1/System.Drawing.Common.xml",
-        "runtimes/win/lib/net6.0/System.Drawing.Common.dll",
-        "runtimes/win/lib/net6.0/System.Drawing.Common.xml",
-        "runtimes/win/lib/netcoreapp3.1/System.Drawing.Common.dll",
-        "runtimes/win/lib/netcoreapp3.1/System.Drawing.Common.xml",
-        "system.drawing.common.6.0.0.nupkg.sha512",
+        "system.drawing.common.8.0.8.nupkg.sha512",
         "system.drawing.common.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -7447,6 +7533,31 @@
         "ref/xamarinwatchos10/_._",
         "system.io.4.3.0.nupkg.sha512",
         "system.io.nuspec"
+      ]
+    },
+    "System.IO.Abstractions/22.0.12": {
+      "sha512": "6zDaRj9ZDao6g3OBlu0BCC11omEkSdvr1p/mrUNXrWpZnqVfQOzHbfXuAd0jbM+uXGkTq3jPA2RevPJiAQR9Ig==",
+      "type": "package",
+      "path": "system.io.abstractions/22.0.12",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "icon_256x256.png",
+        "lib/net472/System.IO.Abstractions.dll",
+        "lib/net472/System.IO.Abstractions.xml",
+        "lib/net6.0/System.IO.Abstractions.dll",
+        "lib/net6.0/System.IO.Abstractions.xml",
+        "lib/net8.0/System.IO.Abstractions.dll",
+        "lib/net8.0/System.IO.Abstractions.xml",
+        "lib/net9.0/System.IO.Abstractions.dll",
+        "lib/net9.0/System.IO.Abstractions.xml",
+        "lib/netstandard2.0/System.IO.Abstractions.dll",
+        "lib/netstandard2.0/System.IO.Abstractions.xml",
+        "lib/netstandard2.1/System.IO.Abstractions.dll",
+        "lib/netstandard2.1/System.IO.Abstractions.xml",
+        "system.io.abstractions.22.0.12.nupkg.sha512",
+        "system.io.abstractions.nuspec"
       ]
     },
     "System.IO.Compression/4.3.0": {
@@ -10264,12 +10375,86 @@
         "system.xml.xdocument.4.3.0.nupkg.sha512",
         "system.xml.xdocument.nuspec"
       ]
+    },
+    "TestableIO.System.IO.Abstractions/22.0.12": {
+      "sha512": "8V3+Ulf8jhhqy0PGJikM+bEebI2o07sgqK8DsFDHavq1sqhewCvih97J+sSsr1Xt2hDBwl8CCs7fg+xkddYqXA==",
+      "type": "package",
+      "path": "testableio.system.io.abstractions/22.0.12",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "icon_256x256.png",
+        "lib/net472/TestableIO.System.IO.Abstractions.dll",
+        "lib/net472/TestableIO.System.IO.Abstractions.xml",
+        "lib/net6.0/TestableIO.System.IO.Abstractions.dll",
+        "lib/net6.0/TestableIO.System.IO.Abstractions.xml",
+        "lib/net8.0/TestableIO.System.IO.Abstractions.dll",
+        "lib/net8.0/TestableIO.System.IO.Abstractions.xml",
+        "lib/net9.0/TestableIO.System.IO.Abstractions.dll",
+        "lib/net9.0/TestableIO.System.IO.Abstractions.xml",
+        "lib/netstandard2.0/TestableIO.System.IO.Abstractions.dll",
+        "lib/netstandard2.0/TestableIO.System.IO.Abstractions.xml",
+        "lib/netstandard2.1/TestableIO.System.IO.Abstractions.dll",
+        "lib/netstandard2.1/TestableIO.System.IO.Abstractions.xml",
+        "testableio.system.io.abstractions.22.0.12.nupkg.sha512",
+        "testableio.system.io.abstractions.nuspec"
+      ]
+    },
+    "TestableIO.System.IO.Abstractions.Wrappers/22.0.12": {
+      "sha512": "pu9OwvRInYnwNxgtEdlL3PMYwKgx2X81TAsgIwes3nnqTDjtWgb0uxcWUfxBGJd59/cvu3bi2IpfM0Au38+UKQ==",
+      "type": "package",
+      "path": "testableio.system.io.abstractions.wrappers/22.0.12",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "icon_256x256.png",
+        "lib/net472/TestableIO.System.IO.Abstractions.Wrappers.dll",
+        "lib/net472/TestableIO.System.IO.Abstractions.Wrappers.xml",
+        "lib/net6.0/TestableIO.System.IO.Abstractions.Wrappers.dll",
+        "lib/net6.0/TestableIO.System.IO.Abstractions.Wrappers.xml",
+        "lib/net8.0/TestableIO.System.IO.Abstractions.Wrappers.dll",
+        "lib/net8.0/TestableIO.System.IO.Abstractions.Wrappers.xml",
+        "lib/net9.0/TestableIO.System.IO.Abstractions.Wrappers.dll",
+        "lib/net9.0/TestableIO.System.IO.Abstractions.Wrappers.xml",
+        "lib/netstandard2.0/TestableIO.System.IO.Abstractions.Wrappers.dll",
+        "lib/netstandard2.0/TestableIO.System.IO.Abstractions.Wrappers.xml",
+        "lib/netstandard2.1/TestableIO.System.IO.Abstractions.Wrappers.dll",
+        "lib/netstandard2.1/TestableIO.System.IO.Abstractions.Wrappers.xml",
+        "testableio.system.io.abstractions.wrappers.22.0.12.nupkg.sha512",
+        "testableio.system.io.abstractions.wrappers.nuspec"
+      ]
+    },
+    "Testably.Abstractions.FileSystem.Interface/9.0.0": {
+      "sha512": "uksk86YlnzAdyfVNu3wICU0X5iXVe9LF7Q3UkngNliHWEvM5gvAlOUr+jmd9JwmbJWISH5+i1vyXE02lEVz7WQ==",
+      "type": "package",
+      "path": "testably.abstractions.filesystem.interface/9.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Docs/Interface.md",
+        "Docs/logo_256x256.png",
+        "lib/net6.0/Testably.Abstractions.FileSystem.Interface.dll",
+        "lib/net6.0/Testably.Abstractions.FileSystem.Interface.xml",
+        "lib/net8.0/Testably.Abstractions.FileSystem.Interface.dll",
+        "lib/net8.0/Testably.Abstractions.FileSystem.Interface.xml",
+        "lib/net9.0/Testably.Abstractions.FileSystem.Interface.dll",
+        "lib/net9.0/Testably.Abstractions.FileSystem.Interface.xml",
+        "lib/netstandard2.0/Testably.Abstractions.FileSystem.Interface.dll",
+        "lib/netstandard2.0/Testably.Abstractions.FileSystem.Interface.xml",
+        "lib/netstandard2.1/Testably.Abstractions.FileSystem.Interface.dll",
+        "lib/netstandard2.1/Testably.Abstractions.FileSystem.Interface.xml",
+        "testably.abstractions.filesystem.interface.9.0.0.nupkg.sha512",
+        "testably.abstractions.filesystem.interface.nuspec"
+      ]
     }
   },
   "projectFileDependencyGroups": {
     "net7.0": [
       "AspNetCoreRateLimit >= 5.0.0",
       "FluentValidation.AspNetCore >= 11.3.0",
+      "Ghostscript.NET >= 1.2.4",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 7.0.12",
       "Newtonsoft.Json >= 13.0.3",
       "System.Data.SqlClient >= 4.8.6"
@@ -10336,6 +10521,10 @@
             "target": "Package",
             "version": "[11.3.0, )"
           },
+          "Ghostscript.NET": {
+            "target": "Package",
+            "version": "[1.2.4, )"
+          },
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
             "target": "Package",
             "version": "[7.0.12, )"
@@ -10371,5 +10560,17 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305\\RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1603",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "MyWebSite depends on Ghostscript.NET (>= 1.2.4) but Ghostscript.NET 1.2.4 was not found. Ghostscript.NET 1.3.0 was resolved instead.",
+      "libraryId": "Ghostscript.NET",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    }
+  ]
 }

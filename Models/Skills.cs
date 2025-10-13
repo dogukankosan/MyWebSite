@@ -6,5 +6,6 @@
         public string SkillName { get; set; }
         public byte SkillPercent { get; set; }
         public string Skillcon { get; set; }
+        public bool Status { get; set; }
     }
 }

@@ -22,7 +22,14 @@ namespace MyWebSite.Business
                 .MaximumLength(75).WithMessage("GitHub linki en fazla 75 karakter olabilir.")
                 .Must(link => Uri.IsWellFormedUriString(link, UriKind.Absolute))
                 .WithMessage("Geçerli bir GitHub URL'si giriniz.");
-
+            RuleFor(x => x.ProjectImg)
+    .Must(file =>
+    {
+        if (file == null) return true;
+        var allowed = new[] { "image/jpeg", "image/png", "image/jpg" };
+        return allowed.Contains(file.ContentType);
+    })
+    .WithMessage("Sadece JPG veya PNG formatında görseller yüklenebilir.");
             RuleFor(project => project.ProjectLink)
                 .NotEmpty().WithMessage("Proje linki boş bırakılamaz.")
                 .MinimumLength(3).WithMessage("Proje linki en az 3 karakter olabilir.")

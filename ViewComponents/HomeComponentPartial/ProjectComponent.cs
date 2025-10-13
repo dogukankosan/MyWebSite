@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyWebSite.Classes;
 using MyWebSite.Models;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace MyWebSite.ViewComponents.HomeComponentPartial
@@ -12,13 +13,12 @@ namespace MyWebSite.ViewComponents.HomeComponentPartial
             try
             {
                 string sql = "ProjectsGet";
-                List<SqlParameter> parameters = new List<SqlParameter>();
                 List<Projects> projects = await SQLCrud.ExecuteModelListAsync<Projects>(
                     sql,
-                    parameters,
+                    null,
                     reader =>
                     {
-                        string base64Image = "";
+                        string base64Image = string.Empty;
                         if (!Convert.IsDBNull(reader["ProjectImg"]))
                         {
                             byte[] imageBytes = (byte[])reader["ProjectImg"];
@@ -31,12 +31,17 @@ namespace MyWebSite.ViewComponents.HomeComponentPartial
                             Base64Pictures = base64Image,
                             ProjectDescription = reader["ProjectDescription"].ToString(),
                             ProjectGithubLink = reader["ProjectGithubLink"].ToString(),
-                            ProjectLink = reader["ProjectLink"].ToString()
+                            ProjectLink = reader["ProjectLink"].ToString(),
+                            Status = reader["Status"] != DBNull.Value && Convert.ToBoolean(reader["Status"])
                         };
                     },
-                    System.Data.CommandType.StoredProcedure
+                    CommandType.StoredProcedure
                 );
-                return View(projects);
+                var activeProjects = projects
+                    .Where(x => x.Status)
+                    .OrderByDescending(x => x.ID) 
+                    .ToList();
+                return View(activeProjects);
             }
             catch (Exception ex)
             {

@@ -1,17 +1,18 @@
 ﻿@model About
 @{
-    ViewData["Title"] = "Admin Hakkinda Guncelle";
+    ViewData["Title"] = "Admin Hakkında Güncelle";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
 <br />
 <form id="aboutForm" enctype="multipart/form-data" method="post" class="p-3 bg-light rounded shadow-sm">
     <h4 class="mb-4">Hakkında Güncelleme Sayfası</h4>
-    <hr/>
+    <hr />
     <input type="hidden" name="ExistingPicture1" value="@ViewBag.Picture1" />
     <input type="hidden" name="ExistingPicture2" value="@ViewBag.Picture2" />
     <div class="form-group mb-3">
         <label for="Picture1">Resim 1 Seçiniz:</label>
         <input type="file" class="form-control" name="Picture1" id="Picture1" accept="image/*" @(ViewBag.Picture1 == null ? "required" : "") />
+        <small class="form-text text-muted">Profil veya tanıtım resmi (600x600 önerilir)</small>
         <div class="mt-2">
             <img id="preview1" src="@ViewBag.Picture1" width="60" height="60" class="border rounded" alt="Resim 1" />
         </div>
@@ -19,6 +20,7 @@
     <div class="form-group mb-3">
         <label for="Picture2">Resim 2 Seçiniz:</label>
         <input type="file" class="form-control" name="Picture2" id="Picture2" accept="image/*" @(ViewBag.Picture2 == null ? "required" : "") />
+        <small class="form-text text-muted">İkinci tanıtım görseli (opsiyonel)</small>
         <div class="mt-2">
             <img id="preview2" src="@ViewBag.Picture2" width="60" height="60" class="border rounded" alt="Resim 2" />
         </div>
@@ -26,56 +28,91 @@
     <div class="form-group mb-3">
         <label>Ünvan:</label>
         <input type="text" class="form-control" name="AboutTitle" value="@Model.AboutTitle"
-               required minlength="2" maxlength="100" pattern="^[^\d]*$" />
+               required minlength="2" maxlength="100" pattern="^[^\d]*$"
+               placeholder="Örn: Yazılım Mühendisi, Proje Yöneticisi">
         <span id="AboutTitleError" class="text-danger mt-1 d-block"></span>
     </div>
     <div class="form-group mb-3">
         <label>Hakkında Detay 1:</label>
-        <textarea class="form-control" name="AboutDetails1" required minlength="5" rows="4">@Model.AboutDetails1</textarea>
+        <textarea class="form-control" name="AboutDetails1" required minlength="5" rows="4"
+                  placeholder="Kendiniz veya firmanız hakkında kısa bir açıklama giriniz.">@Model.AboutDetails1</textarea>
         <span id="AboutDetails1Error" class="text-danger mt-1 d-block"></span>
     </div>
     <div class="form-group mb-3">
         <label>Adres:</label>
         <input type="text" class="form-control" name="AboutAdress" value="@Model.AboutAdress"
-               required minlength="5" maxlength="100" />
+               required minlength="5" maxlength="100"
+               placeholder="Örn: İstanbul, Silivri, Mustafa Kemal Mah. No:12">
         <span id="AboutAdressError" class="text-danger mt-1 d-block"></span>
     </div>
+
     <div class="form-group mb-3">
         <label>Mail:</label>
         <input type="email" class="form-control" name="AboutMail" value="@Model.AboutMail"
-               required maxlength="75" pattern="^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" />
+               required maxlength="75"
+               placeholder="Örn: admin@dogukankosan.com">
         <span id="AboutMailError" class="text-danger mt-1 d-block"></span>
     </div>
+
     <div class="form-group mb-3">
         <label>Telefon:</label>
         <input type="tel" class="form-control" name="AboutPhone" value="@Model.AboutPhone"
-               required pattern="^[0-9\+\-\(\)\s]*$" minlength="15" maxlength="15" />
+               required pattern="^[0-9\+\-\(\)\s]*$" minlength="10" maxlength="20"
+               placeholder="Örn: +90 (545) 511 11 34">
         <span id="AboutPhoneError" class="text-danger mt-1 d-block"></span>
     </div>
     <div class="form-group mb-3">
         <label>Web Site:</label>
         <input type="text" class="form-control" name="AboutWebSite" value="@Model.AboutWebSite"
-               required minlength="4" maxlength="75" />
+               required minlength="4" maxlength="75"
+               placeholder="Örn: dogukankosan.com">
         <span id="AboutWebSiteError" class="text-danger mt-1 d-block"></span>
     </div>
     <div class="form-group mb-3">
         <label>İsim:</label>
         <input type="text" class="form-control" name="AboutName" value="@Model.AboutName"
-               required minlength="2" maxlength="75" pattern="^[^\d]*$" />
+               required minlength="2" maxlength="75" pattern="^[^\d]*$"
+               placeholder="Örn: Doğukan Koşan">
         <span id="AboutNameError" class="text-danger mt-1 d-block"></span>
     </div>
     <div class="form-group mb-3">
         <label>Hakkında Detay 2:</label>
-        <textarea class="form-control" name="AboutDetails2" required minlength="5" rows="4">@Model.AboutDetails2</textarea>
+        <textarea class="form-control" name="AboutDetails2" required minlength="5" rows="4"
+                  placeholder="Ek açıklama veya detaylı bilgilendirme metni giriniz.">@Model.AboutDetails2</textarea>
         <span id="AboutDetails2Error" class="text-danger mt-1 d-block"></span>
     </div>
     <div class="form-group mb-3">
-        <label>Harita:</label>
-        <textarea class="form-control" name="IFrameAdress" required minlength="50" rows="4">@Model.IFrameAdress</textarea>
+        <label>Google Harita Embed (iframe):</label>
+        <textarea class="form-control" name="IFrameAdress" required minlength="50" rows="4"
+                  placeholder="Google Maps iframe kodunu buraya yapıştırın.">@Model.IFrameAdress</textarea>
         <span id="IFrameAdressError" class="text-danger mt-1 d-block"></span>
     </div>
     <span id="resultsucc" class="text-danger mb-3 d-block"></span>
-    <button type="submit" class="btn btn-success mt-3">Güncelle</button>
+    <div class="d-flex justify-content-end gap-2 mt-4">
+        <button type="submit" class="btn btn-success px-4">
+            <i class="fas fa-save me-2"></i> Güncelle
+        </button>
+        <a href="/AdminHakkinda/Liste" class="btn btn-outline-secondary px-4">
+            <i class="fas fa-list me-2"></i> Listeye Dön
+        </a>
+    </div>
+    <style>
+        .btn {
+            transition: all 0.2s ease-in-out;
+        }
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            }
+
+        label {
+            font-weight: 600;
+        }
+
+        textarea, input[type="text"], input[type="email"], input[type="tel"] {
+            font-size: 14px;
+        }
+    </style>
 </form>
 <br />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -93,31 +130,17 @@
                 processData: false,
                 success: function (response) {
                     if (response.success) {
-                            sessionStorage.setItem("updated", "1");
+                        sessionStorage.setItem("updated", "1");
                         window.location.href = response.redirectUrl;
                     } else if (response.errors) {
-                        if (response.errors.AboutTitle)
-                            $('#AboutTitleError').text(response.errors.AboutTitle);
-                        if (response.errors.AboutDetails1)
-                            $('#AboutDetails1Error').text(response.errors.AboutDetails1);
-                        if (response.errors.AboutAdress)
-                            $('#AboutAdressError').text(response.errors.AboutAdress);
-                        if (response.errors.AboutMail)
-                            $('#AboutMailError').text(response.errors.AboutMail);
-                        if (response.errors.AboutPhone)
-                            $('#AboutPhoneError').text(response.errors.AboutPhone);
-                        if (response.errors.AboutWebSite)
-                            $('#AboutWebSiteError').text(response.errors.AboutWebSite);
-                        if (response.errors.AboutName)
-                            $('#AboutNameError').text(response.errors.AboutName);
-                        if (response.errors.AboutDetails2)
-                            $('#AboutDetails2Error').text(response.errors.AboutDetails2);
-                        if (response.errors.IFrameAdress)
-                            $('#IFrameAdressError').text(response.errors.IFrameAdress);
-                        if (response.errors.Picture1)
-                            $('#resultsucc').html('<div class="alert alert-danger">' + response.errors.Picture1 + '</div>');
-                        if (response.errors.Picture2)
-                            $('#resultsucc').html('<div class="alert alert-danger">' + response.errors.Picture2 + '</div>');
+                        for (const key in response.errors) {
+                            const errorElement = $('#' + key + 'Error');
+                            if (errorElement.length) {
+                                errorElement.text(response.errors[key]);
+                            } else {
+                                $('#resultsucc').html('<div class="alert alert-danger">' + response.errors[key] + '</div>');
+                            }
+                        }
                     } else {
                         $('#resultsucc').html('<div class="alert alert-danger">Bilinmeyen bir hata oluştu.</div>');
                     }
@@ -127,23 +150,18 @@
                 }
             });
         });
-    });
-</script>
-<script>
-    function previewImage(input, targetId) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                document.getElementById(targetId).src = e.target.result;
-            };
-            reader.readAsDataURL(input.files[0]);
+        function previewImage(input, targetId) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById(targetId).src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
         }
-    }
-    $(document).ready(function () {
         $('#Picture1').change(function () {
             previewImage(this, 'preview1');
         });
-
         $('#Picture2').change(function () {
             previewImage(this, 'preview2');
         });

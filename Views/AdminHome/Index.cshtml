@@ -3,7 +3,7 @@
     ViewData["Title"] = "Admin Panel";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
-<br/>
+<br />
 <h1 class="mt-4">Admin Rapor Ekranı</h1>
 <hr />
 <style>
@@ -34,12 +34,24 @@
         background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%) !important;
         color: white;
     }
+
+    .bg-gradient-orange {
+        background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%) !important;
+        color: white;
+    }
+
+    .bg-gradient-green {
+        background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%) !important;
+        color: white;
+    }
 </style>
+
+<!-- 1. SATIR -->
 <div class="row">
     <div class="col-xl-3 col-md-6 mb-4">
         <div class="card bg-dark text-white h-100">
             <div class="card-body">
-                <span>Toplam Proje <b>(@Model.ProjectCount)</b></span>
+                <span>Aktif Toplam Proje <b>(@Model.ProjectCount)</b></span>
                 <i class="fas fa-project-diagram"></i>
             </div>
             <div class="card-footer d-flex align-items-center justify-content-between">
@@ -51,7 +63,7 @@
     <div class="col-xl-3 col-md-6 mb-4">
         <div class="card bg-secondary text-white h-100">
             <div class="card-body">
-                <span>Yetenek <b>(@Model.SkillsCount)</b></span>
+                <span>Aktif Yetenek <b>(@Model.SkillsCount)</b></span>
                 <i class="fas fa-tools"></i>
             </div>
             <div class="card-footer d-flex align-items-center justify-content-between">
@@ -63,7 +75,7 @@
     <div class="col-xl-3 col-md-6 mb-4">
         <div class="card bg-gradient-purple text-white h-100">
             <div class="card-body">
-                <span>Eğitim <b>(@Model.EducationCount)</b></span>
+                <span>Aktif Eğitim <b>(@Model.EducationCount)</b></span>
                 <i class="fas fa-user-graduate"></i>
             </div>
             <div class="card-footer d-flex align-items-center justify-content-between">
@@ -75,7 +87,7 @@
     <div class="col-xl-3 col-md-6 mb-4">
         <div class="card bg-success text-white h-100">
             <div class="card-body">
-                <span>İş Hayatı <b>(@Model.JobsCount)</b></span>
+                <span>Aktif İş Hayatı <b>(@Model.JobsCount)</b></span>
                 <i class="fas fa-briefcase"></i>
             </div>
             <div class="card-footer d-flex align-items-center justify-content-between">
@@ -85,6 +97,7 @@
         </div>
     </div>
 </div>
+
 <div class="row">
     <div class="col-xl-3 col-md-6 mb-4">
         <div class="card bg-info text-white h-100">
@@ -122,19 +135,73 @@
             </div>
         </div>
     </div>
-<div class="col-xl-3 col-md-6 mb-4">
-    <div class="card bg-warning text-white h-100">
-        <div class="card-body">
-            <span>İletişim Gönderileri <b>(@Model.ContactCount)</b></span>
-            <i class="fas fa-envelope"></i>
-        </div>
-        <div class="card-footer d-flex align-items-center justify-content-between">
-            <a class="small text-white stretched-link" href="/AdminIletisim/Liste">Detaylar</a>
-            <i class="fas fa-angle-right"></i>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card bg-warning text-white h-100">
+            <div class="card-body">
+                <span>İletişim Gönderileri <b>(@Model.ContactCount)</b></span>
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <a class="small text-white stretched-link" href="/AdminIletisim/Liste">Detaylar</a>
+                <i class="fas fa-angle-right"></i>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- 3. SATIR – Yeni Eklenenler -->
+<div class="row">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card bg-gradient-orange h-100">
+            <div class="card-body">
+                <span>Dosya İndirme <b>(@Model.FileDownloadCount)</b></span>
+                <i class="fas fa-file-download"></i>
+            </div>
+            <div class="card-footer d-flex align-items-center justify-content-between text-white">
+                <a class="small text-white stretched-link" href="/AdminDosya/IndirmeLog">Detaylar</a>
+                <i class="fas fa-angle-right"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card bg-gradient-green h-100">
+            <div class="card-body">
+                <span>CV İndirme <b>(@Model.CvDownloadCount)</b></span>
+                <i class="fas fa-id-card"></i>
+            </div>
+            <div class="card-footer d-flex align-items-center justify-content-between text-white">
+                <a class="small text-white stretched-link" href="/AdminCv/Yonetim">Detaylar</a>
+                <i class="fas fa-angle-right"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card bg-gradient-purple h-100">
+            <div class="card-body">
+                <span>Aktif Sertifikalar <b>(@Model.CertificatesCount)</b></span>
+                <i class="fas fa-certificate"></i>
+            </div>
+            <div class="card-footer d-flex align-items-center justify-content-between text-white">
+                <a class="small text-white stretched-link" href="/AdminSertifika/Liste">Detaylar</a>
+                <i class="fas fa-angle-right"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card bg-dark text-white h-100">
+            <div class="card-body">
+                <span>Sertifika İndirme <b>(@Model.CertificateDownloadCount)</b></span>
+                <i class="fas fa-download"></i>
+            </div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <a class="small text-white stretched-link" href="/AdminSertifika/IndirmeLoglari">Detaylar</a>
+                <i class="fas fa-angle-right"></i>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- GRAFİKLER -->
 <div class="row">
     <div class="col-xl-6 mb-4">
         <div class="card">
@@ -153,43 +220,42 @@
         </div>
     </div>
 </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        var contactData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ContactMonthlyCounts));
-        var webLogData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.WebLogMonthlyCounts));
-        var labels = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
-        new Chart(document.getElementById('contactChart'), {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'İletişim Sayısı',
-                    data: contactData,
-                    borderColor: 'rgba(255, 206, 86, 1)',
-                    backgroundColor: 'rgba(255, 206, 86, 0.2)',
-                    borderWidth: 2,
-                    tension: 0.3,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true
-            }
-        });
-        new Chart(document.getElementById('webLogChart'), {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Site Girişi',
-                    data: webLogData,
-                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true
-            }
-        });
-    </script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var contactData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ContactMonthlyCounts));
+    var webLogData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.WebLogMonthlyCounts));
+    var labels = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+
+    new Chart(document.getElementById('contactChart'), {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'İletişim Sayısı',
+                data: contactData,
+                borderColor: 'rgba(255, 206, 86, 1)',
+                backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                borderWidth: 2,
+                tension: 0.3,
+                fill: true
+            }]
+        },
+        options: { responsive: true }
+    });
+
+    new Chart(document.getElementById('webLogChart'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Site Girişi',
+                data: webLogData,
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: { responsive: true }
+    });
+</script>

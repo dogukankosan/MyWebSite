@@ -31,7 +31,8 @@ namespace MyWebSite.Controllers
                         Base64Pictures = base64Image,
                         ProjectDescription = reader["ProjectDescription"].ToString(),
                         ProjectGithubLink = reader["ProjectGithubLink"].ToString(),
-                        ProjectLink = reader["ProjectLink"].ToString()
+                        ProjectLink = reader["ProjectLink"].ToString(),
+                        Status = reader["Status"] != DBNull.Value && Convert.ToBoolean(reader["Status"])
                     };
                 });
                 return View(projects);
@@ -44,6 +45,7 @@ namespace MyWebSite.Controllers
                 return View(new List<Projects>());
             }
         }
+
         [HttpGet("Guncelle/{id:int}")]
         public async Task<IActionResult> Update(int id)
         {
@@ -65,7 +67,8 @@ namespace MyWebSite.Controllers
                         ProjectDescription = reader["ProjectDescription"].ToString(),
                         ProjectGithubLink = reader["ProjectGithubLink"].ToString(),
                         ProjectLink = reader["ProjectLink"].ToString(),
-                        Base64Pictures = base64Image
+                        Base64Pictures = base64Image,
+                        Status = reader["Status"] != DBNull.Value && Convert.ToBoolean(reader["Status"])
                     };
                 });
                 Projects result = project.FirstOrDefault();
@@ -81,14 +84,17 @@ namespace MyWebSite.Controllers
                 return View(new Projects());
             }
         }
-        [HttpPost("Guncelle")]
-        public async Task<IActionResult> Update(Projects projects)
+
+        [HttpPost("Guncelle/{id:int}")]
+        public async Task<IActionResult> Update(int id, Projects projects)
         {
+            projects.ID = (byte)id;
             if (!ModelState.IsValid)
             {
                 var errors = ModelState
                     .Where(x => x.Value.Errors.Any())
                     .ToDictionary(k => k.Key, v => string.Join(", ", v.Value.Errors.Select(e => e.ErrorMessage)));
+
                 return Json(new { success = false, errors });
             }
             byte[] imageBytes = null;
@@ -110,16 +116,19 @@ namespace MyWebSite.Controllers
                 }
             }
             else
+            {
                 return Json(new { success = false, errors = new { ProjectImg = "En az bir görsel yüklenmelidir." } });
+            }
             List<SqlParameter> parameters = new List<SqlParameter>
-    {
-        new SqlParameter("@ID", projects.ID),
-        new SqlParameter("@ProjectName", projects.ProjectName),
-        new SqlParameter("@ProjectDescription", projects.ProjectDescription),
-        new SqlParameter("@ProjectImg", SqlDbType.VarBinary) { Value = (object)imageBytes ?? DBNull.Value },
-        new SqlParameter("@ProjectGithubLink", projects.ProjectGithubLink),
-        new SqlParameter("@ProjectLink", projects.ProjectLink)
-    };
+            {
+                new SqlParameter("@ID", projects.ID),
+                new SqlParameter("@ProjectName", projects.ProjectName),
+                new SqlParameter("@ProjectDescription", projects.ProjectDescription),
+                new SqlParameter("@ProjectImg", SqlDbType.VarBinary) { Value = (object)imageBytes ?? DBNull.Value },
+                new SqlParameter("@ProjectGithubLink", projects.ProjectGithubLink),
+                new SqlParameter("@ProjectLink", projects.ProjectLink),
+                new SqlParameter("@Status", projects.Status)
+            };
             try
             {
                 await SQLCrud.InsertUpdateDeleteAsync("ProjectsUpdate", parameters);
@@ -133,8 +142,10 @@ namespace MyWebSite.Controllers
                 return Json(new { success = false });
             }
         }
+
         [HttpGet("Ekle")]
         public IActionResult Add() => View();
+
         [HttpPost("Ekle")]
         public async Task<IActionResult> Add(Projects projects)
         {
@@ -143,8 +154,10 @@ namespace MyWebSite.Controllers
                 var errors = ModelState
                     .Where(x => x.Value.Errors.Any())
                     .ToDictionary(k => k.Key, v => string.Join(", ", v.Value.Errors.Select(e => e.ErrorMessage)));
+
                 return Json(new { success = false, errors });
             }
+
             byte[] imageBytes = null;
             if (projects.ProjectImg != null && projects.ProjectImg.Length > 0)
             {
@@ -152,44 +165,67 @@ namespace MyWebSite.Controllers
                 await projects.ProjectImg.CopyToAsync(ms);
                 imageBytes = ms.ToArray();
             }
-            List<SqlParameter> parameters = new List<SqlParameter>
-            {
-                new SqlParameter("@ProjectName", projects.ProjectName),
-                new SqlParameter("@ProjectDescription", projects.ProjectDescription),
-                new SqlParameter("@ProjectImg", SqlDbType.VarBinary) { Value = (object)imageBytes ?? DBNull.Value },
-                new SqlParameter("@ProjectGithubLink", projects.ProjectGithubLink),
-                new SqlParameter("@ProjectLink", projects.ProjectLink)
-            };
+
+            var parameters = new List<SqlParameter>
+    {
+        new SqlParameter("@ProjectName", projects.ProjectName),
+        new SqlParameter("@ProjectDescription", projects.ProjectDescription),
+        new SqlParameter("@ProjectImg", SqlDbType.VarBinary) { Value = (object)imageBytes ?? DBNull.Value },
+        new SqlParameter("@ProjectGithubLink", projects.ProjectGithubLink),
+        new SqlParameter("@ProjectLink", projects.ProjectLink),
+        new SqlParameter("@Status", projects.Status)
+    };
+
             try
             {
                 await SQLCrud.InsertUpdateDeleteAsync("ProjectsInsert", parameters);
-                TempData["Type"] = "success";
-                TempData["Message"] = "Proje başarıyla eklendi.";
                 return Json(new { success = true, redirectUrl = Url.Action("Liste", "AdminProje") });
             }
             catch (Exception ex)
             {
                 await Logging.LogAdd("Admin Projeler Ekleme Hatası", ex.Message);
-                return Json(new { success = false });
+                return Json(new { success = false, errors = new { General = "Sunucuda hata: " + ex.Message } });
             }
         }
+
         [HttpGet("Sil/{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
             List<SqlParameter> parameters = new List<SqlParameter> { new SqlParameter("@ID", id) };
+
             try
             {
                 await SQLCrud.InsertUpdateDeleteAsync("ProjectsDelete", parameters);
                 TempData["Type"] = "success";
                 TempData["Message"] = "Proje başarıyla silindi.";
-                return RedirectToAction("Liste", "AdminProje");
             }
             catch (Exception ex)
             {
                 await Logging.LogAdd("Admin Projeler Silme Hatası", ex.Message);
                 TempData["Type"] = "error";
                 TempData["Message"] = "Proje silinirken hata oluştu.";
-                return RedirectToAction("Liste", "AdminProje");
+            }
+            return RedirectToAction("Liste", "AdminProje");
+        }
+        [HttpPost("DurumGuncelle")]
+        public async Task<IActionResult> UpdateStatus([FromBody] System.Text.Json.JsonElement data)
+        {
+            try
+            {
+                int id = data.GetProperty("id").GetInt32();
+                bool status = data.GetProperty("status").GetBoolean();
+                List<SqlParameter> parameters = new List<SqlParameter>
+                {
+                    new SqlParameter("@ID", id),
+                    new SqlParameter("@Status", status)
+                };
+                await SQLCrud.InsertUpdateDeleteAsync("ProjectsStatusUpdate", parameters);
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                await Logging.LogAdd("Admin Proje Durum Güncelleme Hatası", ex.Message);
+                return Json(new { success = false });
             }
         }
     }

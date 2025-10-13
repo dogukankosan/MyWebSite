@@ -12,7 +12,7 @@
     <div class="form-group">
         <label asp-for="UserName">Kullanıcı Adı</label>
         <input asp-for="UserName" class="form-control"
-               required minlength="3" maxlength="50"
+               required minlength="3" maxlength="50" placeholder="Kullanıcı adınızı yazınız.."
                pattern="^[a-zA-Z0-9_.-]+$"
                title="Sadece harf, rakam, nokta, alt çizgi ve tire içerebilir." />
         <span asp-validation-for="UserName" class="text-danger" style="margin-top: 5px; display: block;"></span>
@@ -22,7 +22,7 @@
         <label asp-for="Password">Şifre (değiştirmek isterseniz doldurun):</label>
         <div class="input-group">
             <input asp-for="Password" class="form-control"
-                   minlength="8" maxlength="150"
+                   minlength="8" placeholder="Şifre isterseniz giriniz.." maxlength="150"
                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$"
                    title="En az 1 büyük harf, 1 küçük harf, 1 rakam ve 1 özel karakter içermelidir." />
             <button type="button" class="btn btn-outline-secondary" id="togglePassword">
@@ -32,7 +32,25 @@
         <span asp-validation-for="Password" class="text-danger" style="margin-top: 5px; display: block;"></span>
     </div>
     <br />
-    <button type="submit" class="btn btn-success">Güncelle</button>
+    <div class="d-flex justify-content-end gap-2 mt-4">
+        <button type="submit" class="btn btn-success px-4">
+            <i class="fas fa-save me-2"></i> Güncelle
+        </button>
+        <a href="/AdminKullanici/Liste" class="btn btn-outline-secondary px-4">
+            <i class="fas fa-list me-2"></i> Listeye Dön
+        </a>
+    </div>
+
+    <style>
+        .btn {
+            transition: all 0.2s ease-in-out;
+        }
+
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            }
+    </style>
 </form>
 <br/>
 

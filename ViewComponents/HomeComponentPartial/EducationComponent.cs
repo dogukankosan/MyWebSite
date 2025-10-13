@@ -13,20 +13,24 @@ namespace MyWebSite.ViewComponents.HomeComponentPartial
             try
             {
                 string sql = "EducationGet";
-                List<SqlParameter> parameters = new List<SqlParameter>();
-                List<Education> educations = await SQLCrud.ExecuteModelListAsync<Education>(
+                var educations = await SQLCrud.ExecuteModelListAsync<Education>(
                     sql,
-                    parameters,
+                    null,
                     reader => new Education
                     {
                         ID = Convert.ToByte(reader["ID"]),
                         SchoolName = reader["SchoolName"].ToString(),
                         SectionName = reader["SectionName"].ToString(),
-                        Years = reader["Years"].ToString()
+                        Years = reader["Years"].ToString(),
+                        Status = reader["Status"] != DBNull.Value && Convert.ToBoolean(reader["Status"])
                     },
                     CommandType.StoredProcedure
                 );
-                return View(educations);
+                var activeList = educations
+                    .Where(e => e.Status)
+                    .OrderByDescending(e => e.ID) 
+                    .ToList();
+                return View(activeList);
             }
             catch (Exception ex)
             {

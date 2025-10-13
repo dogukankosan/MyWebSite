@@ -3,25 +3,74 @@
     ViewData["Title"] = "Admin Mail Güncelle";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
+<style>
+    .form-check-input {
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+        .form-check-input:focus {
+            outline: none !important;
+            box-shadow: 0 0 0 0.2rem rgba(25,135,84,.25);
+        }
+
+    .form-switch .form-check-input {
+        width: 3rem;
+        height: 1.5rem;
+        margin-left: 0;
+        background-color: #adb5bd;
+        border-radius: 2rem;
+        position: relative;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .form-switch .form-check-input:before {
+            content: "";
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 1.1rem;
+            height: 1.1rem;
+            background-color: #fff;
+            border-radius: 50%;
+            transition: left 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .form-switch .form-check-input:checked {
+            background-color: #198754;
+        }
+
+            .form-switch .form-check-input:checked:before {
+                left: 1.4rem;
+            }
+</style>
+
 <form id="adminMailForm" method="post">
     <br />
     <h4>Admin Mail Güncelleme Sayfası</h4>
     <hr />
     <input type="hidden" name="ExistingPassword" value="@Model.MailPassword" />
     <span id="resultsucc" class="text-danger" style="margin-top: 5px; display: block;"></span>
-    <input type="hidden" name="ExistingPassword" value="@Model.MailPassword" />
+
     <div class="form-group">
         <label>Mail Adres:</label>
         <input type="email" class="form-control" name="MailAdress" id="MailAdress"
                value="@Model.MailAdress"
+               placeholder="örn: info@sirketadi.com"
                required minlength="5" maxlength="75" />
         <span id="MailAdressError" class="text-danger" style="margin-top: 5px; display: block;"></span>
     </div>
+
     <br />
     <div class="form-group">
         <label>Mail Şifre (değiştirmek isterseniz yazın):</label>
         <div class="input-group">
             <input type="password" class="form-control" name="MailPassword" id="MailPassword"
+                   placeholder="Yeni şifrenizi girin (isteğe bağlı)"
                    minlength="3" maxlength="150" />
             <button type="button" class="btn btn-outline-secondary" id="togglePassword">
                 <i class="fa fa-eye" id="toggleIcon"></i>
@@ -29,34 +78,59 @@
         </div>
         <span id="MailPasswordError" class="text-danger" style="margin-top: 5px; display: block;"></span>
     </div>
+
     <br />
     <div class="form-group">
         <label>Server Name:</label>
         <input type="text" class="form-control" name="ServerName" id="ServerName"
                value="@Model.ServerName"
+               placeholder="örn: smtp.office365.com veya smtp.gmail.com"
                required minlength="3" maxlength="20" />
         <span id="ServerNameError" class="text-danger" style="margin-top: 5px; display: block;"></span>
     </div>
+
     <br />
     <div class="form-group">
         <label>Port:</label>
         <input type="number" class="form-control" name="MailPort" id="MailPort"
                value="@Model.MailPort"
+               placeholder="örn: 587 veya 465"
                required min="1" max="65535" />
         <span id="MailPortError" class="text-danger" style="margin-top: 5px; display: block;"></span>
     </div>
+
     <br />
     <div class="form-group mb-3">
-        <div class="form-check">
+        <label class="form-label fw-semibold mb-2 d-block">Bağlantı Güvenliği</label>
+        <div class="form-check form-switch">
             <input type="checkbox" class="form-check-input" name="IsSSL" id="IsSSL"
-                   value="true" @(Model.IsSSL ? "checked" : "") />
-            <label class="form-check-label" for="IsSSL">SSL</label>
+                   value="true" @(Model.IsSSL ? "checked" : "")>
+            <label class="form-check-label fw-semibold" for="IsSSL">SSL Kullan</label>
         </div>
     </div>
-    <br />
 
-    <button type="submit" class="btn btn-primary">Güncelle</button>
+    <br />
+    <div class="d-flex justify-content-end gap-2 mt-4">
+        <button type="submit" class="btn btn-success px-4">
+            <i class="fas fa-save me-2"></i> Güncelle
+        </button>
+        <a href="/AdminMail/Liste" class="btn btn-outline-secondary px-4">
+            <i class="fas fa-list me-2"></i> Listeye Dön
+        </a>
+    </div>
+
+    <style>
+        .btn {
+            transition: all 0.2s ease-in-out;
+        }
+
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            }
+    </style>
 </form>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
@@ -74,18 +148,10 @@
                     if (response.success) {
                         window.location.href = response.redirectUrl;
                     } else {
-                        if (response.errors.MailAdress) {
-                            $('#MailAdressError').html(response.errors.MailAdress);
-                        }
-                        if (response.errors.MailPassword) {
-                            $('#MailPasswordError').html(response.errors.MailPassword);
-                        }
-                        if (response.errors.ServerName) {
-                            $('#ServerNameError').html(response.errors.ServerName);
-                        }
-                        if (response.errors.MailPort) {
-                            $('#MailPortError').html(response.errors.MailPort);
-                        }
+                        if (response.errors.MailAdress) $('#MailAdressError').html(response.errors.MailAdress);
+                        if (response.errors.MailPassword) $('#MailPasswordError').html(response.errors.MailPassword);
+                        if (response.errors.ServerName) $('#ServerNameError').html(response.errors.ServerName);
+                        if (response.errors.MailPort) $('#MailPortError').html(response.errors.MailPort);
                     }
                 },
                 error: function () {
@@ -93,6 +159,7 @@
                 }
             });
         });
+
         $('#togglePassword').click(function () {
             var input = $('#MailPassword');
             var icon = $('#toggleIcon');

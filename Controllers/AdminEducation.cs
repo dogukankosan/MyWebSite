@@ -24,7 +24,8 @@ namespace MyWebSite.Controllers
                         ID = Convert.ToByte(reader["ID"]),
                         SchoolName = reader["SchoolName"].ToString(),
                         SectionName = reader["SectionName"].ToString(),
-                        Years = reader["Years"].ToString()
+                        Years = reader["Years"].ToString(),
+                        Status = Convert.ToBoolean(reader["Status"])
                     };
                     return model;
                 });
@@ -38,6 +39,7 @@ namespace MyWebSite.Controllers
                 return View(new List<Education>());
             }
         }
+
         [Route("Ekle")]
         [HttpGet]
         public IActionResult Add()
@@ -59,45 +61,55 @@ namespace MyWebSite.Controllers
             try
             {
                 List<SqlParameter> parameters = new List<SqlParameter>
-                {
-                    new SqlParameter("@SchoolName", education.SchoolName),
-                    new SqlParameter("@SectionName", education.SectionName),
-                    new SqlParameter("@Years", education.Years)
-                };
+        {
+            new SqlParameter("@SchoolName", education.SchoolName),
+            new SqlParameter("@SectionName", education.SectionName),
+            new SqlParameter("@Years", education.Years),
+            new SqlParameter("@Status", education.Status)
+        };
                 await SQLCrud.InsertUpdateDeleteAsync("EducationAdd", parameters);
                 TempData["Type"] = "success";
-                TempData["Message"] = "Admin Eğitim Başarılı Ekleme İşlemi";
-                return Json(new { success = true, redirectUrl = Url.Action("Liste", "AdminEgitim") });
+                TempData["Message"] = "Yeni eğitim kaydı başarıyla eklendi.";
+                Response.ContentType = "application/json; charset=utf-8";
+                return Json(new
+                {
+                    success = true,
+                    redirectUrl = Url.Action("Liste", "AdminEgitim")
+                });
             }
             catch (Exception ex)
             {
                 await Logging.LogAdd("Admin Eğitim Panelde Ekleme Hatası", ex.Message);
                 TempData["Type"] = "error";
-                TempData["Message"] = "Admin Eğitim Hatalı Ekleme İşlemi";
-                return View();
+                TempData["Message"] = "Ekleme sırasında bir hata oluştu.";
+
+                Response.ContentType = "application/json; charset=utf-8";
+                return Json(new { success = false });
             }
         }
+
+        [HttpPost]
         [Route("Sil/{id:int}")]
-        [HttpGet]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Sil(int id)
         {
             try
             {
-                List<SqlParameter> parameters = new List<SqlParameter>
-                {
-                    new SqlParameter("@ID", id)
-                };
-                await SQLCrud.InsertUpdateDeleteAsync("EducationDelete", parameters);
-                TempData["Type"] = "success";
-                TempData["Message"] = "Admin Eğitim Başarılı Silme İşlemi";
+                List<SqlParameter> parameters = new()
+        {
+            new SqlParameter("@ID", id)
+        };
+
+                bool result = await SQLCrud.InsertUpdateDeleteAsync("EducationDelete", parameters);
+                if (result)
+                    return Json(new { success = true, message = "Eğitim başarıyla silindi." });
+                else
+                    return Json(new { success = false, message = "Kayıt silinemedi. SQL işlem başarısız." });
             }
             catch (Exception ex)
             {
-                await Logging.LogAdd("Admin Eğitim Panelde Silme Hatası", ex.Message);
-                TempData["Type"] = "error";
-                TempData["Message"] = "Admin Eğitim Hatalı Silme İşlemi";
+                await Logging.LogAdd("Admin Eğitim Silme Hatası", ex.Message);
+                return Json(new { success = false, message = "Beklenmedik bir hata oluştu." });
             }
-            return RedirectToAction("Liste", "AdminEgitim");
         }
         [Route("Guncelle/{id:int}")]
         [HttpGet]
@@ -117,13 +129,15 @@ namespace MyWebSite.Controllers
                         ID = Convert.ToByte(reader["ID"]),
                         SchoolName = reader["SchoolName"].ToString(),
                         SectionName = reader["SectionName"].ToString(),
-                        Years = reader["Years"].ToString()
+                        Years = reader["Years"].ToString(),
+                        Status = Convert.ToBoolean(reader["Status"])
                     },
                     CommandType.StoredProcedure
                 );
                 Education education = result.FirstOrDefault();
                 if (education == null)
                     return RedirectToAction("Liste", "AdminEgitim");
+
                 return View(education);
             }
             catch (Exception ex)
@@ -134,6 +148,30 @@ namespace MyWebSite.Controllers
                 return View();
             }
         }
+        [Route("DurumGuncelle")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateStatus([FromBody] System.Text.Json.JsonElement data)
+        {
+            try
+            {
+                int id = data.GetProperty("id").GetInt32();
+                bool status = data.GetProperty("status").GetBoolean();
+                List<SqlParameter> parameters = new List<SqlParameter>
+        {
+            new SqlParameter("@ID", id),
+            new SqlParameter("@Status", status)
+        };
+
+                await SQLCrud.InsertUpdateDeleteAsync("EducationStatusUpdate", parameters);
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                await Logging.LogAdd("Admin Eğitim Durum Güncelleme Hatası", ex.Message);
+                return Json(new { success = false });
+            }
+        }
+
         [Route("Guncelle")]
         [HttpPost]
         public async Task<IActionResult> Update(Education education)
@@ -143,6 +181,7 @@ namespace MyWebSite.Controllers
                 Dictionary<string, string> errors = ModelState
                     .Where(e => e.Value.Errors.Any())
                     .ToDictionary(k => k.Key, v => string.Join(", ", v.Value.Errors.Select(e => e.ErrorMessage)));
+
                 return Json(new { success = false, errors });
             }
             try
@@ -152,7 +191,8 @@ namespace MyWebSite.Controllers
                     new SqlParameter("@ID", education.ID),
                     new SqlParameter("@SchoolName", education.SchoolName),
                     new SqlParameter("@SectionName", education.SectionName),
-                    new SqlParameter("@Years", education.Years)
+                    new SqlParameter("@Years", education.Years),
+                    new SqlParameter("@Status", education.Status)
                 };
                 await SQLCrud.InsertUpdateDeleteAsync("EducationUpdate", parameters);
                 TempData["Type"] = "success";

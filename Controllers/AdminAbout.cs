@@ -92,7 +92,7 @@ namespace MyWebSite.Controllers
                 await SQLCrud.InsertUpdateDeleteAsync("AboutUpdate", parameters, CommandType.StoredProcedure);
 
                 TempData["Type"] = "success";
-                TempData["Message"] = "Başarıyla güncellendi.";
+                TempData["Message"] = "Admin Hakkında Başarıyla güncellendi.";
                 return Json(new { success = true, redirectUrl = Url.Action("Liste", "AdminHakkinda") });
             }
             catch (Exception ex)

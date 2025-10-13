@@ -13,6 +13,56 @@
     td.no-export {
         vertical-align: middle;
     }
+    .toggle-btn {
+        --w: 46px;
+        --h: 24px;
+        border: 0;
+        background: transparent;
+        padding: 0;
+        line-height: 1;
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        cursor: pointer;
+    }
+
+        .toggle-btn:focus-visible {
+            outline: 2px solid #0d6efd;
+            outline-offset: 2px;
+        }
+
+    .toggle-track {
+        width: var(--w);
+        height: var(--h);
+        border-radius: 999px;
+        background: #ccc;
+        position: relative;
+        transition: background-color .2s;
+        box-shadow: inset 0 0 0 1px rgba(0,0,0,.05);
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .toggle-knob {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #fff;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        transition: left .2s;
+        box-shadow: 0 1px 3px rgba(0,0,0,.2);
+    }
+
+    .toggle-btn.is-on .toggle-track {
+        background: #198754;
+    }
+
+    .toggle-btn.is-on .toggle-knob {
+        left: calc(var(--w) - 22px);
+    }
+
 </style>
 <br />
 <h4 class="card-title">Dosya Listesi</h4>
@@ -41,6 +91,7 @@
                 <th>Yüklendi</th>
                 <th>Mod</th>
                 <th>İndirme Sayısı</th>
+                <th>Durum</th>
                 <th class="no-export">İşlemler</th>
             </tr>
         </thead>
@@ -84,9 +135,37 @@
                         <td class="text-truncate" style="max-width:260px" title="@i.FileNameStored">@i.FileNameStored</td>
                         <td>@((i.FileSizeBytes / 1024d / 1024d).ToString("0.##")) MB</td>
                         <td class="small text-monospace text-truncate" style="max-width:240px" title="@i.Sha256">@i.Sha256</td>
-                        <td>@i.UploadUtc.ToString("dd.MM.yyyy HH:mm:ss")</td>
-                        <td>@i.LastModifiedUtc.ToString("dd.MM.yyyy HH:mm:ss")</td>
+                        <td>
+                            <span class="badge text-bg-light border">
+                                @i.UploadUtc.ToLocalTime().ToString("dd MMMM yyyy, HH:mm:ss", new System.Globalization.CultureInfo("tr-TR"))
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge text-bg-secondary">
+                                @i.LastModifiedUtc.ToLocalTime().ToString("dd MMMM yyyy, HH:mm:ss", new System.Globalization.CultureInfo("tr-TR"))
+                            </span>
+                        </td>
+
                         <td><span class="badge text-bg-info">@i.DownloadCount</span></td>
+                               
+                        <td>
+                            <form asp-action="Durum" asp-controller="AdminDosya" method="post" class="d-inline mb-0">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@i.Id" />
+
+                                <button type="submit"
+                                        class="toggle-btn @(i.IsActive ? "is-on" : "")"
+                                        title="@(i.IsActive ? "Pasifleştir" : "Aktifleştir")"
+                                        aria-pressed="@(i.IsActive.ToString().ToLower())">
+                                    <span class="toggle-track">
+                                        <span class="toggle-knob"></span>
+                                    </span>
+                                    <span class="small fw-semibold @(i.IsActive ? "text-success" : "text-secondary")">
+                                        @(i.IsActive ? "Aktif" : "Pasif")
+                                    </span>
+                                </button>
+                            </form>
+                        </td>
                         <td class="no-export">
                             <div class="actions-row">
                                 <div class="btn-group btn-group-sm" role="group">
@@ -109,17 +188,7 @@
                                         onclick="copyLink(this)">
                                     <i class="bi bi-link-45deg"></i>
                                 </button>
-                                <form asp-action="Durum" asp-controller="AdminDosya" method="post" class="d-inline mb-0">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="id" value="@i.Id" />
-
-                                    <button type="submit"
-                                            class="btn btn-sm @(i.IsActive ? "btn-outline-danger" : "btn-outline-success")"
-                                            title="@(i.IsActive ? "Pasifleştir" : "Aktifleştir")">
-                                        <i class="bi @(i.IsActive ? "bi-toggle-off" : "bi-toggle-on")"></i>
-                                        @(i.IsActive ? "Pasifleştir" : "Aktifleştir")
-                                    </button>
-                                </form>
+      
                             </div>
                         </td>
                     </tr>
@@ -149,33 +218,25 @@
       const link = btn.getAttribute('data-link');
       if (!link) return;
       const showCopied = () => {
-        if (window.Swal) {
-          Swal.fire({
-            toast: true, position: 'top-end',
-            icon: 'success', title: 'Bağlantı kopyalandı',
-            showConfirmButton: false, timer: 1400, timerProgressBar: true
-          });
-        }
+        Swal.fire({
+          toast: true, position: 'top-end',
+          icon: 'success', title: 'Bağlantı kopyalandı',
+          showConfirmButton: false, timer: 1400, timerProgressBar: true
+        });
         const original = btn.innerHTML;
         btn.innerHTML = '<i class="bi bi-check2"></i>';
-        btn.classList.remove('btn-outline-secondary');
-        btn.classList.add('btn-success');
+        btn.classList.replace('btn-outline-secondary', 'btn-success');
         setTimeout(() => {
           btn.innerHTML = '<i class="bi bi-link-45deg"></i>';
-          btn.classList.remove('btn-success');
-          btn.classList.add('btn-outline-secondary');
+          btn.classList.replace('btn-success', 'btn-outline-secondary');
         }, 1200);
       };
       const showError = () => {
-        if (window.Swal) {
-          Swal.fire({
-            toast: true, position: 'top-end',
-            icon: 'error', title: 'Kopyalanamadı',
-            showConfirmButton: false, timer: 1500, timerProgressBar: true
-          });
-        } else {
-          alert('Link kopyalanamadı.');
-        }
+        Swal.fire({
+          toast: true, position: 'top-end',
+          icon: 'error', title: 'Kopyalanamadı',
+          showConfirmButton: false, timer: 1500, timerProgressBar: true
+        });
       };
       if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(link).then(showCopied).catch(showError);
@@ -184,24 +245,25 @@
         ta.value = link; document.body.appendChild(ta);
         ta.select(); ta.setSelectionRange(0, 99999);
         try { document.execCommand('copy'); showCopied(); }
-        catch (e) { showError(); }
+        catch { showError(); }
         finally { document.body.removeChild(ta); }
       }
     }
+
     document.addEventListener('DOMContentLoaded', function () {
       const el = document.getElementById('tempDataMessages');
-      if (el) {
-        const type = el.getAttribute('data-type');
-        const message = el.getAttribute('data-message');
-        if (type && message) {
-          Swal.fire({
-            icon: type === "success" ? "success" : "error",
-            title: type === "success" ? "Başarılı!" : "Hata!",
-            text: message,
-            timer: 3000,
-            showConfirmButton: false
-          });
-        }
+      const type = el?.dataset.type;
+      const message = el?.dataset.message;
+      if (type && message) {
+        Swal.fire({
+          icon: type === "success" ? "success" : "error",
+          title: type === "success" ? "Başarılı!" : "Hata!",
+          text: message,
+          timer: 3000,
+          showConfirmButton: false
+        });
+
+        history.replaceState({}, document.title, window.location.pathname);
       }
       document.querySelectorAll('.delete-form').forEach(form => {
         form.addEventListener('submit', function (e) {
@@ -215,7 +277,11 @@
             cancelButtonColor: '#3085d6',
             confirmButtonText: 'Evet, sil!',
             cancelButtonText: 'Vazgeç'
-          }).then((result) => { if (result.isConfirmed) form.submit(); });
+          }).then((result) => {
+            if (result.isConfirmed) {
+              form.submit();
+            }
+          });
         });
       });
     });

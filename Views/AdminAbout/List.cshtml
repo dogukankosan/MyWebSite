@@ -17,8 +17,9 @@
         </select>
     </div>
 </div>
+
 <div class="table-responsive">
-    <table class="table table-hover table-striped table-bordered" id="yourTableId">
+    <table class="table table-hover table-striped table-bordered align-middle text-center" id="yourTableId">
         <thead>
             <tr>
                 <th>#</th>
@@ -37,54 +38,84 @@
             </tr>
         </thead>
         <tbody>
-        @{
-            string phoneDigits = new string(Model.AboutPhone?.Where(char.IsDigit).ToArray());
-            string whatsappUrl = "https://wa.me/90" + phoneDigits;
-        }
-        <tr>
-            <td>@Model.ID</td>
-            <td>@Model.AboutTitle</td>
-            <td><img src="@ViewBag.Picture1" width="50" height="50" alt="Resim 1" /></td>
-            <td>@Model.AboutDetails1</td>
-            <td>@Model.AboutAdress</td>
-            <td><a href="mailto:@Model.AboutMail" style="color:blue" target="_blank"><u>@Model.AboutMail</u></a></td>
-            <td>
-                <a href="@whatsappUrl" target="_blank" style="color:blue">
-                    <u>@Model.AboutPhone</u>
-                </a>
-            </td>
             @{
-                string website = Model.AboutWebSite?.StartsWith("http") == true 
-                    ? Model.AboutWebSite 
-                    : "https://" + Model.AboutWebSite;
+                string phoneDigits = new string(Model.AboutPhone?.Where(char.IsDigit).ToArray());
+                string whatsappUrl = "https://wa.me/90" + phoneDigits;
+                string website = Model.AboutWebSite?.StartsWith("http") == true
+                ? Model.AboutWebSite
+                : "https://" + Model.AboutWebSite;
             }
-            <td>
-                <a href="@website" style="color:blue" target="_blank">
-                    <u>@Model.AboutWebSite</u>
-                </a>
-            </td>
-            <td><img src="@ViewBag.Picture2" width="50" height="50" alt="Resim 2" /></td>
-            <td>@Model.AboutName</td>
-            <td>@Model.AboutDetails2</td>
-            <td>
-                <iframe class="rounded w-100" style="height: 400px;" src="@Model.IFrameAdress" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-            </td>
-            <td>
-                <a href="/AdminHakkinda/Guncelle/@Model.ID" class="btn btn-outline-info btn-sm" title="Düzenle">
-                    <i class="fa fa-pencil"></i>
-                </a>
-            </td>
-        </tr>
+            <tr>
+                <td>@Model.ID</td>
+                <td>@Model.AboutTitle</td>
+                <td>
+                    <img src="@ViewBag.Picture1" width="50" height="50" class="img-thumbnail previewable"
+                         alt="Resim 1" data-full="@ViewBag.Picture1" style="cursor:pointer;" />
+                </td>
+                <td>@Model.AboutDetails1</td>
+                <td>@Model.AboutAdress</td>
+                <td>
+                    <a href="mailto:@Model.AboutMail" class="text-primary" target="_blank">
+                        <i class="fa fa-envelope"></i> <u>@Model.AboutMail</u>
+                    </a>
+                </td>
+                <td>
+                    <a href="@whatsappUrl" target="_blank" class="text-success">
+                        <i class="fab fa-whatsapp"></i> <u>@Model.AboutPhone</u>
+                    </a>
+                </td>
+                <td>
+                    <a href="@website" class="text-info" target="_blank">
+                        <i class="fa fa-globe"></i> <u>@Model.AboutWebSite</u>
+                    </a>
+                </td>
+                <td>
+                    <img src="@ViewBag.Picture2" width="50" height="50" class="img-thumbnail previewable"
+                         alt="Resim 2" data-full="@ViewBag.Picture2" style="cursor:pointer;" />
+                </td>
+                <td>@Model.AboutName</td>
+                <td>@Model.AboutDetails2</td>
+                <td>
+                    <iframe class="rounded w-100" style="height: 400px;" src="@Model.IFrameAdress"
+                            allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </td>
+                <td>
+                    <a href="/AdminHakkinda/Guncelle/@Model.ID" class="btn btn-outline-info btn-sm" title="Düzenle">
+                        <i class="fa fa-pencil"></i>
+                    </a>
+                </td>
+            </tr>
         </tbody>
     </table>
 </div>
+
 <div id="tempDataMessages"
      data-type="@TempData["Type"]"
      data-message="@TempData["Message"]">
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // ✅ Resim ön izleme özelliği
+        document.querySelectorAll('.previewable').forEach(img => {
+            img.addEventListener('click', function () {
+                const fullUrl = this.getAttribute('data-full');
+                Swal.fire({
+                    title: this.getAttribute('alt'),
+                    imageUrl: fullUrl,
+                    imageAlt: this.getAttribute('alt'),
+                    showConfirmButton: false,
+                    background: '#f9f9f9',
+                    width: 'auto',
+                    padding: '1rem',
+                    customClass: { image: 'rounded shadow-sm' }
+                });
+            });
+        });
+
+        // ✅ Bildirimler
         const el = document.getElementById('tempDataMessages');
         if (!el) return;
         const type = el.getAttribute('data-type');
@@ -111,3 +142,4 @@
         }
     });
 </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />

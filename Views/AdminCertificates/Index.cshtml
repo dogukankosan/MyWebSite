@@ -1,0 +1,471 @@
+﻿@model List<CertificateModel>
+
+@{
+    ViewData["Title"] = "Admin Sertifika Liste";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+
+<style>
+    .status-toggle {
+        cursor: pointer;
+        user-select: none;
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .desc-cell {
+        max-width: 250px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    @@media (max-width: 768px) {
+        .desc-cell {
+            white-space: normal !important;
+            overflow: visible !important;
+            text-overflow: unset !important;
+            display: -webkit-box !important;
+            -webkit-line-clamp: unset !important;
+            -webkit-box-orient: vertical !important;
+            word-wrap: break-word !important;
+        }
+    }
+
+    .toggle-wrapper {
+        width: 46px;
+        height: 24px;
+        border-radius: 12px;
+        background-color: #ccc;
+        position: relative;
+        transition: background-color 0.3s ease;
+    }
+
+        .toggle-wrapper.active {
+            background-color: #198754;
+        }
+
+    .toggle-switch {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: #fff;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        transition: left 0.3s ease;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .toggle-wrapper.active .toggle-switch {
+        left: 24px;
+    }
+
+    .status-label {
+        transition: color 0.3s ease, transform 0.2s ease;
+    }
+
+    .status-toggle:hover .status-label span {
+        transform: scale(1.05);
+    }
+
+    .img-preview-container {
+        position: relative;
+        display: inline-block;
+        cursor: zoom-in;
+    }
+
+    .img-preview-popup {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.75);
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+        .img-preview-popup img {
+            max-width: 90%;
+            max-height: 85%;
+            border: 3px solid #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        .img-preview-popup.active {
+            display: flex;
+            animation: fadeIn 0.2s ease-in-out;
+        }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+</style>
+
+<br />
+<h4 class="card-title">Sertifikalar</h4>
+<hr />
+
+<div class="row mb-2">
+    <div class="col text-right">
+        <select id="exportOptions" class="form-control form-control-sm w-100 mb-2 d-md-inline-block">
+            <option value="">Dışa Aktar</option>
+            <option value="excel">📥 Excel</option>
+            <option value="pdf">📄 PDF</option>
+            <option value="print">🖨️ Yazdır</option>
+        </select>
+    </div>
+</div>
+@Html.AntiForgeryToken()
+<div class="table-responsive">
+    <table class="table table-hover table-bordered align-middle" id="yourTableId">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Sertifika Adı</th>
+                <th>Açıklama</th>
+                <th>Durum</th>
+                <th>Önizleme</th>
+                <th>Yüklenme Tarihi</th>
+                <th class="text-center no-export">İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CertificateModel item in Model)
+            {
+                string rowClass = item.IsActive ? "" : "table-secondary text-muted";
+                <tr class="@rowClass">
+                    <td>@item.Id</td>
+                    <td class="desc-cell" title="@item.CertificateName">
+                        @item.CertificateName
+                    </td>
+                    <td class="desc-cell" title="@item.CertificateDescription">
+                        @item.CertificateDescription
+                    </td>
+
+
+                    <td class="text-center align-middle">
+                        <div class="status-toggle" data-id="@item.Id">
+                            <div class="toggle-wrapper @(item.IsActive ? "active" : "")">
+                                <div class="toggle-switch"></div>
+                            </div>
+                            <div class="status-label mt-1 small fw-semibold">
+                                <i class="bi @(item.IsActive ? "bi-check-circle-fill text-success" : "bi-x-circle-fill text-secondary")"></i>
+                                <span>@(item.IsActive ? "Aktif" : "Pasif")</span>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td class="text-center">
+                        @if (!string.IsNullOrEmpty(item.ThumbnailBase64))
+                        {
+                            <div class="img-preview-container">
+                                <img data-src="@item.ThumbnailBase64"
+                                     alt="@item.CertificateName"
+                                     width="60"
+                                     height="60"
+                                     class="img-thumbnail preview-thumb lazy-thumb"
+                                     loading="lazy"
+                                     src="/userThema/img/loading.svg" />
+                            </div>
+                        }
+                        else
+                        {
+                            <span class="text-muted">Önizleme yok</span>
+                        }
+                    </td>
+
+                    <td class="upload-date" data-date="@item.UploadDate.ToString("O")"></td>
+
+                    <td class="text-center">
+                        <a class="btn btn-outline-primary btn-sm" href="/AdminSertifika/Indir/@item.Id" title="PDF İndir">
+                            <i class="bi bi-file-earmark-arrow-down"></i>
+                        </a>
+                        <a class="btn btn-outline-info btn-sm" href="/AdminSertifika/Duzenle/@item.Id" title="Düzenle">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                        <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm" onclick="confirmDelete('@item.Id')">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 gap-2">
+        <a class="btn btn-primary" href="/AdminSertifika/Ekle">
+            <i class="fa fa-plus"></i> Yeni Sertifika Ekle
+        </a>
+
+        <a class="btn btn-outline-dark" href="/AdminSertifika/IndirmeLoglari">
+            <i class="bi bi-clock-history"></i> İndirme Logları
+        </a>
+    </div>
+    <br /><br /><br />
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<div class="img-preview-popup" id="imgPopup">
+    <img src="" alt="Önizleme" />
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<div class="img-preview-popup" id="imgPopup">
+    <img src="" alt="Önizleme" />
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        document.addEventListener("click", async function (e) {
+            const toggle = e.target.closest(".status-toggle");
+            if (!toggle) return;
+
+            const id = toggle.dataset.id;
+            const wrapper = toggle.querySelector(".toggle-wrapper");
+            const label = toggle.querySelector(".status-label span");
+            const icon = toggle.querySelector(".status-label i");
+
+            const isActive = wrapper.classList.toggle("active");
+            label.textContent = isActive ? "Aktif" : "Pasif";
+            icon.className = isActive
+                ? "bi bi-check-circle-fill text-success"
+                : "bi bi-x-circle-fill text-secondary";
+
+            try {
+                const response = await fetch(`/AdminSertifika/AktifPasifGuncelle/${id}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ isActive })
+                });
+
+                const result = await response.json();
+                if (!result.success) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Hata!",
+                        text: result.message || "Durum güncellenemedi."
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Başarılı!",
+                        text: result.message,
+                        timer: 1200,
+                        showConfirmButton: false
+                    });
+                }
+            } catch {
+                Swal.fire({
+                    icon: "error",
+                    title: "Sunucu Hatası",
+                    text: "Durum güncellenemedi. Lütfen tekrar deneyin."
+                });
+            }
+        });
+
+        const thumbs = document.querySelectorAll(".lazy-thumb");
+
+        if ("IntersectionObserver" in window) {
+            const observer = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        const realSrc = img.getAttribute("data-src");
+
+                        if (realSrc && !img.src.startsWith("data:image")) {
+                            img.src = realSrc;
+                        }
+
+                        img.onerror = () => {
+                            img.src = "/userThema/img/no-image.png";
+                        };
+
+                        obs.unobserve(img);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            thumbs.forEach(img => observer.observe(img));
+        } else {
+            thumbs.forEach(img => {
+                const realSrc = img.getAttribute("data-src");
+                if (realSrc) img.src = realSrc;
+            });
+        }
+
+        thumbs.forEach(img => {
+            const src = img.getAttribute("src");
+            const dataSrc = img.getAttribute("data-src");
+            if (!src && dataSrc) img.src = dataSrc;
+        });
+
+        const popup = document.getElementById("imgPopup");
+        const popupImg = popup.querySelector("img");
+        document.addEventListener("click", function (e) {
+            const img = e.target.closest(".preview-thumb");
+            if (img) {
+                popupImg.src = img.src;
+                popup.classList.add("active");
+            }
+        });
+        popup.addEventListener("click", () => popup.classList.remove("active"));
+        document.querySelectorAll(".upload-date").forEach(td => {
+            const dateStr = td.getAttribute("data-date");
+            if (dateStr) {
+                const d = new Date(dateStr);
+                const formatted = d.toLocaleDateString("tr-TR", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit"
+                });
+                td.textContent = formatted.charAt(0).toUpperCase() + formatted.slice(1);
+            }
+        });
+    });
+</script>
+
+<script>
+    async function confirmDelete(id) {
+        const result = await Swal.fire({
+            title: 'Emin misiniz?',
+            text: "Bu sertifikayı kalıcı olarak silmek üzeresiniz!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Evet, sil!',
+            cancelButtonText: 'Vazgeç'
+        });
+
+        if (result.isConfirmed) {
+            try {
+                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+                const response = await fetch(`/AdminSertifika/Sil/${id}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "RequestVerificationToken": token
+                    }
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Silindi!',
+                        text: data.message,
+                        timer: 1200,
+                        showConfirmButton: false
+                    });
+                    const row = document.querySelector(`[onclick="confirmDelete('${id}')"]`)?.closest('tr');
+                    if (row) row.remove();
+
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Hata!',
+                        text: data.message
+                    });
+                }
+            } catch {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Sunucu Hatası!',
+                    text: 'Silme işlemi başarısız. Lütfen tekrar deneyin.'
+                });
+            }
+        }
+    }
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        function initLazyLoad() {
+            const thumbs = document.querySelectorAll(".lazy-thumb");
+            if (!thumbs.length) return;
+            if (window.thumbObserver) window.thumbObserver.disconnect();
+
+            window.thumbObserver = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        const realSrc = img.getAttribute("data-src");
+
+                        if (realSrc && !img.src.startsWith("data:image")) {
+                            img.src = realSrc;
+                        }
+
+                        img.onerror = () => img.src = "/userThema/img/no-image.png";
+
+                        obs.unobserve(img);
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            thumbs.forEach(img => {
+                const dataSrc = img.getAttribute("data-src");
+                if (dataSrc && !img.src.startsWith("data:image")) {
+                    window.thumbObserver.observe(img);
+                } else if (img.src.endsWith("loading.svg") && dataSrc) {
+                    img.src = dataSrc; 
+                }
+            });
+        }
+
+        initLazyLoad();
+
+        if (window.jQuery && $.fn.dataTable) {
+            $('#yourTableId').on('draw.dt', function () {
+                initLazyLoad();
+            });
+        }
+        document.addEventListener('click', function (e) {
+            if (e.target.closest('.pagination a')) {
+                setTimeout(initLazyLoad, 800);
+            }
+        });
+    });
+</script>
+@if (TempData["Type"] != null && TempData["Message"] != null)
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const alreadyShown = sessionStorage.getItem("alertShown");
+            if (alreadyShown) return;
+
+            const type = "@TempData["Type"]";
+            const message = "@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(TempData["Message"].ToString()))";
+
+            Swal.fire({
+                icon: type === "success" ? "success" : "error",
+                title: type === "success" ? "Başarılı!" : "Hata!",
+                text: message,
+                timer: 1500,
+                showConfirmButton: false
+            });
+
+            sessionStorage.setItem("alertShown", "true");
+            setTimeout(() => sessionStorage.removeItem("alertShown"), 2000);
+        });
+    </script>
+}

@@ -6,5 +6,6 @@
         public string SchoolName { get; set; }
         public string SectionName { get; set; }
         public string Years { get; set; }
+        public bool Status { get; set; } 
     }
 }

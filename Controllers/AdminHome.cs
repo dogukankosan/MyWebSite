@@ -18,7 +18,7 @@ public class AdminHome : Controller
         try
         {
             List<SqlParameter> emptyParams = new();
-            List<ReportResultModel> contactResults = await SQLCrud.ExecuteModelListAsync<ReportResultModel>(
+            var contactTask = SQLCrud.ExecuteModelListAsync<ReportResultModel>(
                 "ContactMonthReport",
                 emptyParams,
                 reader => new ReportResultModel
@@ -28,9 +28,7 @@ public class AdminHome : Controller
                 },
                 CommandType.StoredProcedure
             );
-            foreach (var item in contactResults)
-                model.ContactMonthlyCounts[item.Ay - 1] = item.Sayisi;
-            List<ReportResultModel> webLogResults = await SQLCrud.ExecuteModelListAsync<ReportResultModel>(
+            var webLogTask = SQLCrud.ExecuteModelListAsync<ReportResultModel>(
                 "WebLogMonthReport",
                 emptyParams,
                 reader => new ReportResultModel
@@ -40,25 +38,49 @@ public class AdminHome : Controller
                 },
                 CommandType.StoredProcedure
             );
-            foreach (var item in webLogResults)
-                model.WebLogMonthlyCounts[item.Ay - 1] = item.Sayisi;
-            model.WebLogCount = await SQLCrud.ExecuteScalarAsync<int>("WebLogCount", emptyParams, 0, CommandType.StoredProcedure);
-            model.ContactCount = await SQLCrud.ExecuteScalarAsync<int>("ContactCount", emptyParams, 0, CommandType.StoredProcedure);
-            model.AdminLoginErrorCount = await SQLCrud.ExecuteScalarAsync<int>("AdminLoginErrorCount", emptyParams, 0, CommandType.StoredProcedure);
-            model.ProjectCount = await SQLCrud.ExecuteScalarAsync<int>("ProjectCount", emptyParams, 0, CommandType.StoredProcedure);
-            model.SkillsCount = await SQLCrud.ExecuteScalarAsync<int>("SkillsCount", emptyParams, 0, CommandType.StoredProcedure);
-            model.AdminLogsCount = await SQLCrud.ExecuteScalarAsync<int>("AdminLogsCount", emptyParams, 0, CommandType.StoredProcedure);
-            model.JobsCount = await SQLCrud.ExecuteScalarAsync<int>("JobsCount", emptyParams, 0, CommandType.StoredProcedure);
-            model.EducationCount = await SQLCrud.ExecuteScalarAsync<int>("EducationCount", emptyParams, 0, CommandType.StoredProcedure);
+            var scalarTasks = new Dictionary<string, Task<int>>
+            {
+                ["WebLogCount"] = SQLCrud.ExecuteScalarAsync<int>("WebLogCount", emptyParams, 0, CommandType.StoredProcedure),
+                ["ContactCount"] = SQLCrud.ExecuteScalarAsync<int>("ContactCount", emptyParams, 0, CommandType.StoredProcedure),
+                ["AdminLoginErrorCount"] = SQLCrud.ExecuteScalarAsync<int>("AdminLoginErrorCount", emptyParams, 0, CommandType.StoredProcedure),
+                ["ProjectCount"] = SQLCrud.ExecuteScalarAsync<int>("ProjectCount", emptyParams, 0, CommandType.StoredProcedure),
+                ["SkillsCount"] = SQLCrud.ExecuteScalarAsync<int>("SkillsCount", emptyParams, 0, CommandType.StoredProcedure),
+                ["AdminLogsCount"] = SQLCrud.ExecuteScalarAsync<int>("AdminLogsCount", emptyParams, 0, CommandType.StoredProcedure),
+                ["JobsCount"] = SQLCrud.ExecuteScalarAsync<int>("JobsCount", emptyParams, 0, CommandType.StoredProcedure),
+                ["EducationCount"] = SQLCrud.ExecuteScalarAsync<int>("EducationCount", emptyParams, 0, CommandType.StoredProcedure),
+                ["FileDownloadCount"] = SQLCrud.ExecuteScalarAsync<int>("FileDownloadCount", emptyParams, 0, CommandType.StoredProcedure),
+                ["CvDownloadCount"] = SQLCrud.ExecuteScalarAsync<int>("CvDownloadCount", emptyParams, 0, CommandType.StoredProcedure),
+                ["CertificatesCount"] = SQLCrud.ExecuteScalarAsync<int>("CertificatesCount", emptyParams, 0, CommandType.StoredProcedure),
+                ["CertificateDownloadCount"] = SQLCrud.ExecuteScalarAsync<int>("CertificateDownloadCount", emptyParams, 0, CommandType.StoredProcedure)
+            };
+            await Task.WhenAll(contactTask, webLogTask, Task.WhenAll(scalarTasks.Values));
+            foreach (var item in contactTask.Result)
+                if (item.Ay >= 1 && item.Ay <= 12)
+                    model.ContactMonthlyCounts[item.Ay - 1] = item.Sayisi;
+            foreach (var item in webLogTask.Result)
+                if (item.Ay >= 1 && item.Ay <= 12)
+                    model.WebLogMonthlyCounts[item.Ay - 1] = item.Sayisi;
+            model.WebLogCount = scalarTasks["WebLogCount"].Result;
+            model.ContactCount = scalarTasks["ContactCount"].Result;
+            model.AdminLoginErrorCount = scalarTasks["AdminLoginErrorCount"].Result;
+            model.ProjectCount = scalarTasks["ProjectCount"].Result;
+            model.SkillsCount = scalarTasks["SkillsCount"].Result;
+            model.AdminLogsCount = scalarTasks["AdminLogsCount"].Result;
+            model.JobsCount = scalarTasks["JobsCount"].Result;
+            model.EducationCount = scalarTasks["EducationCount"].Result;
+            model.FileDownloadCount = scalarTasks["FileDownloadCount"].Result;
+            model.CvDownloadCount = scalarTasks["CvDownloadCount"].Result;
+            model.CertificatesCount = scalarTasks["CertificatesCount"].Result;
+            model.CertificateDownloadCount = scalarTasks["CertificateDownloadCount"].Result;
             return View(model);
         }
         catch (Exception ex)
         {
-            await Logging.LogAdd("Admin Rapor Ekranı Panelde Listeleme İşlemi Hatası", ex.Message);
+            await Logging.LogAdd("Admin Rapor Ekranı Panelde Listeleme Hatası", $"{ex.Message}\n{ex.StackTrace}");
             TempData["Type"] = "error";
             TempData["Message"] = "Admin Rapor Hatalı Listeleme İşlemi";
+            return View(model);
         }
-        return View(model);
     }
     [Route("CikisYap")]
     public async Task<IActionResult> Logout()

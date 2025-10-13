@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyWebSite.Classes;
 using MyWebSite.Models;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -28,12 +29,10 @@ namespace MyWebSite.Controllers
         private const string SP_GET_BY_KV = "dbo.FileStore_GetByKeyVersion";
         private const string SP_GET_BY_KVF = "dbo.FileStore_GetByKeyVersionFile";
         private const string SP_DWREG = "dbo.FileStore_RegisterDownload";
-        private static readonly Regex VersionStrict =
-            new(@"^\d+\.\d+\.\d+$", RegexOptions.CultureInvariant);
-        private static readonly Regex FileNameAllowed =
-            new(@"^[^\\/:*?""<>|]+\.(zip|rar)$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
-        private static readonly Regex PackageKeyAllowed =
-            new(@"^[A-Za-z0-9._-]{1,64}$", RegexOptions.CultureInvariant);
+        private static readonly Regex VersionStrict = new(@"^\d+\.\d+\.\d+$", RegexOptions.CultureInvariant);
+        private static readonly Regex FileNameAllowed = new(@"^[^\\/:*?""<>|]+\.(zip|rar)$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        private static readonly Regex PackageKeyAllowed = new(@"^[A-Za-z0-9._-]{1,64}$", RegexOptions.CultureInvariant);
+
         public DownloadController(IWebHostEnvironment env, IHttpContextAccessor http, IHttpClientFactory httpClientFactory)
         {
             _env = env;
@@ -46,15 +45,14 @@ namespace MyWebSite.Controllers
             {
                 string? ip = GetClientIp(HttpContext) ?? "unknown";
                 if (ip.Length > 25) ip = ip.Substring(0, 25);
-
                 await SQLCrud.InsertUpdateDeleteAsync(SP_ADMIN_LOGS_ADD, new()
-        {
-            new("@LogType",     logType),
-            new("@ErrorMessage",message),
-            new("@IPAdress",    ip)
-        });
+                {
+                    new("@LogType", logType),
+                    new("@ErrorMessage", message),
+                    new("@IPAdress", ip)
+                });
             }
-            catch {  }
+            catch { }
         }
         [HttpGet("")]
         [HttpGet("Index")]
@@ -62,6 +60,7 @@ namespace MyWebSite.Controllers
         {
             SetCommonSecurityHeaders();
             List<SqlParameter> p = new List<SqlParameter>();
+
             if (!string.IsNullOrWhiteSpace(packageKey))
             {
                 packageKey = packageKey.Trim();
@@ -69,7 +68,7 @@ namespace MyWebSite.Controllers
                 {
                     TempData["Type"] = "error";
                     TempData["Message"] = "Geçersiz paket anahtarı.";
-                    return RedirectToAction(nameof(Index), new { version, q = q ?? "" });
+                    return RedirectToAction(nameof(Index));
                 }
                 p.Add(new("@PackageKey", packageKey));
             }
@@ -80,7 +79,7 @@ namespace MyWebSite.Controllers
                 {
                     TempData["Type"] = "error";
                     TempData["Message"] = "Versiyon biçimi 1.2.3 olmalı.";
-                    return RedirectToAction(nameof(Index), new { packageKey, q });
+                    return RedirectToAction(nameof(Index));
                 }
                 p.Add(new("@Version", version));
             }
@@ -90,8 +89,8 @@ namespace MyWebSite.Controllers
                 if (!FileNameAllowed.IsMatch(q))
                 {
                     TempData["Type"] = "error";
-                    TempData["Message"] = "Dosya adı .zip veya .rar ile bitmelidir (ör. paket-1.0.1.zip).";
-                    return RedirectToAction(nameof(Index), new { packageKey, version });
+                    TempData["Message"] = "Dosya adı .zip veya .rar ile bitmelidir.";
+                    return RedirectToAction(nameof(Index));
                 }
                 p.Add(new("@Search", q));
             }
@@ -116,6 +115,7 @@ namespace MyWebSite.Controllers
                 });
             return View("Index", list);
         }
+
         [HttpGet("{packageKey}/{version:regex(^\\d+\\.\\d+\\.\\d+$)}")]
         public async Task<IActionResult> PromptKv(string packageKey, string version, [FromQuery] string? fileName)
         {
@@ -130,7 +130,7 @@ namespace MyWebSite.Controllers
         {
             FileDetails? file = await FindFile(packageKey, version, fileName);
             if (file is null || !file.IsActive) return NotFound();
-            DownloadPromptVm vm = new DownloadPromptVm
+            DownloadPromptVm vm = new()
             {
                 Id = file.Id,
                 PackageKey = file.PackageKey,
@@ -138,8 +138,9 @@ namespace MyWebSite.Controllers
                 FileNameStored = file.FileNameStored,
                 ArchiveType = file.ArchiveType
             };
-            return View("Prompt", vm); 
+            return View("Prompt", vm);
         }
+
         [HttpPost("{packageKey}/{version:regex(^\\d+\\.\\d+\\.\\d+$)}")]
         [ValidateAntiForgeryToken]
         public Task<IActionResult> DownloadKv(string packageKey, string version, string? fileName, string password)
@@ -147,44 +148,29 @@ namespace MyWebSite.Controllers
         private async Task<IActionResult> DownloadInternal(string packageKey, string version, string? fileName, string password)
         {
             string dlToken = Request.Form["dlToken"].ToString();
-            CookieOptions cookieOpts = new CookieOptions
+            CookieOptions cookieOpts = new()
             {
                 Expires = DateTimeOffset.UtcNow.AddMinutes(3),
-                HttpOnly = false,            
-                SameSite = SameSiteMode.Strict,   
-                Secure = Request.IsHttps,      
+                HttpOnly = false,
+                SameSite = SameSiteMode.Strict,
+                Secure = Request.IsHttps,
                 Path = "/"
             };
-            if (!PackageKeyAllowed.IsMatch(packageKey))
-            {
-                if (!string.IsNullOrEmpty(dlToken)) Response.Cookies.Append($"dl_{dlToken}", "err", cookieOpts);
-                return RedirectToAction(nameof(PromptKv), new { packageKey, version });
-            }
-            if (!string.IsNullOrWhiteSpace(fileName) && !FileNameAllowed.IsMatch(fileName))
-            {
-                if (!string.IsNullOrEmpty(dlToken)) Response.Cookies.Append($"dl_{dlToken}", "err", cookieOpts);
-                return RedirectToAction(nameof(PromptKv), new { packageKey, version });
-            }
+
             FileDetails? file = await FindFile(packageKey, version, fileName);
             if (file is null || !file.IsActive) return NotFound();
+
             if (string.IsNullOrWhiteSpace(password) ||
                 !HashingControl.VerifyPassword(password, file.DownloadPasswordHash))
-            {   
-                await SafeAdminLog(
-                    "Hatalı İndirme Şifre Girişi",
-                    $"Wrong password. pkg={packageKey}, ver={version}, file={file.FileNameStored}, ua={Request.Headers.UserAgent}"
-                );
-                await Task.Delay(Random.Shared.Next(250, 600));
+            {
+                await SafeAdminLog("Hatalı İndirme Şifre Girişi",
+                    $"pkg={packageKey}, ver={version}, file={file.FileNameStored}");
                 if (!string.IsNullOrEmpty(dlToken)) Response.Cookies.Append($"dl_{dlToken}", "err", cookieOpts);
                 return RedirectToAction(nameof(PromptKv), new { packageKey, version, fileName });
             }
-            string? root = _env.WebRootPath ?? Path.Combine(_env.ContentRootPath, "wwwroot");
-            string? fullPath = Path.Combine(root, file.RelativePath.Replace('/', Path.DirectorySeparatorChar));
-            string? rootNorm = Path.GetFullPath(root);
-            string? fullNorm = Path.GetFullPath(fullPath);
-            if (!fullNorm.StartsWith(rootNorm, StringComparison.OrdinalIgnoreCase))
-                return NotFound();
-            if (!System.IO.File.Exists(fullNorm)) return NotFound();
+            string root = _env.WebRootPath ?? Path.Combine(_env.ContentRootPath, "wwwroot");
+            string fullPath = Path.Combine(root, file.RelativePath.Replace('/', Path.DirectorySeparatorChar));
+            if (!System.IO.File.Exists(fullPath)) return NotFound();
             string? city = GetCityFromHeaders(Request);
             if (string.IsNullOrWhiteSpace(city))
             {
@@ -192,60 +178,50 @@ namespace MyWebSite.Controllers
                 if (!string.IsNullOrWhiteSpace(ip) && IsPublicIp(ip))
                     city = await ResolveCityFromIpAsync(ip);
             }
-            await SQLCrud.InsertUpdateDeleteAsync("dbo.FileStore_RegisterDownload", new()
-{
-    new("@Id", file.Id),
-    new("@ClientIp", GetClientIp(HttpContext) ?? "unknown"),
-    new("@UserAgent", Request.Headers.UserAgent.ToString()),
-    new("@City", (object?)city ?? DBNull.Value)
-});
+            await SQLCrud.InsertUpdateDeleteAsync(SP_DWREG, new()
+            {
+                new("@Id", file.Id),
+                new("@ClientIp", GetClientIp(HttpContext) ?? "unknown"),
+                new("@UserAgent", Request.Headers.UserAgent.ToString()),
+                new("@City", (object?)city ?? DBNull.Value)
+            });
+
             if (!string.IsNullOrEmpty(dlToken))
                 Response.Cookies.Append($"dl_{dlToken}", "ok", cookieOpts);
+            string contentType = GetContentType(file.ArchiveType);
             Response.Headers["X-Content-Type-Options"] = "nosniff";
             Response.Headers["Referrer-Policy"] = "no-referrer";
-            Response.Headers["Content-Security-Policy"] = "frame-ancestors 'self'";
             Response.Headers["Cache-Control"] = "no-store, private";
-            if (!string.IsNullOrWhiteSpace(file.Sha256))
-                Response.Headers["ETag"] = $"W/\"{file.Sha256}\"";
             string ascii = ToAsciiFilename(file.FileNameStored);
             Response.Headers["Content-Disposition"] =
                 $"attachment; filename=\"{ascii}\"; filename*=UTF-8''{Uri.EscapeDataString(file.FileNameStored)}";
-            string contentType = GetContentType(file.ArchiveType);
-            return PhysicalFile(fullNorm, contentType, file.FileNameStored, enableRangeProcessing: true);
+            return PhysicalFile(fullPath, contentType, file.FileNameStored, enableRangeProcessing: true);
         }
         private async Task<string?> ResolveCityFromIpAsync(string ip)
         {
-            if (string.IsNullOrWhiteSpace(ip)) return null;
-            if (!IsPublicIp(ip)) return null;
-            string url = $"http://ip-api.com/json/{ip}?fields=status,city";
             try
             {
-                HttpClient client = _httpClientFactory.CreateClient();
-                client.Timeout = TimeSpan.FromSeconds(3);
-                using HttpResponseMessage resp = await client.GetAsync(url);
-                if (!resp.IsSuccessStatusCode) return null;
-                using Stream stream = await resp.Content.ReadAsStreamAsync();
-                using JsonDocument doc = await JsonDocument.ParseAsync(stream);
-                JsonElement root = doc.RootElement;
-                if (root.TryGetProperty("status", out var st) &&
-                    st.GetString()?.Equals("success", StringComparison.OrdinalIgnoreCase) == true &&
-                    root.TryGetProperty("city", out var cityEl))
+                if (string.IsNullOrWhiteSpace(ip)) return null;
+                using HttpClient client = _httpClientFactory.CreateClient();
+                string url = $"http://ip-api.com/json/{ip}?fields=status,country,city";
+                client.Timeout = TimeSpan.FromSeconds(4);
+                string response = await client.GetStringAsync(url);
+                JObject json = JObject.Parse(response);
+                if (json["status"]?.ToString() == "success")
                 {
-                    string city = cityEl.GetString();
-                    return string.IsNullOrWhiteSpace(city) ? null : city;
+                    string city = json["city"]?.ToString() ?? "";
+                    string country = json["country"]?.ToString() ?? "";
+                    return $"{city}, {country}".Trim(',', ' ');
                 }
             }
-            catch
-            {
-                
-            }
+            catch { }
             return null;
         }
         private static bool IsPublicIp(string ipString)
         {
             if (!IPAddress.TryParse(ipString, out var ip)) return false;
             if (ip.IsIPv4MappedToIPv6) ip = ip.MapToIPv4();
-            if (ip.AddressFamily == AddressFamily.InterNetwork) 
+            if (ip.AddressFamily == AddressFamily.InterNetwork)
             {
                 byte[] b = ip.GetAddressBytes();
                 if (b[0] == 10) return false;
@@ -254,7 +230,7 @@ namespace MyWebSite.Controllers
                 if (b[0] == 127) return false;
                 return true;
             }
-            if (ip.AddressFamily == AddressFamily.InterNetworkV6) 
+            if (ip.AddressFamily == AddressFamily.InterNetworkV6)
             {
                 if (ip.IsIPv6LinkLocal || ip.IsIPv6Multicast || IPAddress.IsLoopback(ip)) return false;
                 byte[] b = ip.GetAddressBytes();
@@ -263,19 +239,51 @@ namespace MyWebSite.Controllers
             }
             return false;
         }
+        private static string? GetCityFromHeaders(HttpRequest req)
+        {
+            return GetHeader(req, "CF-IPCity")
+                ?? GetHeader(req, "CloudFront-Viewer-City")
+                ?? GetHeader(req, "X-AppEngine-City");
+        }
+        private static string? GetClientIp(HttpContext ctx)
+        {
+            string? ip = GetHeader(ctx.Request, "CF-Connecting-IP");
+            if (string.IsNullOrWhiteSpace(ip))
+                ip = GetHeader(ctx.Request, "X-Forwarded-For")?.Split(',').FirstOrDefault()?.Trim();
+            return ip ?? ctx.Connection.RemoteIpAddress?.ToString();
+        }
+        private static string? GetHeader(HttpRequest req, string name)
+            => req.Headers.TryGetValue(name, out var v) ? v.ToString() : null;
+        private static string ToAsciiFilename(string name)
+        {
+            byte[] bytes = Encoding.ASCII.GetBytes(name);
+            for (int i = 0; i < bytes.Length; i++)
+                if (bytes[i] < 32 || bytes[i] > 126) bytes[i] = (byte)'_';
+            return Encoding.ASCII.GetString(bytes);
+        }
+        private static string GetContentType(string archiveType)
+            => archiveType?.ToLowerInvariant() switch
+            {
+                "zip" => "application/zip",
+                "rar" => "application/x-rar-compressed",
+                _ => "application/octet-stream"
+            };
+        private void SetCommonSecurityHeaders()
+        {
+            Response.Headers["X-Content-Type-Options"] = "nosniff";
+            Response.Headers["Referrer-Policy"] = "no-referrer";
+            Response.Headers["Content-Security-Policy"] = "frame-ancestors 'self'";
+        }
         private async Task<FileDetails?> FindFile(string packageKey, string version, string? fileName)
         {
-            List<SqlParameter> p = new List<SqlParameter>
+            List<SqlParameter> p = new()
             {
                 new("@PackageKey", packageKey),
                 new("@Version", version)
             };
-            string sp = SP_GET_BY_KV;
+            string sp = string.IsNullOrWhiteSpace(fileName) ? SP_GET_BY_KV : SP_GET_BY_KVF;
             if (!string.IsNullOrWhiteSpace(fileName))
-            {
-                sp = SP_GET_BY_KVF;
                 p.Add(new("@FileNameStored", fileName));
-            }
             var list = await SQLCrud.ExecuteModelListAsync<FileDetails>(
                 sp, p,
                 r => new FileDetails
@@ -296,41 +304,6 @@ namespace MyWebSite.Controllers
                     DownloadCount = (int)r["DownloadCount"]
                 });
             return list.FirstOrDefault();
-        }
-        private static string GetContentType(string archiveType)
-            => archiveType?.ToLowerInvariant() switch
-            {
-                "zip" => "application/zip",
-                "rar" => "application/x-rar-compressed",
-                _ => "application/octet-stream"
-            };
-        private void SetCommonSecurityHeaders()
-        {
-            Response.Headers["X-Content-Type-Options"] = "nosniff";
-            Response.Headers["Referrer-Policy"] = "no-referrer";
-            Response.Headers["Content-Security-Policy"] = "frame-ancestors 'self'";
-        }
-        private static string ToAsciiFilename(string name)
-        {
-            byte[] bytes = Encoding.ASCII.GetBytes(name);
-            for (int i = 0; i < bytes.Length; i++)
-                if (bytes[i] < 32 || bytes[i] > 126) bytes[i] = (byte)'_';
-            return Encoding.ASCII.GetString(bytes);
-        }
-        private static string? GetHeader(HttpRequest req, string name)
-            => req.Headers.TryGetValue(name, out var v) ? v.ToString() : null;
-        private static string? GetCityFromHeaders(HttpRequest req)
-        {
-            return GetHeader(req, "CF-IPCity")                
-                ?? GetHeader(req, "CloudFront-Viewer-City")    
-                ?? GetHeader(req, "X-AppEngine-City");       
-        }
-        private static string? GetClientIp(HttpContext ctx)
-        {
-            string? ip = GetHeader(ctx.Request, "CF-Connecting-IP");
-            if (string.IsNullOrWhiteSpace(ip))
-                ip = GetHeader(ctx.Request, "X-Forwarded-For")?.Split(',').FirstOrDefault()?.Trim();
-            return ip ?? ctx.Connection.RemoteIpAddress?.ToString();
         }
     }
 }

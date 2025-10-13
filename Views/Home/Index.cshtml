@@ -2,17 +2,17 @@
 <html lang="tr">
 <head>
     <meta charset="utf-8">
-       <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon" />
     <title>@ViewBag.AboutName | @ViewBag.AboutTitle</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta property="og:title" content="@ViewBag.AboutName | @ViewBag.AboutTitle" />
-    <meta property="og:description" content="Veri Tabanı Yöneticisi,ERP-İş Analisti Raporlama Uzmanı,Teknik Destek,Veritabanı Yöneticisi,SQL,T-SQL,C#,Microsoft Excel VBA" />
+    <meta property="og:description" content="ERP Uzmanı ve İş Zekası Uzmanı,Veritabanı Yöneticisi,ERP-İş Analisti Raporlama Uzmanı,Teknik Destek,SQL,T-SQL,C#,Microsoft Excel VBA" />
     <meta property="og:image" content="@($"{Context.Request.Scheme}://{Context.Request.Host}/userThema/img/my1.jpeg")" />
     <meta property="og:url" content="@($"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}")" />
     <meta property="og:type" content="website" />
     <link rel="canonical" href="@($"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}")" />
-    <meta name="keywords" content="Doğukan Koşan, Yazılım, Teknik Destek, Veri Analizi, İş Analisti, İstanbul, Silivri, Koş, Çalışıyorum, Yazılım Çözümleri" />
-    <meta name="description" content="Doğukan Koşan, Veri Tabanı Yöneticisi,Yazılım çözümleri,İş Analisti,Raporlama Uzmanı,Veri Analizi,Logo,ETA,J-Platform,Logo Flow" />
+    <meta name="keywords" content="@ViewBag.AboutName, ERP, Teknik Destek, Veri Analizi, İş Analisti, İstanbul, Silivri, Çalışıyorum, Yazılım Çözümleri" />
+    <meta name="description" content="@ViewBag.AboutName, ERP Uzmanı ve İş Zekası Uzmanı,Yazılım Çözümleri,İş Analisti,Raporlama Uzmanı,Veri Analizi,Veritabanı Yöneticisi" />
     <meta name="author" content="@ViewBag.AboutName" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,38 +33,152 @@
     <link href="~/userThema/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="~/userThema/css/bootstrap.min.css" rel="stylesheet">
     <link href="~/userThema/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DX52B81E6M"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-        gtag('config', 'G-DX52B81E6M');
-    </script>
+    <script> window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); } gtag('js', new Date()); gtag('config', 'G-DX52B81E6M'); </script>
+    <style>
+        .cookie-banner {
+            position: fixed;
+            bottom: max(12px, env(safe-area-inset-bottom));
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            width: clamp(280px, 92vw, 850px);
+            background: rgba(20,20,20,.95);
+            color: #fff;
+            border-radius: 14px;
+            padding: 16px 18px;
+            z-index: 99999;
+            display: none;
+            box-shadow: 0 8px 22px rgba(0,0,0,.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,.15);
+            font-size: .9rem;
+            word-break: break-word;
+        }
+
+        .cookie-box {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .cookie-text {
+            display: flex;
+            align-items: center;
+            line-height: 1.5;
+        }
+
+            .cookie-text i {
+                margin-right: 8px;
+            }
+
+            .cookie-text a {
+                color: #0dcaf0;
+            }
+
+                .cookie-text a:hover {
+                    color: #66d9ff;
+                }
+
+        .cookie-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        @@media (max-width: 991px) {
+            .cookie-banner {
+                width: 94vw;
+                padding: 14px;
+                font-size: .88rem;
+            }
+
+            .cookie-box {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .cookie-text {
+                justify-content: center;
+                flex-direction: column;
+            }
+
+            .cookie-actions {
+                width: 100%;
+                justify-content: center;
+            }
+
+                .cookie-actions .btn {
+                    width: 100%;
+                    min-width: 140px;
+                }
+        }
+
+        #acceptCookies {
+            background-color: #4096FF !important;
+            border-color: #4096FF !important;
+            color: #fff !important;
+            font-weight: 600;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            #acceptCookies:hover {
+                background-color: #2E7DFF !important;
+                border-color: #2E7DFF !important;
+                box-shadow: 0 0 10px rgba(64, 150, 255, 0.6);
+            }
+
+            #acceptCookies i {
+                margin-right: 4px;
+            }
+
+        @@media (max-width: 576px) {
+            .cookie-banner {
+                border-radius: 10px;
+                padding: 12px;
+                font-size: .85rem;
+            }
+        }
+
+        .cookie-popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.65);
+            z-index: 100000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .cookie-popup-content {
+            background: #fff;
+            color: #222;
+            padding: 25px 22px;
+            border-radius: 10px;
+            max-width: 520px;
+            width: 90%;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            animation-duration: 0.5s;
+        }
+    </style>
 </head>
 <body>
-    @await Component.InvokeAsync("MyCvComponent")
-    @{
-        string formattedNumber = @ViewBag.AboutPhone.Replace("(", "")
-        .Replace(")", "")
-        .Replace(" ", "");
-        formattedNumber = $"https://wa.me/90{formattedNumber}";
-    }
+    @await Component.InvokeAsync("MyCvComponent") @{
+    string formattedNumber = @ViewBag.AboutPhone.Replace("(", "").Replace(")", "").Replace(" ", ""); formattedNumber = $"https://wa.me/90{formattedNumber}";
+        }
     <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-            <span class="sr-only">Yükleniyor...</span>
-        </div>
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"> <span class="sr-only">Yükleniyor...</span> </div>
     </div>
     <div class="container-fluid nav-section border-0">
         <nav class="navbar navbar-light">
-            <div class="navbar-nav flex-column">
-                <a href="#pigraHome" class="nav-item nav-link active"><span class="fa fa-home"></span> Anasayfa</a>
-                <a href="#pigraAbout" class="nav-item nav-link"><span class="far fa-address-card"></span> Hakkımda</a>
-                <a href="#pigraEducation" class="nav-item nav-link"><span class="fas fa-graduation-cap"></span> Eğitim</a>
-                <a href="#pigraWork" class="nav-item nav-link"><span class="fas fa-business-time"></span> İş Hayatı</a>
-                <a href="#pigraService" class="nav-item nav-link"><span class="fas fa-laptop-code"></span> Beceriler</a>
-                <a href="#pigraPortfolio" class="nav-item nav-link"><span class="fa fa-blog"></span> Projeler</a>
-                <a href="#pigraContact" class="nav-item nav-link"><span class="fas fa-address-book"></span> İletişim</a>
-            </div>
+            <div class="navbar-nav flex-column"> <a href="#pigraHome" class="nav-item nav-link active"> <span class="fa fa-home"></span> Anasayfa </a> <a href="#pigraAbout" class="nav-item nav-link"> <span class="far fa-address-card"></span> Hakkımda </a> <a href="#pigraEducation" class="nav-item nav-link"> <span class="fas fa-graduation-cap"></span> Eğitim </a> <a href="#pigraCertificate" class="nav-item nav-link"> <span class="fas fa-certificate"></span> Sertifikalar </a> <a href="#pigraWork" class="nav-item nav-link"> <span class="fas fa-business-time"></span> İş Hayatı </a> <a href="#pigraService" class="nav-item nav-link"> <span class="fas fa-laptop-code"></span> Beceriler </a> <a href="#pigraPortfolio" class="nav-item nav-link"> <span class="fa fa-blog"></span> Projeler </a> <a href="#pigraContact" class="nav-item nav-link"> <span class="fas fa-address-book"></span> İletişim </a> <a href="/Blog" class="nav-item nav-link"> <span class="fa fa-pen-nib"></span> Blog </a> </div>
         </nav>
     </div>
     <div class="container-fluid" id="pigraHome">
@@ -72,12 +186,10 @@
             <div class="row g-0">
                 <div class="col-12 col-lg-3">
                     <div class="header-content bg-dark h-100 pt-6 pe-6 pb-6">
-                        <a href="index.html" class="navbar-brand d-inline-flex pb-5 wow fadeInUp" data-wow-delay="0.1s">
-                        </a>
+                        <a href="index.html" class="navbar-brand d-inline-flex pb-5 wow fadeInUp" data-wow-delay="0.1s"> </a>
                         <div class="text-start d-flex flex-column justify-content-center wow fadeInUp" data-wow-delay="0.3s">
                             @{
-                                string data = @ViewBag.AboutName;
-                                string firstName = data.Contains(" ") ? data.Substring(0, data.IndexOf(" ")) : data;
+                                string data = @ViewBag.AboutName; string firstName = data.Contains(" ") ? data.Substring(0, data.IndexOf(" ")) : data;
                             }
                             <h2 class="display-6 text-white mb-0">👋 Merhaba Ben @firstName</h2>
                         </div>
@@ -87,20 +199,11 @@
                     <div class="header-img d-flex h-100 pt-6 ps-6 pb-6">
                         <div class="row g-5">
                             <div class="col-xl-6 wow fadeInUp" data-wow-delay="0.1s">
-                                <div class="bg-light p-4" style="border-radius: 68% 32% 100% 0% / 0% 75% 25% 100%;">
-                                    <img src="@ViewBag.Picture1" 
-                                         class="img-fluid w-100 rounded-4 shadow-sm"
-                                         style="border-radius: 68% 32% 100% 0% / 0% 75% 25% 100%;" 
-                                         alt="Profil Görseli" 
-                                         loading="lazy" 
-                                         decoding="async">
-                                </div>
+                                <div class="bg-light p-4" style="border-radius: 68% 32% 100% 0% / 0% 75% 25% 100%;"> <img src="@ViewBag.Picture1" class="img-fluid w-100 rounded-4 shadow-sm" style="border-radius: 68% 32% 100% 0% / 0% 75% 25% 100%;" alt="Profil Görseli" loading="lazy" decoding="async"> </div>
                             </div>
                             <div class="col-xl-6 wow fadeInUp" data-wow-delay="0.3s">
                                 <h1 class="display-6 mb-4">@ViewBag.AboutTitle</h1>
-                                <p class="mb-4">
-                                    @ViewBag.AboutDetails1
-                                </p>
+                                <p class="mb-4"> @ViewBag.AboutDetails1 </p>
                                 <div class="d-flex align-items-center mb-2">
                                     <i class="fas fa-map-marker-alt text-primary me-3"></i>
                                     <p class="text-dark mb-0">@ViewBag.AboutAdress</p>
@@ -117,12 +220,7 @@
                                     <i class="fab fa-firefox-browser text-primary me-3"></i>
                                     <p class="text-dark mb-0"><a href="/">@ViewBag.AboutWebSite</a></p>
                                 </div>
-                                <div class="d-flex">
-                                    <a class="btn btn-primary btn-sm-square me-3" href="@ViewBag.FacebookLink" target="_blank"><i class="fab fa-facebook-f text-white"></i></a>
-                                    <a class="btn btn-primary btn-sm-square me-3" href="@ViewBag.GithubLink" target="_blank"><i class="fab fa-github text-white"></i></a>
-                                    <a class="btn btn-primary btn-sm-square me-3" href="@ViewBag.InstagramLink" target="_blank"><i class="fab fa-instagram text-white"></i></a>
-                                    <a class="btn btn-primary btn-sm-square me-3" href="@ViewBag.LinkedinLink" target="_blank"><i class="fab fa-linkedin text-white"></i></a>
-                                </div>
+                                <div class="d-flex"> <a class="btn btn-primary btn-sm-square me-3" href="@ViewBag.FacebookLink" target="_blank"><i class="fab fa-facebook-f text-white"></i></a> <a class="btn btn-primary btn-sm-square me-3" href="@ViewBag.GithubLink" target="_blank"><i class="fab fa-github text-white"></i></a> <a class="btn btn-primary btn-sm-square me-3" href="@ViewBag.InstagramLink" target="_blank"><i class="fab fa-instagram text-white"></i></a> <a class="btn btn-primary btn-sm-square me-3" href="@ViewBag.LinkedinLink" target="_blank"><i class="fab fa-linkedin text-white"></i></a> </div>
                             </div>
                         </div>
                     </div>
@@ -145,28 +243,13 @@
                         <div class="row g-5">
                             <div class="col-xl-5">
                                 <div class="about-img bg-light p-4 wow fadeInUp" data-wow-delay="0.1s">
-                                    <img src="@ViewBag.Picture2" 
-                                         class="img-fluid w-100 rounded-4 shadow-sm"
-                                         style="border-radius: 68% 32% 100% 0% / 0% 75% 25% 100%;" 
-                                         alt="Profil Görseli" 
-                                         loading="lazy" 
-                                         decoding="async">
-
-                                    <div class="sosial-icon">
-                                        <a class="btn btn-primary btn-sm-square mb-3" href="@ViewBag.FacebookLink" target="_blank"><i class="fab fa-facebook-f text-white"></i></a>
-                                        <a class="btn btn-primary btn-sm-square mb-3" href="@ViewBag.GithubLink" target="_blank"><i class="fab fa-github text-white"></i></a>
-                                        <a class="btn btn-primary btn-sm-square mb-3" href="@ViewBag.InstagramLink" target="_blank"><i class="fab fa-instagram text-white"></i></a>
-                                        <a class="btn btn-primary btn-sm-square mb-3" href="@ViewBag.LinkedinLink" target="_blank">
-                                            <i class="fab fa-linkedin text-white"></i>
-                                        </a>
-                                    </div>
+                                    <img src="@ViewBag.Picture2" class="img-fluid w-100 rounded-4 shadow-sm" style="border-radius: 68% 32% 100% 0% / 0% 75% 25% 100%;" alt="Profil Görseli" loading="lazy" decoding="async">
+                                    <div class="sosial-icon"> <a class="btn btn-primary btn-sm-square mb-3" href="@ViewBag.FacebookLink" target="_blank"><i class="fab fa-facebook-f text-white"></i></a> <a class="btn btn-primary btn-sm-square mb-3" href="@ViewBag.GithubLink" target="_blank"><i class="fab fa-github text-white"></i></a> <a class="btn btn-primary btn-sm-square mb-3" href="@ViewBag.InstagramLink" target="_blank"><i class="fab fa-instagram text-white"></i></a> <a class="btn btn-primary btn-sm-square mb-3" href="@ViewBag.LinkedinLink" target="_blank"> <i class="fab fa-linkedin text-white"></i> </a> </div>
                                 </div>
                             </div>
                             <div class="col-xl-7 wow fadeInUp" data-wow-delay="0.3s">
                                 <h4 class="mb-4">Ben @ViewBag.AboutName</h4>
-                                <p class="mb-4">
-                                    @ViewBag.AboutDetails2
-                                </p>
+                                <p class="mb-4"> @ViewBag.AboutDetails2 </p>
                                 <div class="row g-4 mb-4">
                                     <div class="col-12">
                                         <p><strong class="fw-bold text-dark">Telefon :</strong> <a href="@formattedNumber" target="_blank">@ViewBag.AboutPhone</a></p>
@@ -181,10 +264,7 @@
             </div>
         </div>
     </div>
-    @await Component.InvokeAsync("EducationComponent")
-    @await Component.InvokeAsync("JobComponent")
-    @await Component.InvokeAsync("SkillsComponent")
-    @await Component.InvokeAsync("ProjectComponent")
+    @await Component.InvokeAsync("EducationComponent") @await Component.InvokeAsync("CertificatesComponent") @await Component.InvokeAsync("JobComponent") @await Component.InvokeAsync("SkillsComponent") @await Component.InvokeAsync("ProjectComponent")
     <div class="container-fluid" id="pigraContact">
         <div class="container">
             <div class="row g-0">
@@ -201,45 +281,30 @@
                             <div class="row g-5">
                                 <div class="col-xl-5 wow fadeInUp" data-wow-delay="0.1s">
                                     <div class="d-flex mb-4">
-                                        <div class="btn-xl-square bg-primary text-white me-3">
-                                            <i class="fas fa-map-marker-alt"></i>
-                                        </div>
+                                        <div class="btn-xl-square bg-primary text-white me-3"> <i class="fas fa-map-marker-alt"></i> </div>
                                         <div>
                                             <h4>Adres</h4>
                                             <p class="mb-0">@ViewBag.AboutAdress</p>
                                         </div>
                                     </div>
                                     <div class="d-flex mb-4">
-                                        <div class="btn-xl-square bg-primary text-white me-3">
-                                            <i class="fas fa-envelope"></i>
-                                        </div>
+                                        <div class="btn-xl-square bg-primary text-white me-3"> <i class="fas fa-envelope"></i> </div>
                                         <div>
                                             <h4>E-Mail</h4>
                                             <p class="mb-0"><a id="emailLink2" href="mailto:@ViewBag.AboutMail" target="_blank">@ViewBag.AboutMail</a></p>
                                         </div>
                                     </div>
                                     <div class="d-flex">
-                                        <div class="btn-xl-square bg-primary text-white me-3">
-                                            <i class="fa fa-phone-alt"></i>
-                                        </div>
+                                        <div class="btn-xl-square bg-primary text-white me-3"> <i class="fa fa-phone-alt"></i> </div>
                                         <div>
                                             <h4>Telefon</h4>
                                             <p class="mb-0"><a href="@formattedNumber" target="_blank">@ViewBag.AboutPhone</a></p>
                                         </div>
                                     </div>
                                 </div>
-                                @await Component.InvokeAsync("ContactUserComponent")
-                                <br />
+                                @await Component.InvokeAsync("ContactUserComponent") <br />
                                 <div class="col-12 wow fadeInUp" data-wow-delay="0.5s">
-                                    <div class="rounded">
-                                        <iframe class="rounded w-100"
-                                                loading="lazy"
-                                                referrerpolicy="no-referrer-when-downgrade"
-                                                style="height: 400px; width: 100%; border:0;"
-                                                src="@ViewBag.IFrameAdress"
-                                                allowfullscreen>
-                                        </iframe>
-                                    </div>
+                                    <div class="rounded"> <iframe class="rounded w-100" loading="lazy" referrerpolicy="no-referrer-when-downgrade" style="height: 400px; width: 100%; border:0;" src="@ViewBag.IFrameAdress" allowfullscreen> </iframe> </div>
                                 </div>
                             </div>
                         </div>
@@ -255,17 +320,11 @@
                     <div class="footer-content h-100 pt-6 ps-6 pb-6">
                         <div class="row g-4 align-items-center">
                             <div class="col-12 text-center">
-                                <div class="d-flex justify-content-center">
-                                    <a class="btn btn-light btn-md-square me-3" href="@ViewBag.FacebookLink" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                                    <a class="btn btn-light btn-md-square me-3" href="@ViewBag.GithubLink" target="_blank"><i class="fab fa-github"></i></a>
-                                    <a class="btn btn-light btn-md-square me-3" href="@ViewBag.InstagramLink" target="_blank"><i class="fab fa-instagram"></i></a>
-                                    <a class="btn btn-light btn-md-square me-3" href="@ViewBag.LinkedinLink" target="_blank"><i class="fab fa-linkedin"></i></a>
-                                </div>
+                                <div class="d-flex justify-content-center flex-wrap gap-2"> <a class="btn btn-light btn-md-square" href="@ViewBag.FacebookLink" target="_blank" aria-label="Facebook"> <i class="fab fa-facebook-f"></i> </a> <a class="btn btn-light btn-md-square" href="@ViewBag.GithubLink" target="_blank" aria-label="GitHub"> <i class="fab fa-github"></i> </a> <a class="btn btn-light btn-md-square" href="@ViewBag.InstagramLink" target="_blank" aria-label="Instagram"> <i class="fab fa-instagram"></i> </a> <a class="btn btn-light btn-md-square" href="@ViewBag.LinkedinLink" target="_blank" aria-label="LinkedIn"> <i class="fab fa-linkedin"></i> </a> </div>
                             </div>
-                            <div class="col-12 text-center">
-                            </div>
-                            <div class="col-12 text-center text-body">
-                                Tüm Hakları Saklıdır &copy;Tasarlayan <a class="border-bottom text-white" href="@ViewBag.GithubLink" target="_blank">@ViewBag.AboutName</a>
+                            <div class="col-12 text-center text-body mt-3 small">
+                                <span class="d-block mb-1 text-light"> Tüm Hakları Saklıdır &copy; @DateTime.Now.Year — Tasarlayan <a class="border-bottom text-white" href="@ViewBag.GithubLink" target="_blank">Doğukan Koşan</a> </span>
+                                <div class="d-flex justify-content-center flex-wrap gap-3 mt-2"> <a href="/Cerez-Politikasi" class="text-decoration-none text-secondary"> 🍪 Çerez Politikası </a> <a href="/Gizlilik-Politikasi" class="text-decoration-none text-secondary"> 🔒 Gizlilik Politikası </a> <a href="/" class="text-decoration-none text-secondary"> 🏠 Ana Sayfa </a> </div>
                             </div>
                         </div>
                     </div>
@@ -273,6 +332,22 @@
             </div>
         </div>
     </div>
+    <div id="cookieConsent" class="cookie-banner shadow-lg animate__animated animate__fadeInUp">
+        <div class="cookie-box">
+            <div class="cookie-text"> <i class="bi bi-cookie text-warning fs-4"></i> <span> Bu site, kullanıcı deneyiminizi geliştirmek için <strong>çerezleri</strong> kullanır. <a href="/Cerez-Politikasi" id="openCookiePopup" class="fw-semibold text-decoration-underline text-info">Detaylı bilgi</a> </span> </div>
+            <div class="cookie-actions"> <button id="acceptCookies" class="btn btn-success btn-sm"> <i class="bi bi-check-circle"></i> Kabul Et </button> <button id="denyCookies" class="btn btn-outline-light btn-sm"> <i class="bi bi-x-circle"></i> Reddet </button> </div>
+        </div>
+    </div>
+    <div id="cookiePopup" class="cookie-popup-overlay">
+        <div class="cookie-popup-content animate__animated animate__fadeInDown">
+            <h5 class="mb-3"><i class="bi bi-shield-check text-primary"></i> Çerez Politikası</h5>
+            <p> Bu web sitesi, kullanıcı deneyiminizi iyileştirmek, site trafiğini analiz etmek ve hizmetlerimizi geliştirmek amacıyla çerezleri kullanmaktadır. </p>
+            <p> Çerezler, cihazınıza kaydedilen küçük metin dosyalarıdır ve site tercihlerinizi hatırlamamızı sağlar. İstediğiniz zaman tarayıcı ayarlarınızdan çerezleri silebilir veya devre dışı bırakabilirsiniz. </p>
+            <p> Çerezler hakkında daha fazla bilgi için <a href="/Cerez-Politikasi" target="_blank" class="text-primary fw-semibold">Çerez Politikamızı</a> ziyaret edin. </p>
+            <div class="text-end"> <button id="closeCookiePopup" class="btn btn-primary btn-sm mt-2 px-3"> <i class="bi bi-x-circle"></i> Kapat </button> </div>
+        </div>
+    </div>
+    @await Component.InvokeAsync("WhatsAppSupportComponent")
     <a href="#" class="btn btn-primary btn-lg-square back-to-top"><i class="fa fa-arrow-up"></i></a>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
@@ -285,159 +360,17 @@
     <script src="~/userThema/lib/lightbox/js/lightbox.min.js"></script>
     <script src="~/userThema/lib/owlcarousel/owl.carousel.min.js"></script>
     <script src="~/userThema/js/main.js"></script>
-    <script>
-        var email =@ViewBag.AboutMail;
-        var emailLink = document.getElementById("emailLink2");
-        emailLink.href = "mailto:" + email;
-        emailLink.textContent = email;
-    </script>
-    <script>
-        document.addEventListener('wheel', function (event) {
-            if (event.ctrlKey) {
-                event.preventDefault();
-            }
-        }, { passive: false });
-        document.addEventListener('keydown', function (event) {
-            if (event.ctrlKey && (event.key === '+' || event.key === '-' || event.key === '0')) {
-                event.preventDefault();
-            }
-        });
-        document.body.style.zoom = "1.1";
-    </script>
-    @using System.Text.Json
-    <script type="application/ld+json">
-        @{
-                string siteUrl = $"{Context.Request.Scheme}://{Context.Request.Host}";
-                var jsonLd = new
-                {
-                        context = "https://schema.org",
-                        type = "Person",
-                        name = ViewBag.AboutName,
-                        jobTitle = ViewBag.AboutTitle,
-                        url = siteUrl,
-                        sameAs = new string[]
-                        {
-                                        ViewBag.FacebookLink,
-                                        ViewBag.InstagramLink,
-                                        ViewBag.GithubLink,
-                                        ViewBag.LinkedinLink
-                        }
-                };
-                string jsonString = System.Text.Json.JsonSerializer.Serialize(jsonLd)
-                        .Replace("\"context\"", "\"@context\"")
-                        .Replace("\"type\"", "\"@type\"");
+    <script> var email =@ViewBag.AboutMail; var emailLink = document.getElementById("emailLink2"); emailLink.href = "mailto:" + email; emailLink.textContent = email; </script>
+    <script> document.addEventListener('wheel', function (event) { if (event.ctrlKey) { event.preventDefault(); } }, { passive: false }); document.addEventListener('keydown', function (event) { if (event.ctrlKey && (event.key === '+' || event.key === '-' || event.key === '0')) { event.preventDefault(); } }); document.body.style.zoom = "1.1"; </script> @using System.Text.Json
+    <script type="application/ld+json"> @{
+    string siteUrl = $"{Context.Request.Scheme}://{Context.Request.Host}"; var jsonLd = new { context = "https://schema.org", type = "Person", name = ViewBag.AboutName, jobTitle = ViewBag.AboutTitle, url = siteUrl, sameAs = new string[] { ViewBag.FacebookLink, ViewBag.InstagramLink, ViewBag.GithubLink, ViewBag.LinkedinLink } }; string jsonString = System.Text.Json.JsonSerializer.Serialize(jsonLd).Replace("\"context\"", "\"@context\"").Replace("\"type\"", "\"@type\"");
         }
-        @Html.Raw(jsonString)
-    </script>
-    @{
+ @Html.Raw(jsonString) </script> @{
         var message = TempData["Message"] as string;
-    }
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var message = '@message';
-            if (message === "success") {
-                Swal.fire({
-                    title: 'Başarılı!',
-                    text: 'Mesajınız başarılı bir şekilde iletildi.',
-                    icon: 'success',
-                    confirmButtonText: 'Tamam'
-                });
-            }
-            else if (message === "error") {
-                Swal.fire({
-                    title: 'Hata!',
-                    text: 'Mesajınız iletilemedi. Lütfen tekrar deneyiniz.',
-                    icon: 'error',
-                    confirmButtonText: 'Tamam'
-                });
-            }
-        });
-    </script>
-    <script>
-        $(document).ready(function() {
-            generateMathQuestion();
-        });
-        var correctAnswer;
-        function generateMathQuestion() {
-            var num1 = Math.floor(Math.random() * 20) + 1;
-            var num2 = Math.floor(Math.random() * 10) + 1;
-            var operations = ['+', '-', '×'];
-            var operation = operations[Math.floor(Math.random() * operations.length)];
-            switch(operation) {
-                case '+':
-                    correctAnswer = num1 + num2;
-                    break;
-                case '-':
-                    if (num1 < num2) {
-                        var temp = num1;
-                        num1 = num2;
-                        num2 = temp;
-                    }
-                    correctAnswer = num1 - num2;
-                    break;
-                case '×':
-                    num1 = Math.floor(Math.random() * 10) + 1;
-                    num2 = Math.floor(Math.random() * 10) + 1;
-                    correctAnswer = num1 * num2;
-                    break;
-            }
-            $('#mathQuestion').text(num1 + ' ' + operation + ' ' + num2);
         }
-        $('#contactForm').submit(function (event) {
-            event.preventDefault();
-          var $honeypot = $(this).find('input[name="website"]');
-        if ($honeypot.length && $honeypot.val().trim() !== '') {
-            $('#resultsucc').html('<div class="alert alert-danger">Spam tespit edildi.</div>');
-            return;
-        }
-            var userAnswer = parseInt($('#mathCaptcha').val());
-            if (isNaN(userAnswer) || userAnswer !== correctAnswer) {
-                $('#mathError').html('❌ Matematik işlemi yanlış! Tekrar deneyin.');
-                generateMathQuestion();
-                $('#mathCaptcha').val('').focus();
-                return;
-            }
-            $('#mathError').html('✅ Doğru!');
-            $('#nameError').html('');
-            $('#emailError').html('');
-            $('#phoneError').html('');
-            $('#subjectError').html('');
-            $('#messageError').html('');
-            $('#resultsucc').html('');
-            $.ajax({
-                url: '@Url.Action("ContactAdd", "Home")',
-                type: 'POST',
-                data: $(this).serialize(),
-                success: function (response) {
-                    if (response.success) {
-                        $('#resultsucc').html('<div class="alert alert-success">✅ Mesaj Başarıyla Gönderildi.</div>');
-                        $('#contactForm')[0].reset();
-                        generateMathQuestion(); 
-                    } else {
-                        if (response.errors.ContactName) {
-                            $('#nameError').html(response.errors.ContactName);
-                        }
-                        if (response.errors.ContactMail) {
-                            $('#emailError').html(response.errors.ContactMail);
-                        }
-                        if (response.errors.ContactPhone) {
-                            $('#phoneError').html(response.errors.ContactPhone);
-                        }
-                        if (response.errors.ContactSubject) {
-                            $('#subjectError').html(response.errors.ContactSubject);
-                        }
-                        if (response.errors.ContactMessage) {
-                            $('#messageError').html(response.errors.ContactMessage);
-                        }
-                        generateMathQuestion();
-                    }
-                },
-                error: function () {
-                    $('#resultsucc').html('<div class="alert alert-danger">❌ Bir hata oluştu.</div>');
-                    generateMathQuestion();
-                }
-            });
-        });
-    </script>
+    <script> document.addEventListener('DOMContentLoaded', function () { var message = '@message'; if (message === "success") { Swal.fire({ title: 'Başarılı!', text: 'Mesajınız başarılı bir şekilde iletildi.', icon: 'success', confirmButtonText: 'Tamam' }); } else if (message === "error") { Swal.fire({ title: 'Hata!', text: 'Mesajınız iletilemedi. Lütfen tekrar deneyiniz.', icon: 'error', confirmButtonText: 'Tamam' }); } }); </script>
+    <script> $(document).ready(function() { generateMathQuestion(); }); var correctAnswer; function generateMathQuestion() { var num1 = Math.floor(Math.random() * 20) + 1; var num2 = Math.floor(Math.random() * 10) + 1; var operations = ['+', '-', '×']; var operation = operations[Math.floor(Math.random() * operations.length)]; switch(operation) { case '+': correctAnswer = num1 + num2; break; case '-': if (num1 < num2) { var temp = num1; num1 = num2; num2 = temp; } correctAnswer = num1 - num2; break; case '×': num1 = Math.floor(Math.random() * 10) + 1; num2 = Math.floor(Math.random() * 10) + 1; correctAnswer = num1 * num2; break; } $('#mathQuestion').text(num1 + ' ' + operation + ' ' + num2); } $('#contactForm').submit(function (event) { event.preventDefault(); var $honeypot = $(this).find('input[name="website"]'); if ($honeypot.length && $honeypot.val().trim() !== '') { $('#resultsucc').html('<div class="alert alert-danger">Spam tespit edildi.</div>'); return; } var userAnswer = parseInt($('#mathCaptcha').val()); if (isNaN(userAnswer) || userAnswer !== correctAnswer) { $('#mathError').html('❌ Matematik işlemi yanlış! Tekrar deneyin.'); generateMathQuestion(); $('#mathCaptcha').val('').focus(); return; } $('#mathError').html('✅ Doğru!'); $('#nameError').html(''); $('#emailError').html(''); $('#phoneError').html(''); $('#subjectError').html(''); $('#messageError').html(''); $('#resultsucc').html(''); $.ajax({ url: '@Url.Action("ContactAdd", "Home")', type: 'POST', data: $(this).serialize(), success: function (response) { if (response.success) { $('#resultsucc').html('<div class="alert alert-success">✅ Mesaj Başarıyla Gönderildi.</div>'); $('#contactForm')[0].reset(); generateMathQuestion(); } else { if (response.errors.ContactName) { $('#nameError').html(response.errors.ContactName); } if (response.errors.ContactMail) { $('#emailError').html(response.errors.ContactMail); } if (response.errors.ContactPhone) { $('#phoneError').html(response.errors.ContactPhone); } if (response.errors.ContactSubject) { $('#subjectError').html(response.errors.ContactSubject); } if (response.errors.ContactMessage) { $('#messageError').html(response.errors.ContactMessage); } generateMathQuestion(); } }, error: function () { $('#resultsucc').html('<div class="alert alert-danger">❌ Bir hata oluştu.</div>'); generateMathQuestion(); } }); }); </script>
+    <script> document.addEventListener("DOMContentLoaded", () => { const banner = document.getElementById("cookieConsent"); const accepted = localStorage.getItem("cookieAccepted"); if (!accepted) { banner.style.display = "block"; } document.getElementById("acceptCookies")?.addEventListener("click", () => { localStorage.setItem("cookieAccepted", "true"); banner.classList.add("animate__fadeOutDown"); setTimeout(() => banner.remove(), 600); Swal.fire({ icon: "success", title: "Teşekkürler!", text: "Çerez kullanımını kabul ettiniz.", timer: 1600, showConfirmButton: false }); }); document.getElementById("denyCookies")?.addEventListener("click", () => { localStorage.setItem("cookieAccepted", "denied"); banner.classList.add("animate__fadeOutDown"); setTimeout(() => banner.remove(), 600); Swal.fire({ icon: "info", title: "Tercihiniz kaydedildi", text: "Çerezler devre dışı bırakıldı.", timer: 1600, showConfirmButton: false }); }); }); </script>
+    <script> document.addEventListener("DOMContentLoaded", () => { const openPopup = document.getElementById("openCookiePopup"); const closePopup = document.getElementById("closeCookiePopup"); const popup = document.getElementById("cookiePopup"); if (openPopup && closePopup && popup) { openPopup.addEventListener("click", () => popup.style.display = "flex"); closePopup.addEventListener("click", () => popup.style.display = "none"); popup.addEventListener("click", e => { if (e.target === popup) popup.style.display = "none"; }); } }); </script>
 </body>
 </html>

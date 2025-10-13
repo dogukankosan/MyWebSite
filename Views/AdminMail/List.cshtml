@@ -32,15 +32,26 @@
         </thead>
         <tbody>
         <tr>
-            @{
-                string ssl = Model.IsSSL ? "SSL Var" : "SSL Yok";
-            }
             <td>@Model.ID</td>
             <td>@Model.MailAdress</td>
             <td>***</td>
             <td>@Model.ServerName</td>
             <td>@Model.MailPort</td>
-            <td>@ssl</td>
+                <td class="text-center">
+                    @if (Model.IsSSL)
+                    {
+                        <span class="badge bg-success px-3 py-2">
+                            <i class="bi bi-lock-fill"></i> SSL Aktif
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary px-3 py-2">
+                            <i class="bi bi-unlock"></i> Kapalı
+                        </span>
+                    }
+                </td>
+
             <td>
                 <a class="btn btn-outline-info btn-sm" href="/AdminMail/Guncelle/@Model.ID" title="Güncelle">
                     <i class="fa fa-pencil"></i>

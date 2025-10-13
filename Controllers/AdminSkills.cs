@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyWebSite.Classes;
 using MyWebSite.Models;
 using System.Data.SqlClient;
+using System.Text.Json;
 
 namespace MyWebSite.Controllers
 {
@@ -15,7 +16,7 @@ namespace MyWebSite.Controllers
         {
             try
             {
-                List<SqlParameter> parameters = new List<SqlParameter>();
+                List<SqlParameter> parameters = new();
                 List<Skills> skills = await SQLCrud.ExecuteModelListAsync(
                     "SkillsGet",
                     parameters,
@@ -24,7 +25,8 @@ namespace MyWebSite.Controllers
                         ID = Convert.ToByte(reader["ID"]),
                         SkillName = reader["SkillName"].ToString(),
                         SkillPercent = Convert.ToByte(reader["SkillPercent"]),
-                        Skillcon = reader["Skillcon"].ToString()
+                        Skillcon = reader["Skillcon"].ToString(),
+                        Status = reader["Status"] != DBNull.Value && Convert.ToBoolean(reader["Status"])
                     },
                     System.Data.CommandType.StoredProcedure
                 );
@@ -56,24 +58,23 @@ namespace MyWebSite.Controllers
             }
             try
             {
-                List<SqlParameter> parameters = new List<SqlParameter>
+                List<SqlParameter> parameters = new()
                 {
-                    new SqlParameter("@SkillName", skills.SkillName ?? (object)DBNull.Value),
-                    new SqlParameter("@SkillPercent", skills.SkillPercent),
-                    new SqlParameter("@Skillcon", skills.Skillcon ?? (object)DBNull.Value)
+                    new("@SkillName", skills.SkillName ?? (object)DBNull.Value),
+                    new("@SkillPercent", skills.SkillPercent),
+                    new("@Skillcon", skills.Skillcon ?? (object)DBNull.Value),
+                    new("@Status", skills.Status)
                 };
                 await SQLCrud.InsertUpdateDeleteAsync("SkillsAdd", parameters);
+
                 TempData["Type"] = "success";
                 TempData["Message"] = "Admin Beceri Başarılı Ekleme İşlemi";
                 return Json(new { success = true, redirectUrl = Url.Action("Liste", "AdminBeceriler") });
-
             }
             catch (Exception ex)
             {
                 await Logging.LogAdd("Admin Beceriler Panelde Ekleme Hatası", ex.Message);
-                TempData["Type"] = "error";
-                TempData["Message"] = "Admin Beceri Hatalı Ekleme İşlemi";
-                return Json(new { success = false });
+                return Json(new { success = false, errors = new { _ = "Ekleme işlemi başarısız." } });
             }
         }
         [HttpGet("Sil/{id:int}")]
@@ -81,7 +82,7 @@ namespace MyWebSite.Controllers
         {
             try
             {
-                List<SqlParameter> parameters = new List<SqlParameter>  { new SqlParameter("@ID", id) };
+                List<SqlParameter> parameters = new() { new("@ID", id) };
                 await SQLCrud.InsertUpdateDeleteAsync("SkillsDelete", parameters);
                 TempData["Type"] = "success";
                 TempData["Message"] = "Admin Beceriler Başarılı Silme İşlemi";
@@ -99,13 +100,14 @@ namespace MyWebSite.Controllers
         {
             try
             {
-                List<SqlParameter> parameters = new List<SqlParameter> { new SqlParameter("@ID", id) };
+                List<SqlParameter> parameters = new() { new("@ID", id) };
                 var skills = await SQLCrud.ExecuteModelListAsync("SkillsGetByID", parameters, reader => new Skills
                 {
                     ID = Convert.ToByte(reader["ID"]),
                     SkillName = reader["SkillName"].ToString(),
                     SkillPercent = Convert.ToByte(reader["SkillPercent"]),
-                    Skillcon = reader["Skillcon"].ToString()
+                    Skillcon = reader["Skillcon"].ToString(),
+                    Status = reader["Status"] != DBNull.Value && Convert.ToBoolean(reader["Status"])
                 });
                 return View(skills.FirstOrDefault() ?? new Skills());
             }
@@ -114,7 +116,7 @@ namespace MyWebSite.Controllers
                 await Logging.LogAdd("Admin Beceriler Panelde Güncelleme Listesi Hatası", ex.Message);
                 TempData["Type"] = "error";
                 TempData["Message"] = "Admin Beceriler Hatalı Güncelleme Listesi İşlemi";
-                return Json(new { success = false });
+                return View(new Skills());
             }
         }
         [HttpPost("Guncelle")]
@@ -122,18 +124,23 @@ namespace MyWebSite.Controllers
         {
             if (!ModelState.IsValid)
             {
-                Dictionary<string,string> errors = ModelState.Where(x => x.Value.Errors.Any())
-                    .ToDictionary(k => k.Key, v => string.Join(", ", v.Value.Errors.Select(e => e.ErrorMessage)));
+                var errors = ModelState
+                    .Where(x => x.Value.Errors.Any())
+                    .ToDictionary(
+                        k => k.Key.Contains('.') ? k.Key.Split('.').Last() : k.Key,
+                        v => string.Join(", ", v.Value.Errors.Select(e => e.ErrorMessage))
+                    );
                 return Json(new { success = false, errors });
             }
             try
             {
-                List<SqlParameter> parameters = new List<SqlParameter>
+                List<SqlParameter> parameters = new()
                 {
-                    new SqlParameter("@ID", skills.ID),
-                    new SqlParameter("@SkillName", skills.SkillName ?? (object)DBNull.Value),
-                    new SqlParameter("@SkillPercent", skills.SkillPercent),
-                    new SqlParameter("@Skillcon", skills.Skillcon ?? (object)DBNull.Value)
+                    new("@ID", skills.ID),
+                    new("@SkillName", skills.SkillName ?? (object)DBNull.Value),
+                    new("@SkillPercent", skills.SkillPercent),
+                    new("@Skillcon", skills.Skillcon ?? (object)DBNull.Value),
+                    new("@Status", skills.Status)
                 };
                 await SQLCrud.InsertUpdateDeleteAsync("SkillsUpdate", parameters);
                 TempData["Type"] = "success";
@@ -143,9 +150,29 @@ namespace MyWebSite.Controllers
             catch (Exception ex)
             {
                 await Logging.LogAdd("Admin Beceriler Panelde Güncelleme Hatası", ex.Message);
-                TempData["Type"] = "error";
-                TempData["Message"] = "Admin Beceriler Hatalı Güncelleme İşlemi";
-                return View();
+                return Json(new { success = false, errors = new { _ = "Güncelleme işlemi başarısız." } });
+            }
+        }
+        [HttpPost("DurumGuncelle")]
+        public async Task<IActionResult> UpdateStatus([FromBody] JsonElement data)
+        {
+            try
+            {
+                int id = data.GetProperty("id").GetInt32();
+                bool status = data.GetProperty("isActive").GetBoolean(); 
+                List<SqlParameter> parameters = new()
+        {
+            new("@ID", id),
+            new("@Status", status)
+        };
+
+                await SQLCrud.InsertUpdateDeleteAsync("SkillsStatusUpdate", parameters);
+                return Json(new { success = true, message = "Durum başarıyla güncellendi." });
+            }
+            catch (Exception ex)
+            {
+                await Logging.LogAdd("Admin Beceriler Durum Güncelleme Hatası", ex.Message);
+                return Json(new { success = false, message = "Durum güncellenemedi." });
             }
         }
     }

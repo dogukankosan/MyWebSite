@@ -1,4 +1,5 @@
 ﻿@model List<Skills>
+
 <div class="container-fluid" id="pigraService">
     <div class="container">
         <div class="row g-0">
@@ -11,24 +12,37 @@
             </div>
             <div class="col-lg-9">
                 <div class="skills-content h-100 pt-6 ps-6 pb-6">
-                    <div class="row g-4">
-                        @foreach (Skills item in Model)
-                        {
-                            <div class="col-6 col-md-4 col-lg-4 col-xl-3">
-                                <div class="skills-item text-center rounded p-4 h-100 wow fadeInUp" data-wow-delay="0.1s">
-
-                                    <div class="text-primary text-center mb-3"><i class="@item.Skillcon"></i></div>
-                                    <div class="counter-counting d-flex justify-content-center">
-                                        <h4 class="display-6" data-toggle="counter-up">@item.SkillPercent</h4>
-                                        <h4 class="display-6">%</h4>
+                    @if (Model != null && Model.Any())
+                    {
+                        <div class="row g-4">
+                            @foreach (Skills item in Model)
+                            {
+                                <div class="col-6 col-md-4 col-lg-4 col-xl-3">
+                                    <div class="skills-item text-center rounded p-4 h-100 wow fadeInUp" data-wow-delay="0.1s">
+                                        <div class="text-primary text-center mb-3">
+                                            <i class="@item.Skillcon fa-3x"></i>
+                                        </div>
+                                        <div class="counter-counting d-flex justify-content-center">
+                                            <h4 class="display-6" data-toggle="counter-up">@item.SkillPercent</h4>
+                                            <h4 class="display-6">%</h4>
+                                        </div>
+                                        <p class="mb-0">@item.SkillName</p>
                                     </div>
-                                    <p class="mb-0">@item.SkillName</p>
                                 </div>
-                            </div>
-                        }
-                    </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5 wow fadeInUp" data-wow-delay="0.2s">
+                            <i class="fas fa-tools  mb-3" style="font-size: 3rem;"></i>
+                            <h5 class="text-muted fw-semibold">Henüz beceri eklenmemiş.</h5>
+                            <p class="text-secondary small">Yeni beceriler eklendiğinde burada görüntülenecek.</p>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
     </div>
 </div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />

@@ -1,18 +1,18 @@
 ﻿@model List<Contacts>
 @{
-    ViewData["Title"] = "Admin Iletisim Liste";
+    ViewData["Title"] = "Admin İletişim Liste";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
     string NormalizePhone(string rawPhone)
     {
         if (string.IsNullOrWhiteSpace(rawPhone)) return "";
-        var digitsOnly = new string(rawPhone.Where(char.IsDigit).ToArray());
+        string digitsOnly = new string(rawPhone.Where(char.IsDigit).ToArray());
         return digitsOnly;
     }
 }
 <br />
-<title>İletişim Mesajları</title>
-<h4 class="card-title">Tüm İletişim Kayıtları</h4>
+<h4 class="card-title">İletişim Mesajları</h4>
 <hr />
+
 <div class="row mb-2">
     <div class="col text-right">
         <select id="exportOptions" class="form-control form-control-sm w-100 mb-2 d-md-inline-block">
@@ -23,9 +23,10 @@
         </select>
     </div>
 </div>
+
 <div class="table-responsive">
-    <table id="yourTableId" class="table table-striped table-bordered table-hover">
-        <thead>
+    <table id="yourTableId" class="table table-striped table-bordered table-hover align-middle">
+        <thead class="table-light">
             <tr>
                 <th>#</th>
                 <th>İsim</th>
@@ -43,7 +44,7 @@
         <tbody>
             @if (Model != null && Model.Any())
             {
-                @foreach (var item in Model)
+                foreach (Contacts item in Model)
                 {
                     string normalizedPhone = NormalizePhone(item.ContactPhone);
                     string wp = "https://wa.me/" + normalizedPhone;
@@ -51,31 +52,70 @@
                     <tr>
                         <td>@item.ID</td>
                         <td>@item.ContactName</td>
-                        <td><a href="mailto:@item.ContactMail" style="color:blue" target="_blank">@item.ContactMail</a></td>
-                        <td><a href="@wp" style="color:blue" target="_blank"><u>@item.ContactPhone</u></a></td>
+                        <td>
+                            <a href="mailto:@item.ContactMail" class="text-primary text-decoration-none">
+                                <i class="bi bi-envelope"></i> @item.ContactMail
+                            </a>
+                        </td>
+                        <td>
+                            <a href="@wp" class="text-success text-decoration-none" target="_blank">
+                                <i class="bi bi-whatsapp"></i> @item.ContactPhone
+                            </a>
+                        </td>
                         <td>@item.ContactSubject</td>
                         <td style="white-space: pre-wrap; word-break: break-word;">@item.ContactMessage</td>
                         <td>@item.CreateDate.ToString("dd MMMM yyyy HH:mm:ss", new System.Globalization.CultureInfo("tr-TR"))</td>
                         <td>@item.IPAdress</td>
                         <td>@item.UserGeo</td>
                         <td>@item.UserInfo</td>
-                        <td>
-                            <a href="javascript:void(0);" class="btn btn-outline-danger btn-sm" onclick="confirmDelete('@item.ID')">
+                        <td class="text-center">
+                            <button class="btn btn-outline-danger btn-sm" onclick="confirmDelete('@item.ID')">
                                 <i class="fa fa-trash"></i>
-                            </a>
+                            </button>
                         </td>
                     </tr>
                 }
             }
+            else
+            {
+                <tr>
+                    <td colspan="11" class="text-center text-muted py-3">Henüz kayıt bulunamadı.</td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>
+
 <div id="tempDataMessages"
      data-type="@TempData["Type"]"
      data-message="@TempData["Message"]">
 </div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+    table {
+        font-size: 0.9rem;
+    }
+
+    tr:hover {
+        background-color: #f8f9fa;
+        transition: 0.2s ease-in-out;
+    }
+
+    .btn-outline-danger {
+        transition: 0.2s ease;
+    }
+
+        .btn-outline-danger:hover {
+            background-color: #dc3545;
+            color: #fff;
+        }
+</style>
+
 <script>
+
     function confirmDelete(id) {
         Swal.fire({
             title: 'Emin misiniz?',
@@ -93,30 +133,30 @@
             }
         });
     }
-</script>
-<script>
     document.addEventListener('DOMContentLoaded', function () {
         const el = document.getElementById('tempDataMessages');
         if (!el) return;
         const type = el.getAttribute('data-type');
         const message = el.getAttribute('data-message');
         const fromUpdate = sessionStorage.getItem("updated");
+
         if (type && message && type === "success" && fromUpdate === "1") {
             Swal.fire({
                 icon: 'success',
                 title: 'Başarılı!',
                 text: message,
-                timer: 3000,
+                timer: 2500,
                 showConfirmButton: false
             });
             sessionStorage.removeItem("updated");
         }
+
         if (type && message && type === "error") {
             Swal.fire({
                 icon: 'error',
                 title: 'Hata!',
                 text: message,
-                timer: 3000,
+                timer: 2500,
                 showConfirmButton: false
             });
         }

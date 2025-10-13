@@ -12,21 +12,29 @@ namespace MyWebSite.ViewComponents.HomeComponentPartial
         {
             try
             {
-                string sql = "SkillsGet";
-                List<SqlParameter> parameters = new List<SqlParameter>();
-                List<Skills> skills = await SQLCrud.ExecuteModelListAsync<Skills>(
+                const string sql = "SkillsGet";
+                var parameters = new List<SqlParameter>();
+                var allSkills = await SQLCrud.ExecuteModelListAsync<Skills>(
                     sql,
                     parameters,
                     reader => new Skills
                     {
                         ID = Convert.ToByte(reader["ID"]),
-                        SkillName = reader["SkillName"].ToString(),
-                        SkillPercent = Convert.ToByte(reader["SkillPercent"]),
-                        Skillcon = reader["Skillcon"].ToString()
+                        SkillName = reader["SkillName"]?.ToString(),
+                        SkillPercent = reader["SkillPercent"] == DBNull.Value
+                            ? (byte)0
+                            : Convert.ToByte(reader["SkillPercent"]),
+                        Skillcon = reader["Skillcon"]?.ToString(),
+                        Status = reader["Status"] != DBNull.Value && Convert.ToBoolean(reader["Status"])
                     },
                     CommandType.StoredProcedure
                 );
-                return View(skills);
+                var activeSkills = allSkills
+                    .Where(s => s.Status)
+                    .OrderByDescending(s => s.SkillPercent)
+                    .ThenBy(s => s.SkillName)              
+                    .ToList();
+                return View(activeSkills);
             }
             catch (Exception ex)
             {

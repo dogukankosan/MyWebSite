@@ -1,11 +1,61 @@
 ﻿@model List<Education>
+
 @{
     ViewData["Title"] = "Admin Eğitim Liste";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
+
+<style>
+    .status-toggle {
+        cursor: pointer;
+        user-select: none;
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .toggle-wrapper {
+        width: 46px;
+        height: 24px;
+        border-radius: 12px;
+        background-color: #ccc;
+        position: relative;
+        transition: background-color 0.3s ease;
+    }
+
+        .toggle-wrapper.active {
+            background-color: #198754;
+        }
+
+    .toggle-switch {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: #fff;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        transition: left 0.3s ease;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    .toggle-wrapper.active .toggle-switch {
+        left: 24px;
+    }
+
+    .status-label {
+        transition: color 0.3s ease, transform 0.2s ease;
+    }
+
+    .status-toggle:hover .status-label span {
+        transform: scale(1.05);
+    }
+</style>
+
 <br />
 <h4 class="card-title">Eğitim Bilgileri</h4>
 <hr />
+
 <div class="row mb-2">
     <div class="col text-right">
         <select id="exportOptions" class="form-control form-control-sm w-100 mb-2 d-md-inline-block">
@@ -16,70 +66,198 @@
         </select>
     </div>
 </div>
+
 <div class="table-responsive">
-    <table class="table table-hover table-striped table-bordered" id="yourTableId">
-        <thead>
-        <tr>
-            <th>#</th>
-            <th>Okul Adı</th>
-            <th>Bölüm</th>
-            <th>Yıl</th>
-            <th class="no-export">İşlemler</th>
-        </tr>
+    <table class="table table-hover table-striped table-bordered align-middle" id="yourTableId">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Okul Adı</th>
+                <th>Bölüm</th>
+                <th>Yıl</th>
+                <th>Durum</th>
+                <th class="no-export text-center">İşlemler</th>
+            </tr>
         </thead>
         <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.ID</td>
-                <td>@item.SchoolName</td>
-                <td>@item.SectionName</td>
-                <td>@item.Years</td>
-                <td>
-                    <a class="btn btn-outline-info btn-sm" href="/AdminEgitim/Guncelle/@item.ID">
-                        <i class="fa fa-pencil-alt"></i>
-                    </a>
-                    <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm" onclick="confirmDelete('@item.ID')">
-                        <i class="fa fa-trash"></i>
-                    </a>
-                </td>
-            </tr>
-        }
+            @foreach (Education item in Model)
+            {
+                string rowClass = item.Status ? "" : "table-secondary text-muted";
+                <tr class="@rowClass">
+                    <td>@item.ID</td>
+                    <td>@item.SchoolName</td>
+                    <td>@item.SectionName</td>
+                    <td>@item.Years</td>
+                    <td class="text-center align-middle">
+                        <div class="status-toggle" data-id="@item.ID">
+                            <div class="toggle-wrapper @(item.Status ? "active" : "")">
+                                <div class="toggle-switch"></div>
+                            </div>
+                            <div class="status-label mt-1 small fw-semibold">
+                                <i class="bi @(item.Status ? "bi-check-circle-fill text-success" : "bi-x-circle-fill text-secondary")"></i>
+                                <span>@(item.Status ? "Aktif" : "Pasif")</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <a class="btn btn-outline-info btn-sm" href="/AdminEgitim/Guncelle/@item.ID" title="Düzenle">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+
+                        <a href="javascript:void(0)"
+                           class="btn btn-outline-danger btn-sm"
+                           onclick="confirmDelete('@item.ID')"
+                           title="Sil">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
-    <a class="btn btn-primary mt-3" href="/AdminEgitim/Ekle">Yeni Eğitim Ekle</a>
+
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <a class="btn btn-primary" href="/AdminEgitim/Ekle">
+            <i class="fa fa-plus"></i> Yeni Eğitim Ekle
+        </a>
+    </div>
 </div>
 <br />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    function confirmDelete(id) {
-        Swal.fire({
-            title: 'Emin misiniz?',
-            text: "Bu işlemi geri alamazsınız!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Evet, sil!',
-            cancelButtonText: 'Hayır, iptal et'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = '/AdminEgitim/Sil/' + id;
-            }
-        });
-    }
-    document.addEventListener('DOMContentLoaded', function () {
-        const type = '@TempData["Type"]';
-        const message = @Html.Raw(Json.Serialize(TempData["Message"]));
+    document.addEventListener("click", async function (e) {
+        const toggle = e.target.closest(".status-toggle");
+        if (!toggle) return; 
 
-        if (type && message && performance.getEntriesByType("navigation")[0].type === "navigate") {
+        const id = toggle.dataset.id;
+        const wrapper = toggle.querySelector(".toggle-wrapper");
+        const label = toggle.querySelector(".status-label span");
+        const icon = toggle.querySelector(".status-label i");
+        const isActive = wrapper.classList.toggle("active");
+        label.textContent = isActive ? "Aktif" : "Pasif";
+        icon.className = isActive
+            ? "bi bi-check-circle-fill text-success"
+            : "bi bi-x-circle-fill text-secondary";
+
+        try {
+            const response = await fetch(`/AdminEgitim/DurumGuncelle`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id: parseInt(id), status: isActive })
+            });
+
+            const result = await response.json();
+
+            if (!result.success) {
+                wrapper.classList.toggle("active", !isActive);
+                label.textContent = !isActive ? "Aktif" : "Pasif";
+                icon.className = !isActive
+                    ? "bi bi-check-circle-fill text-success"
+                    : "bi bi-x-circle-fill text-secondary";
+
+                Swal.fire({
+                    icon: "error",
+                    title: "Hata!",
+                    text: result.message || "Durum güncellenemedi."
+                });
+            } else {
+                Swal.fire({
+                    icon: "success",
+                    title: "Başarılı!",
+                    text: result.message || "Durum başarıyla güncellendi.",
+                    timer: 1200,
+                    showConfirmButton: false
+                });
+            }
+        } catch {
+            wrapper.classList.toggle("active", !isActive);
+            label.textContent = !isActive ? "Aktif" : "Pasif";
+            icon.className = !isActive
+                ? "bi bi-check-circle-fill text-success"
+                : "bi bi-x-circle-fill text-secondary";
+
             Swal.fire({
-                icon: type === 'success' ? 'success' : 'error',
-                title: type === 'success' ? 'Başarılı' : 'Hata',
-                text: message,
-                timer: 3000,
-                showConfirmButton: false
+                icon: "error",
+                title: "Sunucu Hatası",
+                text: "Durum güncellenemedi. Lütfen tekrar deneyin."
             });
         }
     });
+
+    async function confirmDelete(id) {
+        const result = await Swal.fire({
+            title: 'Emin misiniz?',
+            text: "Bu eğitimi kalıcı olarak silmek üzeresiniz!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Evet, sil!',
+            cancelButtonText: 'Vazgeç'
+        });
+
+        if (result.isConfirmed) {
+            try {
+                const response = await fetch(`/AdminEgitim/Sil/${id}`, { method: "POST" });
+                const data = await response.json();
+
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Silindi!',
+                        text: data.message || "Eğitim başarıyla silindi.",
+                        timer: 1200,
+                        showConfirmButton: false
+                    });
+                    const row = document.querySelector(`[onclick="confirmDelete('${id}')"]`)?.closest('tr');
+                    if (row) row.remove();
+
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Hata!',
+                        text: data.message || "Silme işlemi başarısız."
+                    });
+                }
+            } catch {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Sunucu Hatası!',
+                    text: 'Silme işlemi başarısız. Lütfen tekrar deneyin.'
+                });
+            }
+        }
+    }
 </script>
+@if (TempData["Type"] != null && TempData["Message"] != null)
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Daha önce gösterildiyse tekrar gösterme
+            const alreadyShown = sessionStorage.getItem("alertShown");
+            if (alreadyShown) return;
+
+            const type = "@TempData["Type"]";
+            // Türkçe karakter sorunu için doğru kodlama
+            const message = "@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(TempData["Message"].ToString()))";
+            Swal.fire({
+                icon: type === "success" ? "success" : "error",
+                title: type === "success" ? "Başarılı!" : "Hata!",
+                text: message,
+                timer: 1500,
+                showConfirmButton: false
+            });
+
+            // ✅ Artık gösterildiğini kaydet (F5’te tekrar göstermez)
+            sessionStorage.setItem("alertShown", "true");
+
+            // ✅ Yeni işlemde tekrar gösterilebilmesi için session temizliği yapılır
+            setTimeout(() => {
+                sessionStorage.removeItem("alertShown");
+            }, 2000);
+        });
+    </script>
+}

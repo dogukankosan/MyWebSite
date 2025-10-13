@@ -1,0 +1,112 @@
+﻿@model string
+
+@{
+    string phone = Model ?? "";
+    string cleanNumber = phone.Replace("(", "").Replace(")", "").Replace(" ", "").Replace("-", "");
+    string whatsappUrl = $"https://wa.me/90{cleanNumber}?text=Merhaba%2C%20size%20web%20sitenizden%20ulaşıyorum.";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+    .whatsapp-float {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 99999;
+        background-color: #4096FF;
+        color: white;
+        border-top-right-radius: 28px;
+        border-top-left-radius: 0;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+        padding: 14px 20px 12px 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 20px;
+        font-weight: 500;
+        text-decoration: none;
+        box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.25);
+        transition: all 0.3s ease;
+        animation: slideUp 0.6s ease;
+    }
+
+        .whatsapp-float i {
+            font-size: 30px;
+        }
+
+        .whatsapp-float span {
+            font-size: 15px;
+            line-height: 1;
+        }
+
+        .whatsapp-float:hover {
+            background-color: #2e7dff;
+            transform: translateY(-3px);
+            box-shadow: 0 -3px 18px rgba(64, 150, 255, 0.6);
+            text-decoration: none;
+            color: #fff;
+        }
+
+    @@keyframes slideUp {
+        from
+
+    {
+        transform: translateY(80px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    }
+
+    @@keyframes pulseBlue {
+        0%
+
+    {
+        box-shadow: 0 0 0 0 rgba(64, 150, 255, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 15px rgba(64, 150, 255, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(64, 150, 255, 0);
+    }
+
+    }
+
+    @@media (max-width: 768px) {
+        .whatsapp-float
+
+    {
+        padding: 14px;
+        border-top-right-radius: 22px;
+        bottom: 0;
+        left: 0;
+    }
+
+    .whatsapp-float span {
+        display: none;
+    }
+
+    .whatsapp-float i {
+        font-size: 28px;
+    }
+
+    }
+</style>
+
+@if (!string.IsNullOrWhiteSpace(phone))
+{
+    <a href="@whatsappUrl" target="_blank" rel="noopener noreferrer"
+       class="whatsapp-float" aria-label="WhatsApp İletişim">
+        <i class="fab fa-whatsapp"></i>
+        <span>WhatsApp İletişim</span>
+    </a>
+}

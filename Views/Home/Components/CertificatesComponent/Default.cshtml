@@ -1,0 +1,170 @@
+﻿@model List<CertificateModel>
+
+<div class="container-fluid" id="pigraCertificate">
+    <div class="container">
+        <div class="row g-0 h-100">
+            <div class="col-lg-3">
+                <div class="about-header bg-dark h-100 pt-6 pe-6 pb-6">
+                    <div class="text-start d-flex flex-column justify-content-center wow fadeInUp" data-wow-delay="0.1s">
+                        <h2 class="display-6 text-white mb-0">Sertifikalarım</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="about-content h-100 pt-6 ps-6 pb-6">
+
+                    @if (Model != null && Model.Any())
+                    {
+                        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+                            @{
+                                int i = 1;
+                            }
+                            @foreach (CertificateModel item in Model)
+                            {
+                                <div class="col wow fadeInUp" data-wow-delay="@($"{i * 0.1}s")">
+                                    <div class="bg-light p-3 rounded shadow-sm h-100 text-center certificate-card">
+                                        @if (!string.IsNullOrEmpty(item.ThumbnailBase64))
+                                        {
+                                            <div class="img-preview-container mb-3">
+                                                <img src="@item.ThumbnailBase64"
+                                                     alt="@item.CertificateName"
+                                                     class="img-fluid rounded zoomable-thumb"
+                                                     loading="lazy" />
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="text-muted small mb-3">Önizleme yok</div>
+                                        }
+
+                                        <h6 class="fw-bold mb-1">@item.CertificateName</h6>
+                                        <p class="text-muted small mb-2">@item.CertificateDescription</p>
+
+                                        <a href="/Certificate/Download/@item.Id"
+                                           class="btn btn-outline-primary btn-sm">
+                                            <i class="bi bi-download me-1"></i> İndir
+                                        </a>
+                                    </div>
+                                </div>
+                                i++;
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="d-flex align-items-center justify-content-center text-center wow fadeInUp"
+                             data-wow-delay="0.1s"
+                             style="min-height: 350px;">
+                            <div>
+                                <i class="fa fa-certificate fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted fw-semibold">Henüz sertifika bulunamadı.</h5>
+                                <p class="text-secondary small mb-0">Yeni sertifikalar eklendiğinde burada görüntülenecek.</p>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="img-zoom-popup" id="imgPopup">
+    <img src="" alt="Önizleme" />
+</div>
+<style>
+    .certificate-card {
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+        .certificate-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+    .img-preview-container {
+        position: relative;
+        display: inline-block;
+        cursor: zoom-in;
+    }
+
+
+    .img-zoom-popup {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+        .img-zoom-popup img {
+            max-width: 90%;
+            max-height: 85%;
+            border: 3px solid #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+            animation: fadeInZoom 0.25s ease-in-out;
+        }
+
+        .img-zoom-popup.active {
+            display: flex;
+            animation: fadeInBg 0.25s ease-in-out;
+        }
+
+    @@keyframes fadeInBg {
+        from
+
+    {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+
+    }
+
+    @@keyframes fadeInZoom {
+        from
+
+    {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    }
+
+    @@media (max-width: 576px) {
+        .certificate-card
+
+    {
+        padding: 1rem;
+    }
+
+    }
+</style>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const popup = document.getElementById("imgPopup");
+        const popupImg = popup.querySelector("img");
+
+        document.querySelectorAll(".zoomable-thumb").forEach(img => {
+            img.addEventListener("click", () => {
+                popupImg.src = img.src;
+                popup.classList.add("active");
+            });
+        });
+
+        popup.addEventListener("click", () => {
+            popup.classList.remove("active");
+        });
+    });
+</script>

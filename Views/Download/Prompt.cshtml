@@ -8,7 +8,7 @@
 <!doctype html>
 <html lang="tr">
 <head>
-    <link rel="icon" type="image/png" href="@Url.Content("~/css/software-developer.png")" />
+    <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon" />
     <meta charset="utf-8" />
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
     <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
@@ -24,6 +24,11 @@
         body {
             min-height: 100vh;
             background: radial-gradient(1000px 600px at 10% -10%, #eaf1ff, transparent 60%), radial-gradient(800px 500px at 120% 0%, #f7f7fb, transparent 50%), #f6f7fb;
+        }
+
+        ::selection {
+            background-color: aqua;
+            color: black;
         }
         .page-shell {
             min-height: calc(100vh - 64px);

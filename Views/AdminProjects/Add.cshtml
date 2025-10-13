@@ -1,101 +1,220 @@
-﻿@{
+﻿@model Projects
+@{
     ViewData["Title"] = "Admin Proje Ekle";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
-<form id="projectAddForm" enctype="multipart/form-data" method="post">
+<form id="projectAddForm" enctype="multipart/form-data" method="post" autocomplete="off">
     <br />
     <h4>Admin Proje Ekle Sayfası</h4>
     <hr />
+
+    <div id="resultsucc" class="text-danger mb-2"></div>
+
     <div class="form-group">
         <label for="ProjectName">Proje Adı:</label>
         <input type="text" class="form-control" name="ProjectName" id="ProjectName"
-               required minlength="3" maxlength="75" autocomplete="off" placeholder="Proje adı giriniz">
+               required minlength="3" maxlength="75" placeholder="Proje adı giriniz">
         <span id="ProjectNameError" class="text-danger"></span>
     </div>
-    <br />
-    <div class="form-group">
+
+    <div class="form-group mt-3">
         <label for="ProjectDescription">Proje Açıklama:</label>
         <textarea class="form-control" name="ProjectDescription" id="ProjectDescription"
                   required minlength="3" placeholder="Proje açıklaması giriniz"></textarea>
         <span id="ProjectDescriptionError" class="text-danger"></span>
     </div>
-    <br />
-    <div class="form-group">
-        <label for="ProjectImg">Proje Resim Seçiniz:</label>
-        <input type="file" name="ProjectImg" id="ProjectImg" class="form-control"
-               required accept="image/*" />
-        <span class="text-muted small">Desteklenen: jpg, jpeg, png</span>
+
+    <div class="form-group mt-3">
+        <label for="ProjectImg">Proje Görseli:</label>
+        <input type="file" name="ProjectImg" id="ProjectImg" class="form-control" required accept="image/*" />
+        <span class="text-muted small">Desteklenen formatlar: JPG, JPEG, PNG</span>
         <br />
-        <img id="previewImage" src="#" alt="Önizleme" class="mt-2" style="max-height: 150px; display: none;" />
+        <img id="previewImage" src="#" alt="Önizleme"
+             class="mt-2 rounded shadow-sm" style="max-height: 150px; display: none;" />
+        <span id="ProjectImage" class="text-danger"></span>
     </div>
-    <span id="ProjectImage" class="text-danger"></span>
-    <br />
-    <div class="form-group">
+
+    <div class="form-group mt-3">
         <label for="ProjectGithubLink">Github Link:</label>
         <input type="url" class="form-control" name="ProjectGithubLink" id="ProjectGithubLink"
-               required minlength="3" maxlength="75" autocomplete="off" placeholder="https://github.com/...">
+               required minlength="3" maxlength="75" placeholder="https://github.com/...">
         <span id="ProjectGithubLinkError" class="text-danger"></span>
     </div>
-    <br />
-    <div class="form-group">
+
+    <div class="form-group mt-3">
         <label for="ProjectLink">Web Link:</label>
         <input type="url" class="form-control" name="ProjectLink" id="ProjectLink"
-               required minlength="3" maxlength="75" autocomplete="off" placeholder="https://...">
+               required minlength="3" maxlength="75" placeholder="https://...">
         <span id="ProjectLinkError" class="text-danger"></span>
     </div>
-    <br />
-    <button type="submit" class="btn btn-primary">Ekle</button>
+    <div class="form-group mt-4">
+        <label class="d-block mb-2 font-weight-bold">Durum:</label>
+        <div class="d-flex align-items-center">
+            <label class="switch">
+                <input type="checkbox" id="Status" name="Status" value="true" checked>
+                <span class="slider round"></span>
+            </label>
+            <span id="statusText" class="ml-3 font-weight-bold text-success">Aktif</span>
+        </div>
+    </div>
+    <div class="d-flex justify-content-end gap-2 mt-4">
+        <button type="submit" class="btn btn-success px-4">
+            <i class="fas fa-save me-2"></i> Ekle
+        </button>
+        <a href="/AdminProje/Liste" class="btn btn-outline-secondary px-4">
+            <i class="fas fa-list me-2"></i> Listeye Dön
+        </a>
+    </div>
+
+    <style>
+        .btn {
+            transition: all 0.2s ease-in-out;
+        }
+
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            }
+    </style>
 </form>
-<div id="resultsucc" class="mt-3"></div>
-<br/>
+<br />
+
+<style>
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 25px;
+    }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+    input:checked + .slider {
+        background-color: #28a745;
+    }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+</style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
-    $(document).ready(function () {
-        $('#ProjectImg').change(function () {
+    $(function () {
+        $('#ProjectImg').on('change', function () {
             const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    $('#previewImage').attr('src', e.target.result).show();
-                };
-                reader.readAsDataURL(file);
-            } else {
+            if (!file) return;
+
+            const validExtensions = ['jpg', 'jpeg', 'png'];
+            const ext = file.name.split('.').pop().toLowerCase();
+            const maxSizeMB = 5;
+
+            if (!validExtensions.includes(ext)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Geçersiz Dosya Türü!',
+                    text: 'Sadece JPG veya PNG formatında resim yükleyin.'
+                });
+                $(this).val('');
                 $('#previewImage').hide();
+                return;
+            }
+
+            if (file.size > maxSizeMB * 1024 * 1024) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Dosya Çok Büyük!',
+                    text: `Resim boyutu en fazla ${maxSizeMB} MB olabilir.`
+                });
+                $(this).val('');
+                $('#previewImage').hide();
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = e => $('#previewImage').attr('src', e.target.result).show();
+            reader.readAsDataURL(file);
+        });
+
+        $('#Status').change(function () {
+            if (this.checked) {
+                $('#statusText').text('Aktif').removeClass('text-secondary').addClass('text-success');
+            } else {
+                $('#statusText').text('Pasif').removeClass('text-success').addClass('text-secondary');
             }
         });
-        $('#projectAddForm').submit(function (event) {
-            event.preventDefault();
+
+        $('#projectAddForm').on('submit', function (e) {
+            e.preventDefault();
+
+            const fileInput = $('#ProjectImg')[0];
+            if (!fileInput.files.length) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Resim Zorunlu!',
+                    text: 'Lütfen proje için bir resim seçin.'
+                });
+                return;
+            }
+
             const formData = new FormData(this);
-            $('#ProjectNameError, #ProjectDescriptionError, #ProjectGithubLinkError, #ProjectLinkError, #resultsucc').html('');
+            if (!$('#Status').is(':checked')) {
+                formData.append('Status', 'false');
+            }
+
             $.ajax({
                 url: '/AdminProje/Ekle',
                 type: 'POST',
                 data: formData,
-                contentType: false,
                 processData: false,
+                contentType: false,
                 success: function (response) {
                     if (response.success) {
+
+                        sessionStorage.setItem("swalType", "success");
+                        sessionStorage.setItem("swalMessage", "Yeni proje başarıyla eklendi.");
                         window.location.href = response.redirectUrl;
+
+                    } else if (response.errors) {
+                        for (let key in response.errors) {
+                            $('#' + key + 'Error').html(response.errors[key]);
+                        }
                     } else {
-                        if (response.errors.ProjectName) {
-                            $('#ProjectNameError').html(response.errors.ProjectName);
-                        }
-                        if (response.errors.ProjectDescription) {
-                            $('#ProjectDescriptionError').html(response.errors.ProjectDescription);
-                        }
-                        if (response.errors.ProjectGithubLink) {
-                            $('#ProjectGithubLinkError').html(response.errors.ProjectGithubLink);
-                        }
-                        if (response.errors.ProjectLink) {
-                            $('#ProjectLinkError').html(response.errors.ProjectLink);
-                        }
-                         if (response.errors.ProjectImg) {
-                            $('#ProjectImage').html(response.errors.ProjectImg);
-                        }
+                        Swal.fire('Hata', 'Sunucudan beklenmeyen bir cevap geldi.', 'error');
                     }
                 },
                 error: function () {
-                    $('#resultsucc').html('<div class="alert alert-danger">Bir hata oluştu. Lütfen tekrar deneyin.</div>');
+                    Swal.fire('Hata', 'Bir hata oluştu. Lütfen tekrar deneyin.', 'error');
                 }
             });
         });

@@ -1,0 +1,10 @@
+C:\Users\DOGUKAN\source\repos\MyWebSite\obj\x64\Debug\net8.0\win-x64\MyWebSite.csproj.AssemblyReference.cache
+C:\Users\DOGUKAN\source\repos\MyWebSite\obj\x64\Debug\net8.0\win-x64\rpswa.dswa.cache.json
+C:\Users\DOGUKAN\source\repos\MyWebSite\obj\x64\Debug\net8.0\win-x64\MyWebSite.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\DOGUKAN\source\repos\MyWebSite\obj\x64\Debug\net8.0\win-x64\MyWebSite.AssemblyInfoInputs.cache
+C:\Users\DOGUKAN\source\repos\MyWebSite\obj\x64\Debug\net8.0\win-x64\MyWebSite.AssemblyInfo.cs
+C:\Users\DOGUKAN\source\repos\MyWebSite\obj\x64\Debug\net8.0\win-x64\MyWebSite.csproj.CoreCompileInputs.cache
+C:\Users\DOGUKAN\source\repos\MyWebSite\obj\x64\Debug\net8.0\win-x64\MyWebSite.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\DOGUKAN\source\repos\MyWebSite\obj\x64\Debug\net8.0\win-x64\MyWebSite.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\DOGUKAN\source\repos\MyWebSite\obj\x64\Debug\net8.0\win-x64\MyWebSite.RazorAssemblyInfo.cache
+C:\Users\DOGUKAN\source\repos\MyWebSite\obj\x64\Debug\net8.0\win-x64\MyWebSite.RazorAssemblyInfo.cs

@@ -309,3 +309,5 @@ wwwroot\userThema\scss\bootstrap\scss\_transitions.scss
 wwwroot\userThema\scss\bootstrap\scss\_type.scss
 wwwroot\userThema\scss\bootstrap\scss\_utilities.scss
 wwwroot\userThema\scss\bootstrap\scss\_variables.scss
+wwwroot\ghostscript\bin\gsdll64.dll
+wwwroot\ghostscript\bin\gswin64c.exe

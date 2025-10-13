@@ -24,7 +24,8 @@ namespace MyWebSite.Controllers
                         JobName = reader["JobName"].ToString(),
                         JobTitle = reader["JobTitle"].ToString(),
                         JobYears = reader["JobYears"].ToString(),
-                        JobAbout = reader["JobAbout"].ToString()
+                        JobAbout = reader["JobAbout"].ToString(),
+                        Status = reader["Status"] != DBNull.Value && Convert.ToBoolean(reader["Status"])
                     },
                     System.Data.CommandType.StoredProcedure
                 );
@@ -35,7 +36,7 @@ namespace MyWebSite.Controllers
                 await Logging.LogAdd("Admin İş Hayatı Listeleme Hatası", ex.Message);
                 TempData["Type"] = "error";
                 TempData["Message"] = "Listeleme işlemi sırasında hata oluştu.";
-                return View();
+                return View(new List<Jobs>());
             }
         }
         [HttpGet("Ekle")]
@@ -45,7 +46,11 @@ namespace MyWebSite.Controllers
         public async Task<IActionResult> Add(Jobs jobs)
         {
             if (!ModelState.IsValid)
-                return Json(new { success = false, errors = ModelState.ToDictionary(k => k.Key, v => string.Join(", ", v.Value.Errors.Select(e => e.ErrorMessage))) });
+                return Json(new
+                {
+                    success = false,
+                    errors = ModelState.ToDictionary(k => k.Key, v => string.Join(", ", v.Value.Errors.Select(e => e.ErrorMessage)))
+                });
             try
             {
                 List<SqlParameter> parameters = new List<SqlParameter>
@@ -53,7 +58,8 @@ namespace MyWebSite.Controllers
                     new SqlParameter("@JobName", jobs.JobName),
                     new SqlParameter("@JobTitle", jobs.JobTitle),
                     new SqlParameter("@JobYears", jobs.JobYears),
-                    new SqlParameter("@JobAbout", jobs.JobAbout)
+                    new SqlParameter("@JobAbout", jobs.JobAbout),
+                    new SqlParameter("@Status", jobs.Status)
                 };
                 await SQLCrud.InsertUpdateDeleteAsync("JobsAdd", parameters);
                 TempData["Type"] = "success";
@@ -77,7 +83,7 @@ namespace MyWebSite.Controllers
                 await SQLCrud.InsertUpdateDeleteAsync("JobsDelete", parameters);
 
                 TempData["Type"] = "success";
-                TempData["Message"] = "Silme işlemi başarılı.";
+                TempData["Message"] = "İş Hayatı Silme işlemi başarılı.";
             }
             catch (Exception ex)
             {
@@ -102,7 +108,8 @@ namespace MyWebSite.Controllers
                         JobName = reader["JobName"].ToString(),
                         JobTitle = reader["JobTitle"].ToString(),
                         JobYears = reader["JobYears"].ToString(),
-                        JobAbout = reader["JobAbout"].ToString()
+                        JobAbout = reader["JobAbout"].ToString(),
+                        Status = reader["Status"] != DBNull.Value && Convert.ToBoolean(reader["Status"])
                     },
                     System.Data.CommandType.StoredProcedure
                 );
@@ -123,16 +130,21 @@ namespace MyWebSite.Controllers
         public async Task<IActionResult> Update(Jobs jobs)
         {
             if (!ModelState.IsValid)
-                return Json(new { success = false, errors = ModelState.ToDictionary(k => k.Key, v => string.Join(", ", v.Value.Errors.Select(e => e.ErrorMessage))) });
+                return Json(new
+                {
+                    success = false,
+                    errors = ModelState.ToDictionary(k => k.Key, v => string.Join(", ", v.Value.Errors.Select(e => e.ErrorMessage)))
+                });
             try
             {
-                List<SqlParameter> parameters =new List<SqlParameter>
+                List<SqlParameter> parameters = new List<SqlParameter>
                 {
                     new SqlParameter("@ID", jobs.ID),
                     new SqlParameter("@JobName", jobs.JobName),
                     new SqlParameter("@JobTitle", jobs.JobTitle),
                     new SqlParameter("@JobYears", jobs.JobYears),
-                    new SqlParameter("@JobAbout", jobs.JobAbout)
+                    new SqlParameter("@JobAbout", jobs.JobAbout),
+                    new SqlParameter("@Status", jobs.Status)
                 };
                 await SQLCrud.InsertUpdateDeleteAsync("JobsUpdate", parameters);
                 TempData["Type"] = "success";
@@ -145,6 +157,28 @@ namespace MyWebSite.Controllers
                 TempData["Type"] = "error";
                 TempData["Message"] = "Güncelleme sırasında bir hata oluştu.";
                 return View();
+            }
+        }
+        [HttpPost("DurumGuncelle")]
+        public async Task<IActionResult> UpdateStatus([FromBody] System.Text.Json.JsonElement data)
+        {
+            try
+            {
+                int id = data.GetProperty("id").GetInt32();
+                bool status = data.GetProperty("status").GetBoolean();
+                List<SqlParameter> parameters = new List<SqlParameter>
+                {
+                    new SqlParameter("@ID", id),
+                    new SqlParameter("@Status", status)
+                };
+
+                await SQLCrud.InsertUpdateDeleteAsync("JobsStatusUpdate", parameters);
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                await Logging.LogAdd("Admin İş Hayatı Durum Güncelleme Hatası", ex.Message);
+                return Json(new { success = false });
             }
         }
     }

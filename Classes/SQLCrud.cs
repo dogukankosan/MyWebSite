@@ -97,5 +97,27 @@ namespace MyWebSite.Classes
             }
             return list;
         }
+        public static async Task<T?> ExecuteModelSingleAsync<T>(
+    string procedureName,
+    List<SqlParameter>? parameters,
+    Func<SqlDataReader, T> mapper,
+    CommandType commandType = CommandType.StoredProcedure)
+        {
+            using SqlConnection conn = new(ConnectionString);
+            using SqlCommand cmd = new(procedureName, conn)
+            {
+                CommandType = commandType
+            };
+
+            if (parameters != null)
+                cmd.Parameters.AddRange(parameters.ToArray());
+            await conn.OpenAsync();
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync(CommandBehavior.SingleRow);
+            if (await reader.ReadAsync())
+            {
+                return mapper(reader);
+            }
+            return default;
+        }
     }
 }
