@@ -36,7 +36,8 @@
 
 ## 📸 Ekran Görüntüsü
 
-<img width="1896" height="990" alt="image" src="https://github.com/user-attachments/assets/f48ce9a7-5719-4e10-8f8d-e8fdc02c1298" />
+<img width="1920" height="999" alt="image" src="https://github.com/user-attachments/assets/962d69ff-1530-4e5f-9e7e-e4af57ec35e4" />
+
 
 ---
 
