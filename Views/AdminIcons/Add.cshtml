@@ -21,6 +21,9 @@
         vertical-align: middle;
     }
 
+    label {
+        font-weight: bold;
+    }
     #iconPreviewHost {
         display: inline-flex;
         align-items: center;
@@ -92,7 +95,7 @@
     <hr />
 
     <div class="form-group">
-        <label for="Icon">İkon Sınıfı:</label>
+        <label for="Icon">İkon Sınıfı: </label> <span style="color:red;">*</span>
         <input type="text" class="form-control" name="Icon.Icon" id="Icon"
                placeholder="fa-solid fa-bug, fa-regular fa-user, vb."
                required minlength="4" maxlength="200" />

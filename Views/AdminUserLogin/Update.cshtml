@@ -3,6 +3,11 @@
     ViewData["Title"] = "Admin Giriş Güncelleme Sayfası";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
+<style>
+    label {
+        font-weight: bold;
+    }
+</style>
 <form method="post" asp-controller="AdminKullanici" asp-action="Guncelle">
     <br />
     <h4>Admin Giriş Güncelleme Sayfası</h4>
@@ -10,7 +15,7 @@
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <input type="hidden" asp-for="ExistingPasswordHash" />
     <div class="form-group">
-        <label asp-for="UserName">Kullanıcı Adı</label>
+        <label asp-for="UserName">Kullanıcı Adı: </label> <span class="text-danger">*</span>
         <input asp-for="UserName" class="form-control"
                required minlength="3" maxlength="50" placeholder="Kullanıcı adınızı yazınız.."
                pattern="^[a-zA-Z0-9_.-]+$"

@@ -3,6 +3,7 @@
     ViewData["Title"] = "İndirme Logları";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
+
 <style>
     .ua-cell, .file-cell {
         max-width: 420px;
@@ -14,9 +15,18 @@
     td.no-export {
         vertical-align: middle;
     }
+
+    .btn {
+        transition: all 0.2s ease-in-out;
+    }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
 </style>
 <br />
-<h4 class="card-title">İndirme Logları</h4>
+<h4 class="card-title">Dosya İndirme Logları</h4>
 <hr />
 <div class="row mb-2">
     <div class="col text-right">
@@ -51,12 +61,10 @@
             }
             else
             {
-                int row = 0;
                 foreach (DownloadLogItem x in Model)
                 {
-                    row++;
                     <tr>
-                        <td>@row</td>
+                        <td>@x.Id</td>
                         <td class="file-cell text-truncate" title="@x.FileNameStored">@x.FileNameStored</td>
                         <td>@x.PackageKey</td>
                         <td><span class="badge text-bg-secondary">@x.Version</span></td>
@@ -86,17 +94,6 @@
             <i class="fas fa-list me-2"></i> Listeye Dön
         </a>
     </div>
-
-    <style>
-        .btn {
-            transition: all 0.2s ease-in-out;
-        }
-
-            .btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            }
-    </style>
 </div>
 <br />
 <br />

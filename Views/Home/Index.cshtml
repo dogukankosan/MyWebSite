@@ -11,9 +11,9 @@
     <meta property="og:url" content="@($"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}")" />
     <meta property="og:type" content="website" />
     <link rel="canonical" href="@($"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}")" />
-    <meta name="keywords" content="@ViewBag.AboutName, ERP, Teknik Destek, Veri Analizi, İş Analisti, İstanbul, Silivri, Çalışıyorum, Yazılım Çözümleri" />
+    <meta name="keywords" content="@ViewBag.AboutName, ERP Uzmanı, Teknik Destek, Veri Analizi, İş Analisti, İstanbul Silivri, Yazılım Çözümleri" />
     <meta name="description" content="@ViewBag.AboutName, ERP Uzmanı ve İş Zekası Uzmanı,Yazılım Çözümleri,İş Analisti,Raporlama Uzmanı,Veri Analizi,Veritabanı Yöneticisi" />
-    <meta name="author" content="@ViewBag.AboutName" />
+    <meta name="author" content="Doğukan Koşan" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Edu+TAS+Beginner:wght@400..700&family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -36,140 +36,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DX52B81E6M"></script>
     <script> window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); } gtag('js', new Date()); gtag('config', 'G-DX52B81E6M'); </script>
-    <style>
-        .cookie-banner {
-            position: fixed;
-            bottom: max(12px, env(safe-area-inset-bottom));
-            left: 0;
-            right: 0;
-            margin: 0 auto;
-            width: clamp(280px, 92vw, 850px);
-            background: rgba(20,20,20,.95);
-            color: #fff;
-            border-radius: 14px;
-            padding: 16px 18px;
-            z-index: 99999;
-            display: none;
-            box-shadow: 0 8px 22px rgba(0,0,0,.4);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,.15);
-            font-size: .9rem;
-            word-break: break-word;
-        }
-
-        .cookie-box {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        .cookie-text {
-            display: flex;
-            align-items: center;
-            line-height: 1.5;
-        }
-
-            .cookie-text i {
-                margin-right: 8px;
-            }
-
-            .cookie-text a {
-                color: #0dcaf0;
-            }
-
-                .cookie-text a:hover {
-                    color: #66d9ff;
-                }
-
-        .cookie-actions {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        @@media (max-width: 991px) {
-            .cookie-banner {
-                width: 94vw;
-                padding: 14px;
-                font-size: .88rem;
-            }
-
-            .cookie-box {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .cookie-text {
-                justify-content: center;
-                flex-direction: column;
-            }
-
-            .cookie-actions {
-                width: 100%;
-                justify-content: center;
-            }
-
-                .cookie-actions .btn {
-                    width: 100%;
-                    min-width: 140px;
-                }
-        }
-
-        #acceptCookies {
-            background-color: #4096FF !important;
-            border-color: #4096FF !important;
-            color: #fff !important;
-            font-weight: 600;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-            #acceptCookies:hover {
-                background-color: #2E7DFF !important;
-                border-color: #2E7DFF !important;
-                box-shadow: 0 0 10px rgba(64, 150, 255, 0.6);
-            }
-
-            #acceptCookies i {
-                margin-right: 4px;
-            }
-
-        @@media (max-width: 576px) {
-            .cookie-banner {
-                border-radius: 10px;
-                padding: 12px;
-                font-size: .85rem;
-            }
-        }
-
-        .cookie-popup-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.65);
-            z-index: 100000;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(4px);
-        }
-
-        .cookie-popup-content {
-            background: #fff;
-            color: #222;
-            padding: 25px 22px;
-            border-radius: 10px;
-            max-width: 520px;
-            width: 90%;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            animation-duration: 0.5s;
-        }
-    </style>
 </head>
 <body>
+    @{
+        string phone = ViewBag.AboutPhone ?? "";
+        string cleanNumber = phone.Replace("(", "").Replace(")", "").Replace(" ", "").Replace("-", "");
+        string whatsappUrl = $"https://wa.me/90{cleanNumber}?text=Merhaba%2C%20size%20web%20sitenizden%20ulaşıyorum.";
+    }
     @await Component.InvokeAsync("MyCvComponent") @{
     string formattedNumber = @ViewBag.AboutPhone.Replace("(", "").Replace(")", "").Replace(" ", ""); formattedNumber = $"https://wa.me/90{formattedNumber}";
         }
@@ -212,9 +85,10 @@
                                     <i class="fas fa-envelope text-primary me-3"></i>
                                     <p class="text-dark mb-0"><a id="emailLink" href="mailto:@ViewBag.AboutMail" target="_blank">@ViewBag.AboutMail</a></p>
                                 </div>
+    
                                 <div class="d-flex align-items-center mb-2">
                                     <i class="fa fa-phone-alt text-primary me-3"></i>
-                                    <p class="text-dark mb-0"><a href="@formattedNumber" target="_blank">@ViewBag.AboutPhone</a></p>
+                                    <p class="text-dark mb-0"><a href="@whatsappUrl" target="_blank">@ViewBag.AboutPhone</a></p>
                                 </div>
                                 <div class="d-flex align-items-center mb-4">
                                     <i class="fab fa-firefox-browser text-primary me-3"></i>
@@ -252,7 +126,7 @@
                                 <p class="mb-4"> @ViewBag.AboutDetails2 </p>
                                 <div class="row g-4 mb-4">
                                     <div class="col-12">
-                                        <p><strong class="fw-bold text-dark">Telefon :</strong> <a href="@formattedNumber" target="_blank">@ViewBag.AboutPhone</a></p>
+                                        <p><strong class="fw-bold text-dark">Telefon :</strong> <a href="@whatsappUrl" target="_blank">@ViewBag.AboutPhone</a></p>
                                         <p><strong class="fw-bold text-dark">E-Mail :</strong><a id="emailLink1" href="mailto:@ViewBag.AboutMail" target="_blank"> @ViewBag.AboutMail</a></p>
                                         <p><strong class="fw-bold text-dark">Adres :</strong> @ViewBag.AboutAdress</p>
                                     </div>
@@ -298,7 +172,7 @@
                                         <div class="btn-xl-square bg-primary text-white me-3"> <i class="fa fa-phone-alt"></i> </div>
                                         <div>
                                             <h4>Telefon</h4>
-                                            <p class="mb-0"><a href="@formattedNumber" target="_blank">@ViewBag.AboutPhone</a></p>
+                                            <p class="mb-0"><a href="@whatsappUrl" target="_blank">@ViewBag.AboutPhone</a></p>
                                         </div>
                                     </div>
                                 </div>
@@ -334,7 +208,7 @@
     </div>
     <div id="cookieConsent" class="cookie-banner shadow-lg animate__animated animate__fadeInUp">
         <div class="cookie-box">
-            <div class="cookie-text"> <i class="bi bi-cookie text-warning fs-4"></i> <span> Bu site, kullanıcı deneyiminizi geliştirmek için <strong>çerezleri</strong> kullanır. <a href="/Cerez-Politikasi" id="openCookiePopup" class="fw-semibold text-decoration-underline text-info">Detaylı bilgi</a> </span> </div>
+            <div class="cookie-text"> <i class="bi bi-cookie text-warning fs-4"></i> <span> Bu site, kullanıcı deneyiminizi geliştirmek için <strong>çerezleri</strong> kullanır. <a href="#" id="openCookiePopup" class="fw-semibold text-decoration-underline text-info">Detaylı bilgi</a> </span> </div>
             <div class="cookie-actions"> <button id="acceptCookies" class="btn btn-success btn-sm"> <i class="bi bi-check-circle"></i> Kabul Et </button> <button id="denyCookies" class="btn btn-outline-light btn-sm"> <i class="bi bi-x-circle"></i> Reddet </button> </div>
         </div>
     </div>

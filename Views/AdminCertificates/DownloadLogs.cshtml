@@ -63,25 +63,24 @@
         <tbody>
             @if (Model != null && Model.Any())
             {
-                int i = 1;
                 foreach (CertificateDownloadLogModel item in Model)
                 {
                     <tr id="row-@item.Id">
-                        <td>@i</td>
+                        <td>@item.Id</td>
                         <td class="desc-cell" title="@item.CertificateName">@item.CertificateName</td>
                         <td>@item.ClientIp</td>
                         <td>@item.City</td>
                         <td class="desc-cell" title="@item.UserAgent">
                             <small class="text-muted">@item.UserAgent</small>
                         </td>
-                        <td class="upload-date" data-date="@item.DownloadUtc.ToString("O")"></td>
+                        <td class="upload-date" data-date="@item.DownloadUtc.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")"></td>
+
                         <td class="text-center">
                             <a href="javascript:void(0)" class="btn btn-outline-danger btn-sm" onclick="confirmDeleteLog('@item.Id')">
                                 <i class="fa fa-trash"></i>
                             </a>
                         </td>
                     </tr>
-                    i++;
                 }
             }
             else
@@ -117,7 +116,6 @@
         if (result.isConfirmed) {
             try {
                 const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-
                 const response = await fetch(`/AdminSertifika/IndirmeLogSil/${id}`, {
                     method: "POST",
                     headers: {
@@ -154,21 +152,37 @@
     }
 </script>
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
+    function formatUploadDates() {
         document.querySelectorAll(".upload-date").forEach(td => {
             const dateStr = td.getAttribute("data-date");
             if (dateStr) {
-                const d = new Date(dateStr);
-                const formatted = d.toLocaleDateString("tr-TR", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                    weekday: "long",
-                    hour: "2-digit",
-                    minute: "2-digit"
-                });
-                td.textContent = formatted.charAt(0).toUpperCase() + formatted.slice(1);
+                const date = new Date(dateStr);
+                if (!isNaN(date)) {
+                    const options = {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    };
+                    const formatted = date.toLocaleString("tr-TR", options);
+                    td.textContent = formatted.charAt(0).toUpperCase() + formatted.slice(1);
+                } else {
+                    td.textContent = "Tarih geçersiz";
+                }
+            } else {
+                td.textContent = "Tarih yok";
             }
         });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        formatUploadDates();
+        if ($.fn.DataTable.isDataTable('#yourTableId')) {
+            $('#yourTableId').on('draw.dt', function () {
+                formatUploadDates();
+            });
+        }
     });
 </script>

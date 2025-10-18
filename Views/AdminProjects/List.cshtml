@@ -53,7 +53,7 @@
 </style>
 
 <br />
-<h4 class="card-title">Projeler</h4>
+<h4 class="card-title">Proje Bilgileri</h4>
 <hr />
 
 <div class="row mb-2">
@@ -91,8 +91,11 @@
                     <td class="text-truncate" style="max-width:300px;">@item.ProjectDescription</td>
                     <td>
                         <img src="data:image/jpeg;base64,@item.Base64Pictures"
-                             width="60" height="60" class="rounded" alt="Proje Görseli" />
+                             data-full="data:image/jpeg;base64,@item.Base64Pictures"
+                             width="60" height="60" class="rounded preview-img"
+                             alt="Proje Görseli" style="cursor: pointer;" />
                     </td>
+
                     <td>
                         @if (!string.IsNullOrEmpty(item.ProjectGithubLink))
                         {
@@ -133,12 +136,20 @@
             }
         </tbody>
     </table>
-
-    <a class="btn btn-primary mt-3" href="/AdminProje/Ekle">
-        <i class="fa fa-plus"></i> Yeni Proje Ekle
-    </a>
+    <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <img id="modalImage" src="" class="img-fluid w-100" alt="Büyük Görsel" />
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
+<a class="btn btn-primary mt-3" href="/AdminProje/Ekle">
+    <i class="fa fa-plus"></i> Yeni Proje Ekle
+</a>
+<br />
 <br />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -250,5 +261,19 @@
                 ? "bi bi-check-circle-fill text-success"
                 : "bi bi-x-circle-fill text-secondary";
         }
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("click", function (e) {
+            if (e.target.classList.contains("preview-img")) {
+                const fullSrc = e.target.getAttribute("data-full");
+                const modalImage = document.getElementById("modalImage");
+                modalImage.src = fullSrc;
+
+                const modal = new bootstrap.Modal(document.getElementById("imagePreviewModal"));
+                modal.show();
+            }
+        });
     });
 </script>

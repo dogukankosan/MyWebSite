@@ -26,7 +26,11 @@
 </head>
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color:#212529">
-        <a class="navbar-brand ps-3" href="/Admin/Anasayfa">Site Yönetim Paneli</a>
+        <a class="navbar-brand ps-3 d-flex align-items-center gap-2" href="/Admin/Anasayfa">
+            <img src="~/favicon.ico" alt="Logo" height="32" style="border-radius: 50%; object-fit: cover;" />
+            <span style="font-weight: 600;">Site Yönetim Paneli</span>
+        </a>
+
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
         </ul>
@@ -76,10 +80,14 @@
                                 <a class="nav-link" href="/AdminProje/Liste">
                                     <div class="sb-nav-link-icon"><i class="fas fa-tasks"></i></div>
                                     Projeler
-                                </a>
+                                </a>  
                                 <a class="nav-link" href="/AdminIletisim/Liste">
                                     <div class="sb-nav-link-icon"><i class="fas fa-envelope-open-text"></i></div>
                                     İletişim
+                                </a>
+                                <a class="nav-link" href="~/Blog">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-blog"></i></div>
+                                    Bloglar
                                 </a>
 
                             </nav>

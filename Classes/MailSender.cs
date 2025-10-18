@@ -7,21 +7,31 @@ namespace MyWebSite.Classes
 {
     internal class MailSender
     {
-        internal async Task<bool> SendMail (string subject, string body)
+        public AdminMail CustomSettings { get; set; }
+
+        internal async Task<bool> SendMail(string subject, string body)
         {
             try
             {
-                List<SqlParameter> emptyParams = new();
-                List<AdminMail> adminMailList = await SQLCrud.ExecuteModelListAsync("AdminMailGet", emptyParams, reader => new AdminMail
+                AdminMail mailSettings;
+                if (CustomSettings != null)
                 {
-                    ID = Convert.ToByte(reader["ID"]),
-                    MailAdress = reader["MailAdress"].ToString(),
-                    MailPassword =reader["MailPassword"].ToString(),
-                    ServerName = reader["ServerName"].ToString(),
-                    MailPort = Convert.ToInt32(reader["MailPort"]),
-                    IsSSL = Convert.ToBoolean(reader["IsSSL"])
-                });
-                AdminMail mailSettings = adminMailList.FirstOrDefault();
+                    mailSettings = CustomSettings;
+                }
+                else
+                {
+                    List<SqlParameter> emptyParams = new();
+                    List<AdminMail> adminMailList = await SQLCrud.ExecuteModelListAsync("AdminMailGet", emptyParams, reader => new AdminMail
+                    {
+                        ID = Convert.ToByte(reader["ID"]),
+                        MailAdress = reader["MailAdress"].ToString(),
+                        MailPassword = reader["MailPassword"].ToString(),
+                        ServerName = reader["ServerName"].ToString(),
+                        MailPort = Convert.ToInt32(reader["MailPort"]),
+                        IsSSL = Convert.ToBoolean(reader["IsSSL"])
+                    });
+                    mailSettings = adminMailList.FirstOrDefault();
+                }
                 if (mailSettings == null || string.IsNullOrEmpty(mailSettings.MailAdress))
                     throw new Exception("Mail ayarları eksik veya okunamadı.");
                 MailMessage mail = new MailMessage
@@ -34,7 +44,12 @@ namespace MyWebSite.Classes
                 mail.To.Add(mailSettings.MailAdress);
                 using SmtpClient smtpClient = new SmtpClient(mailSettings.ServerName, mailSettings.MailPort)
                 {
-                    Credentials = new NetworkCredential(mailSettings.MailAdress, await HashingControl.Decrypt(mailSettings.MailPassword)),
+                    Credentials = new NetworkCredential(
+                        mailSettings.MailAdress,
+                        CustomSettings != null
+                            ? mailSettings.MailPassword
+                            : await HashingControl.Decrypt(mailSettings.MailPassword)
+                    ),
                     EnableSsl = mailSettings.IsSSL
                 };
                 await smtpClient.SendMailAsync(mail);

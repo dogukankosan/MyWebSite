@@ -2,28 +2,41 @@
     ViewData["Title"] = "Admin İş Ekle";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
+<style>
+    .btn {
+        transition: all 0.2s ease-in-out;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    label {
+        font-weight: bold;
+    }
+</style>
 <form id="jobAddForm" onsubmit="return false;" autocomplete="off">
     <br />
-    <h4>Admin İş Ekleme Sayfası</h4>
+    <h4>Yeni İş Ekleme Sayfası</h4>
     <hr />
     <div id="resultsucc" class="text-danger mb-2"></div>
 
     <div class="form-group">
-        <label for="JobName">Firma Adı:</label>
+        <label for="JobName">Firma Adı: <span style="color:red;">*</span></label>
         <input type="text" class="form-control" name="JobName" id="JobName"
                maxlength="75" minlength="3" required placeholder="Örn: ABC Teknoloji">
         <span id="JobNameError" class="text-danger mt-1 d-block"></span>
     </div>
 
     <div class="form-group mt-3">
-        <label for="JobTitle">İş Ünvan:</label>
+        <label for="JobTitle">İş Ünvan: <span style="color:red;">*</span></label>
         <input type="text" class="form-control" name="JobTitle" id="JobTitle"
                maxlength="75" minlength="3" required placeholder="Örn: Yazılım Geliştirici">
         <span id="JobTitleError" class="text-danger mt-1 d-block"></span>
     </div>
 
     <div class="form-group mt-3">
-        <label for="JobYears">Çalışma Yılı:</label>
+        <label for="JobYears">Çalışma Yılı: <span style="color:red;">*</span></label>
         <input type="text" class="form-control" name="JobYears" id="JobYears"
                maxlength="12" pattern="^\d{4}-[A-Za-z0-9ÇçĞğİıÖöŞşÜü]+$"
                required placeholder="Örn: 2020-2025 | 2020-AKTİF">
@@ -31,11 +44,12 @@
     </div>
 
     <div class="form-group mt-3">
-        <label for="JobAbout">İş Hakkında:</label>
+        <label for="JobAbout">İş Hakkında: <span style="color:red;">*</span></label>
         <textarea class="form-control" name="JobAbout" id="JobAbout" rows="3" required
                   placeholder="Yaptığınız iş hakkında kısa açıklama..."></textarea>
         <span id="JobAboutError" class="text-danger mt-1 d-block"></span>
     </div>
+
     <div class="form-group mt-4">
         <label class="d-block mb-2">Durum:</label>
         <label class="switch">
@@ -44,6 +58,7 @@
         </label>
         <span id="statusText" class="ml-2 font-weight-bold text-secondary">Pasif</span>
     </div>
+
     <div class="d-flex justify-content-end gap-2 mt-4">
         <button type="submit" class="btn btn-success px-4">
             <i class="fas fa-save me-2"></i> Ekle
@@ -52,19 +67,7 @@
             <i class="fas fa-list me-2"></i> Listeye Dön
         </a>
     </div>
-
-    <style>
-        .btn {
-            transition: all 0.2s ease-in-out;
-        }
-
-            .btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            }
-    </style>
 </form>
-
 <br />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 

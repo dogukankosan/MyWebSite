@@ -22,7 +22,6 @@ namespace MyWebSite.Controllers
         {
             new SqlParameter("@IPAdress", HttpContext.Connection.RemoteIpAddress?.ToString())
         };
-
                 bool status = await SQLCrud.InsertUpdateDeleteAsync("AdminLoginErrorGet", parameters);
                 if (!status)
                     throw new Exception();
@@ -30,7 +29,7 @@ namespace MyWebSite.Controllers
             }
             catch (Exception ex)
             {
-                string ip = HttpContext.Connection.RemoteIpAddress?.ToString();
+                string? ip = HttpContext.Connection.RemoteIpAddress?.ToString();
                 string geo = string.Empty;
                 try
                 {
@@ -99,7 +98,6 @@ namespace MyWebSite.Controllers
         {
             new SqlParameter("@AdminUserName", model.UserName)
         };
-
                 string result = await SQLCrud.ExecuteScalarAsync("AdminLoginSignUp", parameters, string.Empty);
                 bool isPasswordCorrect = HashingControl.VerifyPassword(model.Password, result);
                 if (isPasswordCorrect)

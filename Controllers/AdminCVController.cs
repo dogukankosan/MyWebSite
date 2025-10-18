@@ -29,7 +29,6 @@ namespace MyWebSite.Controllers
                 },
                 CommandType.StoredProcedure
             );
-            // ✅ Mevcut CV'yi veritabanından çek ve varsa /wwwroot/cv/cv.pdf olarak kaydet
             string cvPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "cv");
             if (!Directory.Exists(cvPath))
                 Directory.CreateDirectory(cvPath);
@@ -97,7 +96,6 @@ namespace MyWebSite.Controllers
                 return Json(new { success = false, message = "Hata: " + ex.Message });
             }
         }
-
         [Route("MevcutCv")]
         [HttpGet]
         public async Task<IActionResult> MevcutCv()

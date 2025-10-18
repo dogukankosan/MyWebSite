@@ -163,9 +163,23 @@
                             </form>
                         </div>
                     </div>
-                    <div class="text-center mt-3 muted small">
-                        © @DateTime.Now.Year • İndirme Modülü
-                    </div>
+                    <footer class="border-top bg-white py-3 mt-4">
+                        <div class="container small text-muted text-center text-md-start">
+                            <div class="row">
+                                <div class="col-md-6 mb-2 mb-md-0">
+                                    © @DateTime.Now.Year <a href="/">@Context.Request.Host</a> • Dosya Merkezi
+                                </div>
+                                <div class="col-md-6 text-md-end">
+                                    <a href="/Cerez-Politikasi" class="text-decoration-none text-secondary me-3">
+                                        🍪 Çerez Politikası
+                                    </a>
+                                    <a href="/Gizlilik-Politikasi" class="text-decoration-none text-secondary">
+                                        🔒 Gizlilik Politikası
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </footer>
 
                 </div>
             </div>

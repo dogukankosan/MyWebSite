@@ -259,11 +259,11 @@ namespace MyWebSite.Controllers
                 TryDelete(fullPath);
                 return FailResult("DB ekleme başarısız.", vm);
             }
+            TempData["Type"] = "success";
+            TempData["Message"] = $"Dosya başarıyla yüklendi.\nPaket: {safePackage}\nVersiyon: {version}";
             if (IsAjaxRequest(Request))
                 return Json(new { ok = true, redirect = Url.Action("Liste", "AdminDosya") });
-            TempData["Type"] = "success";
-            TempData["Message"] = $"Yüklendi • Paket:{safePackage} Versiyon:{version}";
-            return RedirectToAction(nameof(Index), new { packageKey = safePackage });
+            return RedirectToAction("Liste", "AdminDosya");
         }
         [HttpGet("Indir/{id:int}")]
         public async Task<IActionResult> Get(int id)

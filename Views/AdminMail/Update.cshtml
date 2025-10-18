@@ -1,73 +1,90 @@
 ﻿@model AdminMail
+
 @{
     ViewData["Title"] = "Admin Mail Güncelle";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
 <style>
-    .form-check-input {
-        appearance: none !important;
-        -webkit-appearance: none !important;
-        -moz-appearance: none !important;
-        outline: none !important;
-        box-shadow: none !important;
+    .btn {
+        transition: all 0.2s ease-in-out;
     }
 
-        .form-check-input:focus {
-            outline: none !important;
-            box-shadow: 0 0 0 0.2rem rgba(25,135,84,.25);
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
-    .form-switch .form-check-input {
-        width: 3rem;
-        height: 1.5rem;
-        margin-left: 0;
-        background-color: #adb5bd;
-        border-radius: 2rem;
+    .switch {
         position: relative;
-        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        display: inline-block;
+        width: 46px;
+        height: 24px;
     }
 
-        .form-switch .form-check-input:before {
-            content: "";
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 24px;
+    }
+
+        .slider:before {
             position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 1.1rem;
-            height: 1.1rem;
-            background-color: #fff;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
             border-radius: 50%;
-            transition: left 0.3s ease;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
 
-        .form-switch .form-check-input:checked {
-            background-color: #198754;
+    input:checked + .slider {
+        background-color: #198754;
+    }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
         }
 
-            .form-switch .form-check-input:checked:before {
-                left: 1.4rem;
-            }
+    label {
+        font-weight: bold;
+    }
 </style>
-
 <form id="adminMailForm" method="post">
     <br />
     <h4>Admin Mail Güncelleme Sayfası</h4>
     <hr />
     <input type="hidden" name="ExistingPassword" value="@Model.MailPassword" />
-    <span id="resultsucc" class="text-danger" style="margin-top: 5px; display: block;"></span>
+    <span id="resultsucc" class="text-danger mb-2 d-block"></span>
 
     <div class="form-group">
-        <label>Mail Adres:</label>
+        <label for="MailAdress">
+            Mail Adres: <span class="text-danger">*</span>
+        </label>
         <input type="email" class="form-control" name="MailAdress" id="MailAdress"
                value="@Model.MailAdress"
                placeholder="örn: info@sirketadi.com"
                required minlength="5" maxlength="75" />
-        <span id="MailAdressError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+        <span id="MailAdressError" class="text-danger mt-1 d-block"></span>
     </div>
 
-    <br />
-    <div class="form-group">
-        <label>Mail Şifre (değiştirmek isterseniz yazın):</label>
+    <div class="form-group mt-3">
+        <label for="MailPassword">
+            Mail Şifre (değiştirmek isterseniz yazın):
+        </label>
         <div class="input-group">
             <input type="password" class="form-control" name="MailPassword" id="MailPassword"
                    placeholder="Yeni şifrenizi girin (isteğe bağlı)"
@@ -76,40 +93,43 @@
                 <i class="fa fa-eye" id="toggleIcon"></i>
             </button>
         </div>
-        <span id="MailPasswordError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+        <span id="MailPasswordError" class="text-danger mt-1 d-block"></span>
     </div>
 
-    <br />
-    <div class="form-group">
-        <label>Server Name:</label>
+    <div class="form-group mt-3">
+        <label for="ServerName">
+            Server Name: <span class="text-danger">*</span>
+        </label>
         <input type="text" class="form-control" name="ServerName" id="ServerName"
                value="@Model.ServerName"
                placeholder="örn: smtp.office365.com veya smtp.gmail.com"
                required minlength="3" maxlength="20" />
-        <span id="ServerNameError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+        <span id="ServerNameError" class="text-danger mt-1 d-block"></span>
     </div>
 
-    <br />
-    <div class="form-group">
-        <label>Port:</label>
+    <div class="form-group mt-3">
+        <label for="MailPort">
+            Port: <span class="text-danger">*</span>
+        </label>
         <input type="number" class="form-control" name="MailPort" id="MailPort"
                value="@Model.MailPort"
                placeholder="örn: 587 veya 465"
                required min="1" max="65535" />
-        <span id="MailPortError" class="text-danger" style="margin-top: 5px; display: block;"></span>
+        <span id="MailPortError" class="text-danger mt-1 d-block"></span>
     </div>
 
-    <br />
-    <div class="form-group mb-3">
-        <label class="form-label fw-semibold mb-2 d-block">Bağlantı Güvenliği</label>
-        <div class="form-check form-switch">
-            <input type="checkbox" class="form-check-input" name="IsSSL" id="IsSSL"
-                   value="true" @(Model.IsSSL ? "checked" : "")>
-            <label class="form-check-label fw-semibold" for="IsSSL">SSL Kullan</label>
+    <div class="form-group mt-4">
+        <label class="d-block mb-2 font-weight-bold">Bağlantı Güvenliği (SSL):</label>
+        <div class="d-flex align-items-center">
+            <label class="switch">
+                <input type="checkbox" id="IsSSL" name="IsSSL" value="true" @(Model.IsSSL ? "checked" : "")>
+                <span class="slider round"></span>
+            </label>
+            <span id="sslStatusText" class="ml-3 font-weight-bold @(Model.IsSSL ? "text-success" : "text-secondary")">
+                @(Model.IsSSL ? "Aktif" : "Pasif")
+            </span>
         </div>
     </div>
-
-    <br />
     <div class="d-flex justify-content-end gap-2 mt-4">
         <button type="submit" class="btn btn-success px-4">
             <i class="fas fa-save me-2"></i> Güncelle
@@ -117,49 +137,41 @@
         <a href="/AdminMail/Liste" class="btn btn-outline-secondary px-4">
             <i class="fas fa-list me-2"></i> Listeye Dön
         </a>
-    </div>
-
-    <style>
-        .btn {
-            transition: all 0.2s ease-in-out;
-        }
-
-            .btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            }
-    </style>
-</form>
-
+    
+    </div>    <br /><br /><br />
+</form><script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
         $('#adminMailForm').submit(function (event) {
             event.preventDefault();
             var formData = $(this).serialize();
-
             $('#MailAdressError, #MailPasswordError, #ServerNameError, #MailPortError, #resultsucc').html('');
-
             $.ajax({
                 url: '/AdminMail/Guncelle',
                 type: 'POST',
                 data: formData,
-                success: function (response) {
-                    if (response.success) {
-                        window.location.href = response.redirectUrl;
-                    } else {
-                        if (response.errors.MailAdress) $('#MailAdressError').html(response.errors.MailAdress);
-                        if (response.errors.MailPassword) $('#MailPasswordError').html(response.errors.MailPassword);
-                        if (response.errors.ServerName) $('#ServerNameError').html(response.errors.ServerName);
-                        if (response.errors.MailPort) $('#MailPortError').html(response.errors.MailPort);
-                    }
-                },
-                error: function () {
-                    $('#resultsucc').html('<div class="alert alert-danger">Bir hata oluştu. Lütfen tekrar deneyin.</div>');
-                }
+    success: function (response) {
+        console.log(response);
+        if (response.success) {
+            window.location.href = response.redirectUrl;
+        } else {
+            if (response.errors.MailAdress) $('#MailAdressError').html(response.errors.MailAdress);
+            if (response.errors.MailPassword) $('#MailPasswordError').html(response.errors.MailPassword);
+            if (response.errors.ServerName) $('#ServerNameError').html(response.errors.ServerName);
+            if (response.errors.MailPort) $('#MailPortError').html(response.errors.MailPort);
+
+            if (response.errors.general) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hata!',
+                    text: response.errors.general
+                });
+            }
+        }
+    }
             });
         });
-
         $('#togglePassword').click(function () {
             var input = $('#MailPassword');
             var icon = $('#toggleIcon');
@@ -170,6 +182,14 @@
             } else {
                 input.attr('type', 'password');
                 icon.removeClass('fa-eye-slash').addClass('fa-eye');
+            }
+        });
+        $('#IsSSL').change(function () {
+            const sslText = $('#sslStatusText');
+            if ($(this).is(':checked')) {
+                sslText.text('Aktif').removeClass('text-secondary').addClass('text-success');
+            } else {
+                sslText.text('Pasif').removeClass('text-success').addClass('text-secondary');
             }
         });
     });

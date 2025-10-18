@@ -3,6 +3,11 @@
     ViewData["Title"] = "Dosya Yükleme";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
+<style>
+    label {
+        font-weight: bold;
+    }
+</style>
 <br />
 <title>Dosya Yükleme</title>
 <h4 class="card-title">Dosya Yükleme</h4>
@@ -27,7 +32,7 @@
                         <div class="text-danger small field-error d-none" data-for="PackageKey"></div>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Versiyon</label>
+                        <label class="form-label">Versiyon</label> <span class="text-danger">*</span>
                         <input asp-for="Version"
                                name="Version"
                                class="form-control"

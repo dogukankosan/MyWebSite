@@ -3,29 +3,88 @@
     ViewData["Title"] = "Admin Proje Ekle";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
+<style>
+
+     .switch {
+         position: relative;
+         display: inline-block;
+         width: 50px;
+         height: 25px;
+     }
+
+         .switch input {
+             opacity: 0;
+             width: 0;
+             height: 0;
+         }
+
+     .slider {
+         position: absolute;
+         cursor: pointer;
+         top: 0;
+         left: 0;
+         right: 0;
+         bottom: 0;
+         background-color: #ccc;
+         transition: .4s;
+         border-radius: 34px;
+     }
+
+    .btn {
+        transition: all 0.2s ease-in-out;
+    }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+    label {
+        font-weight: bold;
+    }
+         .slider:before {
+             position: absolute;
+             content: "";
+             height: 18px;
+             width: 18px;
+             left: 4px;
+             bottom: 4px;
+             background-color: white;
+             transition: .4s;
+             border-radius: 50%;
+         }
+
+     input:checked + .slider {
+         background-color: #28a745;
+     }
+
+         input:checked + .slider:before {
+             transform: translateX(24px);
+         }
+</style>
 <form id="projectAddForm" enctype="multipart/form-data" method="post" autocomplete="off">
     <br />
-    <h4>Admin Proje Ekle Sayfası</h4>
+    <h4>Yeni Proje Ekle Sayfası</h4>
     <hr />
 
     <div id="resultsucc" class="text-danger mb-2"></div>
 
     <div class="form-group">
-        <label for="ProjectName">Proje Adı:</label>
+        <label for="ProjectName">Proje Adı: <span style="color:red;">*</span></label>
         <input type="text" class="form-control" name="ProjectName" id="ProjectName"
                required minlength="3" maxlength="75" placeholder="Proje adı giriniz">
         <span id="ProjectNameError" class="text-danger"></span>
     </div>
 
     <div class="form-group mt-3">
-        <label for="ProjectDescription">Proje Açıklama:</label>
+        <label for="ProjectDescription">Proje Açıklama: <span style="color:red;">*</span></label>
         <textarea class="form-control" name="ProjectDescription" id="ProjectDescription"
                   required minlength="3" placeholder="Proje açıklaması giriniz"></textarea>
         <span id="ProjectDescriptionError" class="text-danger"></span>
     </div>
 
     <div class="form-group mt-3">
-        <label for="ProjectImg">Proje Görseli:</label>
+        <label for="ProjectImg">Proje Görseli: <span style="color:red;">*</span></label>
         <input type="file" name="ProjectImg" id="ProjectImg" class="form-control" required accept="image/*" />
         <span class="text-muted small">Desteklenen formatlar: JPG, JPEG, PNG</span>
         <br />
@@ -35,18 +94,19 @@
     </div>
 
     <div class="form-group mt-3">
-        <label for="ProjectGithubLink">Github Link:</label>
+        <label for="ProjectGithubLink">Github Link: <span style="color:red;">*</span></label>
         <input type="url" class="form-control" name="ProjectGithubLink" id="ProjectGithubLink"
                required minlength="3" maxlength="75" placeholder="https://github.com/...">
         <span id="ProjectGithubLinkError" class="text-danger"></span>
     </div>
 
     <div class="form-group mt-3">
-        <label for="ProjectLink">Web Link:</label>
+        <label for="ProjectLink">Web Link: <span style="color:red;">*</span></label>
         <input type="url" class="form-control" name="ProjectLink" id="ProjectLink"
                required minlength="3" maxlength="75" placeholder="https://...">
         <span id="ProjectLinkError" class="text-danger"></span>
     </div>
+
     <div class="form-group mt-4">
         <label class="d-block mb-2 font-weight-bold">Durum:</label>
         <div class="d-flex align-items-center">
@@ -57,6 +117,7 @@
             <span id="statusText" class="ml-3 font-weight-bold text-success">Aktif</span>
         </div>
     </div>
+
     <div class="d-flex justify-content-end gap-2 mt-4">
         <button type="submit" class="btn btn-success px-4">
             <i class="fas fa-save me-2"></i> Ekle
@@ -65,70 +126,10 @@
             <i class="fas fa-list me-2"></i> Listeye Dön
         </a>
     </div>
-
-    <style>
-        .btn {
-            transition: all 0.2s ease-in-out;
-        }
-
-            .btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            }
-    </style>
 </form>
 <br />
-
-<style>
-
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 50px;
-        height: 25px;
-    }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        transition: .4s;
-        border-radius: 34px;
-    }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-    input:checked + .slider {
-        background-color: #28a745;
-    }
-
-        input:checked + .slider:before {
-            transform: translateX(24px);
-        }
-</style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script>
     $(function () {
         $('#ProjectImg').on('change', function () {

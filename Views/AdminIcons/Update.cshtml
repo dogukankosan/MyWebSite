@@ -49,6 +49,9 @@
         left: 24px;
     }
 
+    label {
+        font-weight: bold;
+    }
     .status-label {
         margin-top: 5px;
         font-size: 0.9rem;
@@ -65,7 +68,7 @@
     <hr />
 
     <div class="form-group">
-        <label for="Icon">İkon Sınıfı:</label>
+        <label for="Icon">İkon Sınıfı: </label> <span style="color:red;">*</span>
         <input type="text" class="form-control" name="Icon.Icon" id="Icon"
                value="@Model.Icon"
                placeholder="fas fa-star, fa-solid fa-heart, vs."

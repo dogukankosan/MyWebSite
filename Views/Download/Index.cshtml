@@ -338,17 +338,23 @@
         }
     </main>
     <footer class="border-top bg-white py-3 mt-4">
-        <div class="container small text-muted">
-            © @DateTime.Now.Year @Context.Request.Host • Dosya Merkezi
-            <br />
-            <a href="/Cerez-Politikasi" class="text-decoration-none text-secondary">
-                🍪 Çerez Politikası
-            </a>
-            <a href="/Gizlilik-Politikasi" class="text-decoration-none text-secondary">
-                🔒 Gizlilik Politikası
-            </a>
+        <div class="container small text-muted text-center text-md-start">
+            <div class="row">
+                <div class="col-md-6 mb-2 mb-md-0">
+                    © @DateTime.Now.Year <a href="/">@Context.Request.Host</a> • Dosya Merkezi
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="/Cerez-Politikasi" class="text-decoration-none text-secondary me-3">
+                        🍪 Çerez Politikası
+                    </a>
+                    <a href="/Gizlilik-Politikasi" class="text-decoration-none text-secondary">
+                        🔒 Gizlilik Politikası
+                    </a>
+                </div>
+            </div>
         </div>
     </footer>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

@@ -20,6 +20,9 @@
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
         }
 
+    label {
+        font-weight: bold;
+    }
     .pdf-preview-overlay {
         position: absolute;
         top: 0;
@@ -106,15 +109,13 @@
             </div>
         </div>
     </div>
-
     <div class="col-md-8">
         <div class="card shadow-sm">
             <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
                 <span>CV İndirme Logları</span>
-                <span class="badge bg-light text-dark">@Model.Count adet kayıt</span>
             </div>
             <div class="card-body table-responsive">
-                <table class="table table-hover table-striped align-middle">
+                <table id="yourTableId" class="table table-striped table-bordered table-hover align-middle">
                     <thead class="table-light">
                         <tr>
                             <th>#</th>
@@ -145,6 +146,7 @@
                         }
                     </tbody>
                 </table>
+
             </div>
         </div>
     </div>

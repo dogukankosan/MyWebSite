@@ -5,20 +5,63 @@
 <html lang="tr">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Blog | @ViewBag.AboutName</title>
-    <meta name="description" content="@ViewBag.AboutName'ın yazılım, teknoloji ve veri analizi üzerine içerik paylaşımları.">
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
-
+    <meta name="description" content="@ViewBag.AboutName tarafından yazılım, teknoloji, ERP sistemleri ve veri analizi üzerine paylaşımlar." />
+    <meta name="keywords" content="yazılım, teknoloji, veri analizi, ERP, Logo ERP, C#, SQL, @ViewBag.AboutName, blog" />
+    <meta name="author" content="Doğukan Koşan" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content="Blog | @ViewBag.AboutName" />
+    <meta property="og:description" content="@ViewBag.AboutName'ın yazılım, teknoloji ve veri analizi üzerine paylaşımları." />
+    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:url" content="https://@Context.Request.Host/Blog" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Blog | @ViewBag.AboutName" />
+    <meta name="twitter:description" content="@ViewBag.AboutName tarafından yazılım ve teknoloji içerikleri." />
+    <meta name="twitter:image" content="/og-image.png" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" sizes="32x32" />
+    <link rel="canonical" href="https://@Context.Request.Host/Blog" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <style>
+        .centered-image {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            width: 110%;
+            max-width: 2000px;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+            .centered-image img {
+                width: 100%;
+                height: auto;
+                display: block;
+            }
+
+        main {
+            position: relative;
+            z-index: 2;
+        }
+
+        h1, p {
+            position: relative;
+            z-index: 3;
+            text-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+        }
+
         body {
             font-family: "Inter", sans-serif;
             color: #fff;
             height: 100vh;
             margin: 0;
-            background: linear-gradient(rgba(0, 0, 50, 0.6), rgba(0, 0, 70, 0.6)), url('/back.png') center center / 90% no-repeat fixed;
+            background: linear-gradient(rgba(0, 0, 50, 0.6), rgba(0, 0, 70, 0.6)), url('/stars-7088.gif') center center / cover no-repeat fixed;
             background-color: #001b44;
             display: flex;
             flex-direction: column;
@@ -32,34 +75,18 @@
             background-color: aqua;
             color: black;
         }
-        @@keyframes gradientShift {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
-        }
 
         h1 {
             font-weight: 700;
             font-size: 2.8rem;
-            letter-spacing: 0.5px;
             margin-bottom: 10px;
-            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
 
         p {
             font-size: 1.1rem;
             max-width: 650px;
             margin: 0 auto 20px;
-            color: rgba(255, 255, 255, 0.9);
-            text-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+            color: rgba(255, 255, 255, 0.95);
         }
 
         .spinner-border {
@@ -70,21 +97,27 @@
         }
 
         a.btn-main {
-            background-color: #ffc107;
+            background: linear-gradient(135deg, #ffc107, #ffb300); 
             color: #001b44;
-            font-weight: 600;
+            font-weight: 700;
             border-radius: 50px;
-            padding: 10px 28px;
+            padding: 12px 34px;
             font-size: 1rem;
-            transition: all 0.3s ease;
             text-decoration: none;
-            box-shadow: 0 0 12px rgba(255, 193, 7, 0.4);
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.6); 
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.55); 
+            z-index: 3;
+            opacity: 1;
+            backdrop-filter: none; 
         }
 
             a.btn-main:hover {
-                background-color: #fff;
+                background: #fff;
                 color: #0d6efd;
-                box-shadow: 0 0 18px rgba(255, 255, 255, 0.6);
+                transform: scale(1.05);
+                box-shadow: 0 12px 30px rgba(255, 255, 255, 0.3);
+                border-color: #fff;
             }
 
         .social-links {
@@ -113,8 +146,8 @@
             text-align: center;
             padding: 15px 0;
             font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.8);
-            background: rgba(0, 0, 0, 0.35);
+            color: rgba(255, 255, 255, 0.85);
+            background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(4px);
         }
 
@@ -128,28 +161,80 @@
                     text-decoration: underline;
                     color: #fff;
                 }
+        @@media
+
+        (max-width: 768px) {
+            h1
+
+        {
+            font-size: 1.8rem;
+        }
+
+        p {
+            font-size: 0.95rem;
+            padding: 0 20px;
+            line-height: 1.6;
+        }
+
+        .btn-main {
+            padding: 10px 24px;
+            font-size: 0.95rem;
+        }
+
+        .centered-image {
+            width: 100%;
+            top: 45%;
+        }
+
+        .social-links {
+            flex-direction: row;
+            gap: 10px;
+            font-size: 1.2rem;
+        }
+
+        footer {
+            font-size: 0.75rem;
+            padding: 10px 0;
+        }
+
+        }
     </style>
 </head>
 <body>
-    <div class="text-center">
-        <div class="spinner-border text-warning" role="status"></div>
+    <main class="text-center" role="main" aria-label="Blog gelişim sayfası">
+        <div class="centered-image">
+            <img src="https://iili.io/K8zaAAB.webp" alt="Blog Başlangıç Görseli" />
+        </div>
+        <br /><br /><br />
         <h1><i class="bi bi-code-slash text-warning"></i> Blog Yapım Aşamasında</h1>
         <p>
             <strong>@ViewBag.AboutName</strong> olarak, yakında yazılım, veri analizi, ERP sistemleri ve teknoloji alanında
             özgün içerikler paylaşacağım.
-            Takipte kalmak için <a href="/" target="_blank" class="text-warning fw-semibold">anasayfamı</a> ziyaret edebilirsin.
+            Takipte kalmak için <a href="/" class="text-warning fw-semibold" style="color:aqua">anasayfamı</a> ziyaret edebilirsin.
         </p>
-        <a href="/" class="btn-main mt-3">
+        <a href="/" class="btn-main mt-3" aria-label="Ana sayfaya dön">
             <i class="bi bi-house-door-fill"></i> Ana Sayfaya Dön
         </a>
-        <div class="social-links mt-4">
-            <a href="@ViewBag.GithubLink" target="_blank"><i class="bi bi-github"></i></a>
-            <a href="@ViewBag.LinkedinLink" target="_blank"><i class="bi bi-linkedin"></i></a>
-            <a href="@ViewBag.InstagramLink" target="_blank"><i class="bi bi-instagram"></i></a>
+        <div class="social-links mt-4" aria-label="Sosyal medya bağlantıları">
+            @if (!string.IsNullOrEmpty(ViewBag.GithubLink))
+            {
+                <a href="@ViewBag.GithubLink" target="_blank" aria-label="GitHub profili"><i class="bi bi-github"></i></a>
+            }
+            @if (!string.IsNullOrEmpty(ViewBag.LinkedinLink))
+            {
+                <a href="@ViewBag.LinkedinLink" target="_blank" aria-label="LinkedIn profili"><i class="bi bi-linkedin"></i></a>
+            }
+            @if (!string.IsNullOrEmpty(ViewBag.InstagramLink))
+            {
+                <a href="@ViewBag.InstagramLink" target="_blank" aria-label="Instagram profili"><i class="bi bi-instagram"></i></a>
+            }
         </div>
-    </div>
+    </main>
     <footer>
-        © @DateTime.Now.Year @ViewBag.AboutName • <a href="/Cerez-Politikasi">Çerez Politikası</a> • <a href="/Gizlilik-Politikasi">Gizlilik Politikası</a>
+        © @DateTime.Now.Year @ViewBag.AboutName •
+        <a href="/Cerez-Politikasi">Çerez Politikası</a> •
+        <a href="/Gizlilik-Politikasi">Gizlilik Politikası</a>
     </footer>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

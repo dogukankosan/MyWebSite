@@ -3,67 +3,6 @@
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
 
-<form id="educationForm" method="post" autocomplete="off">
-    <br />
-    <h4>Eğitim Ekleme Sayfası</h4>
-    <hr />
-    <div id="resultsucc" class="text-danger mb-2"></div>
-
-    <div class="form-group">
-        <label for="SchoolName">Okul Adı:</label>
-        <input type="text" class="form-control" name="SchoolName" id="SchoolName"
-               maxlength="75" minlength="3" required placeholder="Örn: İstanbul Üniversitesi">
-        <span id="SchoolNameError" class="text-danger mt-1 d-block"></span>
-    </div>
-
-    <div class="form-group mt-3">
-        <label for="SectionName">Bölüm:</label>
-        <input type="text" class="form-control" name="SectionName" id="SectionName"
-               maxlength="75" minlength="3" required placeholder="Örn: Bilgisayar Mühendisliği">
-        <span id="SectionNameError" class="text-danger mt-1 d-block"></span>
-    </div>
-
-    <div class="form-group mt-3">
-        <label for="Years">Okul Yılı:</label>
-        <input type="text" class="form-control" name="Years" id="Years"
-               maxlength="12"
-               pattern="^\d{4}-[A-Za-z0-9ÇçĞğİıÖöŞşÜü]+$"
-               required placeholder="Örn: 2020-2025 | 2020-AKTİF">
-        <span id="YearsError" class="text-danger mt-1 d-block"></span>
-    </div>
-    <div class="form-group mt-4">
-        <label class="d-block mb-2">Durum:</label>
-        <label class="switch">
-            <input type="checkbox" id="Status" name="Status" value="true">
-            <span class="slider round"></span>
-        </label>
-        <span id="statusText" class="ml-2 font-weight-bold text-secondary">Pasif</span>
-    </div>
-
-    <div class="d-flex justify-content-end gap-2 mt-4">
-        <button type="submit" class="btn btn-success px-4">
-            <i class="fas fa-save me-2"></i> Ekle
-        </button>
-        <a href="/AdminEgitim/Liste" class="btn btn-outline-secondary px-4">
-            <i class="fas fa-list me-2"></i> Listeye Dön
-        </a>
-    </div>
-
-    <style>
-        .btn {
-            transition: all 0.2s ease-in-out;
-        }
-
-            .btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            }
-    </style>
-</form>
-<br />
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <style>
     .switch {
         position: relative;
@@ -72,6 +11,18 @@
         height: 30px;
     }
 
+    .btn {
+        transition: all 0.2s ease-in-out;
+    }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+    label {
+        font-weight: bold;
+    }
         .switch input {
             display: none;
         }
@@ -108,7 +59,56 @@
             transform: translateX(30px);
         }
 </style>
+<form id="educationForm" method="post" autocomplete="off">
+    <br />
+    <h4>Eğitim Ekleme Sayfası</h4>
+    <hr />
+    <div id="resultsucc" class="text-danger mb-2"></div>
 
+    <div class="form-group">
+        <label for="SchoolName">Okul Adı: <span style="color:red;">*</span></label>
+        <input type="text" class="form-control" name="SchoolName" id="SchoolName"
+               maxlength="75" minlength="3" required placeholder="Örn: İstanbul Üniversitesi">
+        <span id="SchoolNameError" class="text-danger mt-1 d-block"></span>
+    </div>
+
+    <div class="form-group mt-3">
+        <label for="SectionName">Bölüm: <span style="color:red;">*</span></label>
+        <input type="text" class="form-control" name="SectionName" id="SectionName"
+               maxlength="75" minlength="3" required placeholder="Örn: Bilgisayar Mühendisliği">
+        <span id="SectionNameError" class="text-danger mt-1 d-block"></span>
+    </div>
+
+    <div class="form-group mt-3">
+        <label for="Years">Okul Yılı: <span style="color:red;">*</span></label>
+        <input type="text" class="form-control" name="Years" id="Years"
+               maxlength="12"
+               pattern="^\d{4}-[A-Za-z0-9ÇçĞğİıÖöŞşÜü]+$"
+               required placeholder="Örn: 2020-2025 | 2020-AKTİF">
+        <span id="YearsError" class="text-danger mt-1 d-block"></span>
+    </div>
+
+    <div class="form-group mt-4">
+        <label class="d-block mb-2">Durum:</label>
+        <label class="switch">
+            <input type="checkbox" id="Status" name="Status" value="true">
+            <span class="slider round"></span>
+        </label>
+        <span id="statusText" class="ml-2 font-weight-bold text-secondary">Pasif</span>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 mt-4">
+        <button type="submit" class="btn btn-success px-4">
+            <i class="fas fa-save me-2"></i> Ekle
+        </button>
+        <a href="/AdminEgitim/Liste" class="btn btn-outline-secondary px-4">
+            <i class="fas fa-list me-2"></i> Listeye Dön
+        </a>
+    </div>
+</form>
+<br />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(function () {
         $('#Status').change(function () {
@@ -118,7 +118,6 @@
                 $('#statusText').text('Pasif').removeClass('text-success').addClass('text-secondary');
             }
         });
-
         $('#educationForm').on('submit', function (event) {
             event.preventDefault();
             $('#SchoolNameError, #SectionNameError, #YearsError, #resultsucc').html('');
@@ -130,9 +129,7 @@
                     value: 'false'
                 }).appendTo('#educationForm');
             }
-
             var formData = $(this).serialize();
-
     $.ajax({
         url: '/AdminEgitim/Ekle',
         type: 'POST',

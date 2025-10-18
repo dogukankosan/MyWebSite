@@ -32,8 +32,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5DZXJ0aWZpY2F0ZXNcQWRkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminCertificates/DownloadLogs.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5DZXJ0aWZpY2F0ZXNcRG93bmxvYWRMb2dzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminCertificates/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5DZXJ0aWZpY2F0ZXNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminCertificates/Update.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5DZXJ0aWZpY2F0ZXNcVXBkYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/DOGUKAN/source/repos/MyWebSite/Views/AdminClean/Clean.cshtml]
@@ -176,6 +184,18 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG93bmxvYWRcUHJvbXB0S3YuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/Home/Blog.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxCbG9nLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/Home/CerezPolitikasi.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDZXJlelBvbGl0aWthc2kuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/Home/Components/CertificatesComponent/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDb21wb25lbnRzXENlcnRpZmljYXRlc0NvbXBvbmVudFxEZWZhdWx0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/DOGUKAN/source/repos/MyWebSite/Views/Home/Components/ContactUserComponent/Default.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDb21wb25lbnRzXENvbnRhY3RVc2VyQ29tcG9uZW50XERlZmF1bHQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -200,8 +220,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDb21wb25lbnRzXFNraWxsc0NvbXBvbmVudFxEZWZhdWx0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/Home/Components/WhatsAppSupportComponent/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDb21wb25lbnRzXFdoYXRzQXBwU3VwcG9ydENvbXBvbmVudFxEZWZhdWx0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/DOGUKAN/source/repos/MyWebSite/Views/Home/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxFcnJvci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DOGUKAN/source/repos/MyWebSite/Views/Home/GizlilikPolitikasi.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxHaXpsaWxpa1BvbGl0aWthc2kuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/DOGUKAN/source/repos/MyWebSite/Views/Home/Index.cshtml]

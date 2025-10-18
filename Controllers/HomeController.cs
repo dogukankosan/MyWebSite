@@ -230,7 +230,6 @@ namespace MyWebSite.Controllers
         };
                 await SQLCrud.InsertUpdateDeleteAsync(sqlLog, logParams);
                 string sql = "MyCVGet";
-                byte[]? cvFile = null;
                 var cvList = await SQLCrud.ExecuteModelListAsync<MyCV>(
                     sql,
                     null,
@@ -244,7 +243,9 @@ namespace MyWebSite.Controllers
                 MyCV? cv = cvList.FirstOrDefault();
                 if (cv == null || cv.CV == null)
                     return NotFound("CV bulunamadı");
-                return File(cv.CV, "application/pdf", "CV.pdf");
+                string domain = HttpContext.Request.Host.Host.Replace("www.", "");
+                string downloadFileName = $"{domain}-CV.pdf";
+                return File(cv.CV, "application/pdf", downloadFileName);
             }
             catch (Exception ex)
             {

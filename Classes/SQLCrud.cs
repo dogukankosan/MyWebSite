@@ -80,7 +80,7 @@ namespace MyWebSite.Classes
             List<SqlParameter> parameters,
             Func<SqlDataReader, T> mapper,
             CommandType commandType = CommandType.StoredProcedure)
-        {
+       {
             List<T> list = new();
             using SqlConnection conn = new(ConnectionString);
             using SqlCommand cmd = new(procedureName, conn)

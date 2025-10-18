@@ -4,9 +4,54 @@
     ViewData["Title"] = "Admin Beceriler Liste";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
+<style>
+    .status-toggle {
+        cursor: pointer;
+        user-select: none;
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
+    .toggle-wrapper {
+        width: 46px;
+        height: 24px;
+        border-radius: 12px;
+        background-color: #ccc;
+        position: relative;
+        transition: background-color 0.3s ease;
+    }
+
+        .toggle-wrapper.active {
+            background-color: #198754;
+        }
+
+    .toggle-switch {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: #fff;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        transition: left 0.3s ease;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .toggle-wrapper.active .toggle-switch {
+        left: 24px;
+    }
+
+    .status-label {
+        transition: color 0.3s ease, transform 0.2s ease;
+    }
+
+    .status-toggle:hover .status-label span {
+        transform: scale(1.05);
+    }
+</style>
 <br />
-<h4 class="card-title">Beceriler</h4>
+<h4 class="card-title">Beceri Bilgileri</h4>
 <hr />
 <div class="row mb-2">
     <div class="col text-right">
@@ -72,60 +117,13 @@
             }
         </tbody>
     </table>
-    <a class="btn btn-primary mt-3" href="/AdminBeceriler/Ekle">Yeni Beceri Ekle</a>
 </div>
 <br />
-
+<a class="btn btn-primary mt-3" href="/AdminBeceriler/Ekle">Yeni Beceri Ekle</a>
+<br />
+<br />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<style>
-    .status-toggle {
-        cursor: pointer;
-        user-select: none;
-        display: inline-flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .toggle-wrapper {
-        width: 46px;
-        height: 24px;
-        border-radius: 12px;
-        background-color: #ccc;
-        position: relative;
-        transition: background-color 0.3s ease;
-    }
-
-        .toggle-wrapper.active {
-            background-color: #198754;
-        }
-
-    .toggle-switch {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background-color: #fff;
-        position: absolute;
-        top: 2px;
-        left: 2px;
-        transition: left 0.3s ease;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-    }
-
-    .toggle-wrapper.active .toggle-switch {
-        left: 24px;
-    }
-
-    .status-label {
-        transition: color 0.3s ease, transform 0.2s ease;
-    }
-
-    .status-toggle:hover .status-label span {
-        transform: scale(1.05);
-    }
-</style>
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
 
@@ -222,5 +220,4 @@
             }
         });
     }
-
 </script>

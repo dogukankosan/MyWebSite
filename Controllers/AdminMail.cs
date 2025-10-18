@@ -56,6 +56,7 @@ namespace MyWebSite.Controllers
                 Dictionary<string, string> errors = ModelState
                     .Where(e => e.Value.Errors.Any())
                     .ToDictionary(k => k.Key, v => string.Join(", ", v.Value.Errors.Select(e => e.ErrorMessage)));
+
                 return Json(new { success = false, errors });
             }
             try
@@ -65,25 +66,74 @@ namespace MyWebSite.Controllers
                     finalPassword = adminMail.ExistingPassword;
                 else
                     finalPassword = await HashingControl.Encrypt(adminMail.MailPassword);
-                List<SqlParameter> parameters = new()
+                MailSender testSender = new MailSender
                 {
-                    new SqlParameter("@MailAdress", adminMail.MailAdress),
-                    new SqlParameter("@MailPassword", finalPassword),
-                    new SqlParameter("@ServerName", adminMail.ServerName),
-                    new SqlParameter("@MailPort", adminMail.MailPort),
-                    new SqlParameter("@IsSSL", adminMail.IsSSL)
+                    CustomSettings = new AdminMail
+                    {
+                        MailAdress = adminMail.MailAdress,
+                        MailPassword = string.IsNullOrWhiteSpace(adminMail.MailPassword)
+              ? await HashingControl.Decrypt(adminMail.ExistingPassword)
+              : adminMail.MailPassword,
+                        ServerName = adminMail.ServerName,
+                        MailPort = adminMail.MailPort,
+                        IsSSL = adminMail.IsSSL
+                    }
                 };
+                string htmlBody = @"
+        <div style='font-family:Segoe UI,Arial,sans-serif; background-color:#f4f7fb; padding:30px;'>
+            <div style='max-width:600px; margin:auto; background-color:#ffffff; border-radius:10px; 
+                        box-shadow:0 2px 8px rgba(0,0,0,0.1); overflow:hidden;'>
+                <div style='background:linear-gradient(90deg,#007bff,#00bfff); color:#fff; 
+                            text-align:center; padding:15px 0; font-size:20px; font-weight:bold;'>
+                    ✉️ Test Maili - SMTP Ayarları Doğrulama
+                </div>
+                <div style='padding:25px; color:#333;'>
+                    <p>Merhaba,</p>
+                    <p>Bu mail, SMTP ayarlarınızın doğruluğunu test etmek amacıyla gönderilmiştir.</p>
+                    <p>Her şey başarıyla çalışıyor 🎉</p>
+                    <hr style='border:none; border-top:1px solid #eee; margin:20px 0;' />
+                    <p style='font-size:13px; color:#777;'>📅 Gönderim Zamanı: " + DateTime.Now.ToString("dd MMMM yyyy HH:mm", new System.Globalization.CultureInfo("tr-TR")) + @"</p>
+                </div>
+            </div>
+        </div>";
+                bool testResult = await testSender.SendMail(
+                    subject: "✅ SMTP Test Maili - Ayarlar Başarılı",
+                    body: htmlBody
+                );
+                if (!testResult)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        errors = new
+                        {
+                            General = "❌ Test maili gönderilemedi. Lütfen SMTP ayarlarını kontrol edin."
+                        }
+                    });
+                }
+                List<SqlParameter> parameters = new()
+        {
+            new SqlParameter("@MailAdress", adminMail.MailAdress),
+            new SqlParameter("@MailPassword", finalPassword),
+            new SqlParameter("@ServerName", adminMail.ServerName),
+            new SqlParameter("@MailPort", adminMail.MailPort),
+            new SqlParameter("@IsSSL", adminMail.IsSSL)
+        };
                 await SQLCrud.InsertUpdateDeleteAsync("AdminMailUpdate", parameters, System.Data.CommandType.StoredProcedure);
                 TempData["Type"] = "success";
-                TempData["Message"] = "Admin Mail Başarılı Güncelleme İşlemi";
+                TempData["Message"] = "Mail ayarları başarıyla güncellendi ve test maili gönderildi.";
                 return Json(new { success = true, redirectUrl = Url.Action("Liste", "AdminMail") });
             }
             catch (Exception ex)
             {
-                await Logging.LogAdd("Admin Mail Panelde Güncelleme Hatası", ex.Message);
+                await Logging.LogAdd("Admin Mail Güncelleme Hatası", ex.Message);
                 TempData["Type"] = "error";
-                TempData["Message"] = "Admin Mail Hatalı Güncelleme İşlemi";
-                return Json(new { success = false });
+                TempData["Message"] = "Mail ayarları güncellenemedi.";
+                return Json(new
+                {
+                    success = false,
+                    errors = new { General = "⚠️ Mail güncelleme işlemi sırasında hata oluştu. Detaylar loga kaydedildi." }
+                });
             }
         }
         [HttpGet]

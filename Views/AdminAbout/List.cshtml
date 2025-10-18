@@ -17,7 +17,6 @@
         </select>
     </div>
 </div>
-
 <div class="table-responsive">
     <table class="table table-hover table-striped table-bordered align-middle text-center" id="yourTableId">
         <thead>
@@ -89,16 +88,13 @@
         </tbody>
     </table>
 </div>
-
 <div id="tempDataMessages"
      data-type="@TempData["Type"]"
      data-message="@TempData["Message"]">
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // ✅ Resim ön izleme özelliği
         document.querySelectorAll('.previewable').forEach(img => {
             img.addEventListener('click', function () {
                 const fullUrl = this.getAttribute('data-full');
@@ -114,8 +110,6 @@
                 });
             });
         });
-
-        // ✅ Bildirimler
         const el = document.getElementById('tempDataMessages');
         if (!el) return;
         const type = el.getAttribute('data-type');

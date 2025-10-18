@@ -4,16 +4,72 @@
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
 
+<style>
+    .btn {
+        transition: all 0.2s ease-in-out;
+    }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 30px;
+    }
+
+        .switch input {
+            display: none;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 30px;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+    input:checked + .slider {
+        background-color: #28a745;
+    }
+
+    label {
+        font-weight: bold;
+    }
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+</style>
 <form id="jobUpdateForm" onsubmit="return false;" autocomplete="off">
     <br />
     <h4>Admin İş Güncelleme Sayfası</h4>
     <hr />
-
-    <input type="hidden" name="ID" value="@Model.ID" />
     <div id="resultsucc" class="text-danger mb-2"></div>
 
+    <input type="hidden" name="ID" value="@Model.ID" />
+
     <div class="form-group">
-        <label for="JobName">Firma Adı:</label>
+        <label for="JobName">Firma Adı: <span style="color:red;">*</span></label>
         <input type="text" class="form-control" name="JobName" id="JobName"
                maxlength="75" minlength="3" required placeholder="Örn: ABC Teknoloji"
                value="@Model.JobName">
@@ -21,7 +77,7 @@
     </div>
 
     <div class="form-group mt-3">
-        <label for="JobTitle">İş Ünvan:</label>
+        <label for="JobTitle">İş Ünvan: <span style="color:red;">*</span></label>
         <input type="text" class="form-control" name="JobTitle" id="JobTitle"
                maxlength="75" minlength="3" required placeholder="Örn: Yazılım Geliştirici"
                value="@Model.JobTitle">
@@ -29,7 +85,7 @@
     </div>
 
     <div class="form-group mt-3">
-        <label for="JobYears">Çalışma Yılı:</label>
+        <label for="JobYears">Çalışma Yılı: <span style="color:red;">*</span></label>
         <input type="text" class="form-control" name="JobYears" id="JobYears"
                maxlength="12" pattern="^\d{4}-[A-Za-z0-9ÇçĞğİıÖöŞşÜü]+$"
                required placeholder="Örn: 2020-2025 | 2020-AKTİF"
@@ -38,7 +94,7 @@
     </div>
 
     <div class="form-group mt-3">
-        <label for="JobAbout">İş Hakkında:</label>
+        <label for="JobAbout">İş Hakkında: <span style="color:red;">*</span></label>
         <textarea class="form-control" name="JobAbout" id="JobAbout" rows="3" required
                   placeholder="Yaptığınız iş hakkında kısa açıklama...">@Model.JobAbout</textarea>
         <span id="JobAboutError" class="text-danger mt-1 d-block"></span>
@@ -50,7 +106,7 @@
             <input type="checkbox" id="Status" name="Status" value="true" @(Model.Status ? "checked" : "")>
             <span class="slider round"></span>
         </label>
-        <span id="statusText" class="ml-2 font-weight-bold @(Model.Status ? "text-success" : "text-secondary")">
+        <span id="statusText" class="ml-2 font-weight-bold text-secondary">
             @(Model.Status ? "Aktif" : "Pasif")
         </span>
     </div>
@@ -63,62 +119,7 @@
             <i class="fas fa-list me-2"></i> Listeye Dön
         </a>
     </div>
-
-    <style>
-        .btn {
-            transition: all 0.2s ease-in-out;
-        }
-
-            .btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            }
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 30px;
-        }
-
-            .switch input {
-                display: none;
-            }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 30px;
-        }
-
-            .slider:before {
-                position: absolute;
-                content: "";
-                height: 22px;
-                width: 22px;
-                left: 4px;
-                bottom: 4px;
-                background-color: white;
-                transition: .4s;
-                border-radius: 50%;
-            }
-
-        input:checked + .slider {
-            background-color: #28a745;
-        }
-
-            input:checked + .slider:before {
-                transform: translateX(30px);
-            }
-    </style>
 </form>
-
 <br />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

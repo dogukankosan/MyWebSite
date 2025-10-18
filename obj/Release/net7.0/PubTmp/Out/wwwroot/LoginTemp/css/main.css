@@ -265,26 +265,24 @@ iframe {
   pointer-events: none;
 }
 
-.focus-input100::before {
-  content: "";
-  display: block;
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  width: 0;
-  height: 1px;
-
-  -webkit-transition: all 0.4s;
-  -o-transition: all 0.4s;
-  -moz-transition: all 0.4s;
-  transition: all 0.4s;
-
-  background: #d41872;
-  background: -webkit-linear-gradient(left, #a445b2, #d41872, #fa4299);
-  background: -o-linear-gradient(left, #a445b2, #d41872, #fa4299);
-  background: -moz-linear-gradient(left, #a445b2, #d41872, #fa4299);
-  background: linear-gradient(left, #a445b2, #d41872, #fa4299);
-}
+	.focus-input100::before {
+		content: "";
+		display: block;
+		position: absolute;
+		bottom: -1px;
+		left: 0;
+		width: 0;
+		height: 1px;
+		-webkit-transition: all 0.4s;
+		-o-transition: all 0.4s;
+		-moz-transition: all 0.4s;
+		transition: all 0.4s;
+		background: aqua;
+		background: -webkit-linear-gradient(left, aqua, aqua, aqua);
+		background: -o-linear-gradient(left, aqua, aqua, aqua);
+		background: -moz-linear-gradient(left, aqua, aqua, aqua);
+		background: linear-gradient(left, aqua, aqua, aqua);
+	}
 
 .focus-input100::after {
   font-family: Linearicons-Free;
@@ -322,18 +320,12 @@ iframe {
   left: 23px;
   color: #d41872;
 }
-
 .has-val.input100 + .focus-input100::before {
   width: 100%;
 }
-
 .has-val.input100 {
   padding-left: 60px;
 }
-
-
-/*------------------------------------------------------------------
-[ Button ]*/
 .container-login100-form-btn {
   width: 100%;
   display: -webkit-box;
@@ -344,40 +336,35 @@ iframe {
   flex-wrap: wrap;
   justify-content: center;
 }
-
 .login100-form-btn {
-  font-family: Ubuntu-Bold;
-  font-size: 18px;
-  color: #fff;
-  line-height: 1.2;
-  text-transform: uppercase;
-
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0 20px;
-  min-width: 160px;
-  height: 42px;
-  border-radius: 21px;
-
-  background: #d41872;
-  background: -webkit-linear-gradient(left, #a445b2, #d41872, #fa4299);
-  background: -o-linear-gradient(left, #a445b2, #d41872, #fa4299);
-  background: -moz-linear-gradient(left, #a445b2, #d41872, #fa4299);
-  background: linear-gradient(left, #a445b2, #d41872, #fa4299);
-  position: relative;
-  z-index: 1;
-
-  -webkit-transition: all 0.4s;
-  -o-transition: all 0.4s;
-  -moz-transition: all 0.4s;
-  transition: all 0.4s;
+	font-family: Ubuntu-Bold;
+	font-size: 18px;
+	color: black;
+	line-height: 1.2;
+	text-transform: uppercase;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 0 20px;
+	min-width: 160px;
+	height: 42px;
+	border-radius: 21px;
+	background: #d41872;
+	background: -webkit-linear-gradient(left, aqua, aqua, aqua);
+	background: -o-linear-gradient(left, aqua, aqua, aqua);
+	background: -moz-linear-gradient(left, aqua, aqua, aqua);
+	background: linear-gradient(left, aqua, aqua, aqua);
+	position: relative;
+	z-index: 1;
+	-webkit-transition: all 0.4s;
+	-o-transition: all 0.4s;
+	-moz-transition: all 0.4s;
+	transition: all 0.4s;
 }
-
 .login100-form-btn::before {
   content: "";
   display: block;
@@ -404,11 +391,6 @@ iframe {
 .login100-form-btn:hover:before {
   opacity: 1;
 }
-
-
-
-/*------------------------------------------------------------------
-[ Alert validate ]*/
 
 .validate-input {
   position: relative;
@@ -474,6 +456,3 @@ iframe {
     opacity: 1;
   }
 }
-
-
-

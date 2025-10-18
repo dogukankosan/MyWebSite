@@ -73,24 +73,35 @@ namespace MyWebSite.Controllers
             }
             try
             {
+                if ((about.Picture1 != null && !about.Picture1.ContentType.StartsWith("image/")) ||
+                    (about.Picture2 != null && !about.Picture2.ContentType.StartsWith("image/")))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        errors = new Dictionary<string, string>
+                {
+                    { "resultsucc", "Sadece resim dosyası yükleyebilirsiniz (JPEG, PNG, GIF vb.)." }
+                }
+                    });
+                }
                 byte[]? imageBytes1 = await GetBytes(about.Picture1);
                 byte[]? imageBytes2 = await GetBytes(about.Picture2);
                 List<SqlParameter> parameters = new()
-                {
-                    new SqlParameter("@Picture1", SqlDbType.VarBinary) { Value = (object?)imageBytes1 ?? DBNull.Value },
-                    new SqlParameter("@Picture2", SqlDbType.VarBinary) { Value = (object?)imageBytes2 ?? DBNull.Value },
-                    new SqlParameter("@AboutTitle", about.AboutTitle),
-                    new SqlParameter("@AboutDetails1", about.AboutDetails1),
-                    new SqlParameter("@AboutAdress", about.AboutAdress),
-                    new SqlParameter("@AboutMail", about.AboutMail),
-                    new SqlParameter("@AboutPhone", about.AboutPhone),
-                    new SqlParameter("@AboutWebSite", about.AboutWebSite),
-                    new SqlParameter("@AboutName", about.AboutName),
-                    new SqlParameter("@AboutDetails2", about.AboutDetails2),
-                    new SqlParameter("@IFrameAdress", about.IFrameAdress)
-                };
+        {
+            new SqlParameter("@Picture1", SqlDbType.VarBinary) { Value = (object?)imageBytes1 ?? DBNull.Value },
+            new SqlParameter("@Picture2", SqlDbType.VarBinary) { Value = (object?)imageBytes2 ?? DBNull.Value },
+            new SqlParameter("@AboutTitle", about.AboutTitle),
+            new SqlParameter("@AboutDetails1", about.AboutDetails1),
+            new SqlParameter("@AboutAdress", about.AboutAdress),
+            new SqlParameter("@AboutMail", about.AboutMail),
+            new SqlParameter("@AboutPhone", about.AboutPhone),
+            new SqlParameter("@AboutWebSite", about.AboutWebSite),
+            new SqlParameter("@AboutName", about.AboutName),
+            new SqlParameter("@AboutDetails2", about.AboutDetails2),
+            new SqlParameter("@IFrameAdress", about.IFrameAdress)
+        };
                 await SQLCrud.InsertUpdateDeleteAsync("AboutUpdate", parameters, CommandType.StoredProcedure);
-
                 TempData["Type"] = "success";
                 TempData["Message"] = "Admin Hakkında Başarıyla güncellendi.";
                 return Json(new { success = true, redirectUrl = Url.Action("Liste", "AdminHakkinda") });

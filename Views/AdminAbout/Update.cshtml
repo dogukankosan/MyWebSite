@@ -9,37 +9,42 @@
     <hr />
     <input type="hidden" name="ExistingPicture1" value="@ViewBag.Picture1" />
     <input type="hidden" name="ExistingPicture2" value="@ViewBag.Picture2" />
+
     <div class="form-group mb-3">
-        <label for="Picture1">Resim 1 Seçiniz:</label>
+        <label for="Picture1">Resim 1 Seçiniz: <span style="color:red;">*</span></label>
         <input type="file" class="form-control" name="Picture1" id="Picture1" accept="image/*" @(ViewBag.Picture1 == null ? "required" : "") />
-        <small class="form-text text-muted">Profil veya tanıtım resmi (600x600 önerilir)</small>
+        <small class="form-text text-muted">Profil veya tanıtım resmi</small>
         <div class="mt-2">
             <img id="preview1" src="@ViewBag.Picture1" width="60" height="60" class="border rounded" alt="Resim 1" />
         </div>
     </div>
+
     <div class="form-group mb-3">
-        <label for="Picture2">Resim 2 Seçiniz:</label>
+        <label for="Picture2">Resim 2 Seçiniz: <span style="color:red;">*</span></label>
         <input type="file" class="form-control" name="Picture2" id="Picture2" accept="image/*" @(ViewBag.Picture2 == null ? "required" : "") />
-        <small class="form-text text-muted">İkinci tanıtım görseli (opsiyonel)</small>
+        <small class="form-text text-muted">İkinci tanıtım görseli</small>
         <div class="mt-2">
             <img id="preview2" src="@ViewBag.Picture2" width="60" height="60" class="border rounded" alt="Resim 2" />
         </div>
     </div>
+
     <div class="form-group mb-3">
-        <label>Ünvan:</label>
+        <label>Ünvan: <span style="color:red;">*</span></label>
         <input type="text" class="form-control" name="AboutTitle" value="@Model.AboutTitle"
                required minlength="2" maxlength="100" pattern="^[^\d]*$"
                placeholder="Örn: Yazılım Mühendisi, Proje Yöneticisi">
         <span id="AboutTitleError" class="text-danger mt-1 d-block"></span>
     </div>
+
     <div class="form-group mb-3">
-        <label>Hakkında Detay 1:</label>
+        <label>Hakkında Detay 1: <span style="color:red;">*</span></label>
         <textarea class="form-control" name="AboutDetails1" required minlength="5" rows="4"
                   placeholder="Kendiniz veya firmanız hakkında kısa bir açıklama giriniz.">@Model.AboutDetails1</textarea>
         <span id="AboutDetails1Error" class="text-danger mt-1 d-block"></span>
     </div>
+
     <div class="form-group mb-3">
-        <label>Adres:</label>
+        <label>Adres: <span style="color:red;">*</span></label>
         <input type="text" class="form-control" name="AboutAdress" value="@Model.AboutAdress"
                required minlength="5" maxlength="100"
                placeholder="Örn: İstanbul, Silivri, Mustafa Kemal Mah. No:12">
@@ -47,7 +52,7 @@
     </div>
 
     <div class="form-group mb-3">
-        <label>Mail:</label>
+        <label>Mail: <span style="color:red;">*</span></label>
         <input type="email" class="form-control" name="AboutMail" value="@Model.AboutMail"
                required maxlength="75"
                placeholder="Örn: admin@dogukankosan.com">
@@ -55,39 +60,45 @@
     </div>
 
     <div class="form-group mb-3">
-        <label>Telefon:</label>
+        <label>Telefon: <span style="color:red;">*</span></label>
         <input type="tel" class="form-control" name="AboutPhone" value="@Model.AboutPhone"
                required pattern="^[0-9\+\-\(\)\s]*$" minlength="10" maxlength="20"
                placeholder="Örn: +90 (545) 511 11 34">
         <span id="AboutPhoneError" class="text-danger mt-1 d-block"></span>
     </div>
+
     <div class="form-group mb-3">
-        <label>Web Site:</label>
+        <label>Web Site: <span style="color:red;">*</span></label>
         <input type="text" class="form-control" name="AboutWebSite" value="@Model.AboutWebSite"
                required minlength="4" maxlength="75"
                placeholder="Örn: dogukankosan.com">
         <span id="AboutWebSiteError" class="text-danger mt-1 d-block"></span>
     </div>
+
     <div class="form-group mb-3">
-        <label>İsim:</label>
+        <label>İsim: <span style="color:red;">*</span></label>
         <input type="text" class="form-control" name="AboutName" value="@Model.AboutName"
                required minlength="2" maxlength="75" pattern="^[^\d]*$"
                placeholder="Örn: Doğukan Koşan">
         <span id="AboutNameError" class="text-danger mt-1 d-block"></span>
     </div>
+
     <div class="form-group mb-3">
-        <label>Hakkında Detay 2:</label>
+        <label>Hakkında Detay 2: <span style="color:red;">*</span></label>
         <textarea class="form-control" name="AboutDetails2" required minlength="5" rows="4"
                   placeholder="Ek açıklama veya detaylı bilgilendirme metni giriniz.">@Model.AboutDetails2</textarea>
         <span id="AboutDetails2Error" class="text-danger mt-1 d-block"></span>
     </div>
+
     <div class="form-group mb-3">
-        <label>Google Harita Embed (iframe):</label>
+        <label>Google Harita Embed (iframe): <span style="color:red;">*</span></label>
         <textarea class="form-control" name="IFrameAdress" required minlength="50" rows="4"
                   placeholder="Google Maps iframe kodunu buraya yapıştırın.">@Model.IFrameAdress</textarea>
         <span id="IFrameAdressError" class="text-danger mt-1 d-block"></span>
     </div>
+
     <span id="resultsucc" class="text-danger mb-3 d-block"></span>
+
     <div class="d-flex justify-content-end gap-2 mt-4">
         <button type="submit" class="btn btn-success px-4">
             <i class="fas fa-save me-2"></i> Güncelle
@@ -96,23 +107,6 @@
             <i class="fas fa-list me-2"></i> Listeye Dön
         </a>
     </div>
-    <style>
-        .btn {
-            transition: all 0.2s ease-in-out;
-        }
-            .btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            }
-
-        label {
-            font-weight: 600;
-        }
-
-        textarea, input[type="text"], input[type="email"], input[type="tel"] {
-            font-size: 14px;
-        }
-    </style>
 </form>
 <br />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

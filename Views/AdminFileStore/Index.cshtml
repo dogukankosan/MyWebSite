@@ -102,10 +102,8 @@
             }
             else
             {
-                int row = 0;
                 foreach (FileListItem i in Model)
                 {
-                    row++;
                     string? at = (i.ArchiveType ?? "").ToLowerInvariant();
                     bool willBeActive = !i.IsActive;
                     string? linkAbs = Url.Action(
@@ -115,7 +113,7 @@
                     Context.Request.Host.ToString()
                     );
                     <tr>
-                        <td>@row</td>
+                        <td>@i.Id</td>
                         <td>@i.PackageKey</td>
                         <td><span class="badge text-bg-secondary">@i.Version</span></td>
                         <td>
@@ -137,15 +135,14 @@
                         <td class="small text-monospace text-truncate" style="max-width:240px" title="@i.Sha256">@i.Sha256</td>
                         <td>
                             <span class="badge text-bg-light border">
-                                @i.UploadUtc.ToLocalTime().ToString("dd MMMM yyyy, HH:mm:ss", new System.Globalization.CultureInfo("tr-TR"))
+                                @i.UploadUtc.ToString("dd MMMM yyyy, HH:mm:ss", new System.Globalization.CultureInfo("tr-TR"))
                             </span>
                         </td>
                         <td>
                             <span class="badge text-bg-secondary">
-                                @i.LastModifiedUtc.ToLocalTime().ToString("dd MMMM yyyy, HH:mm:ss", new System.Globalization.CultureInfo("tr-TR"))
+                                @i.LastModifiedUtc.ToString("dd MMMM yyyy, HH:mm:ss", new System.Globalization.CultureInfo("tr-TR"))
                             </span>
                         </td>
-
                         <td><span class="badge text-bg-info">@i.DownloadCount</span></td>
                                
                         <td>
@@ -196,15 +193,15 @@
             }
         </tbody>
     </table>
-    <a asp-action="IndirmeLog" asp-controller="AdminDosya" class="btn btn-outline-primary ms-auto">
-        <i class="bi bi-graph-down-arrow"></i> Tüm İndirmeler Log
-    </a>
 </div>
 <div class="mt-3 d-flex">
     <a asp-action="Yukle" asp-controller="AdminDosya" class="btn btn-primary ms-auto">
         <i class="bi bi-cloud-upload"></i> Yükle
     </a>
-</div>
+
+</div>    <a asp-action="IndirmeLog" asp-controller="AdminDosya" class="btn btn-outline-primary ms-auto">
+    <i class="bi bi-graph-down-arrow"></i> Tüm İndirmeler Log
+</a>
 <br />
 <br />
 <br />
@@ -284,5 +281,26 @@
           });
         });
       });
+    });
+</script>
+<div id="tempDataMessages"
+     data-type="@TempData["Type"]"
+     data-message="@TempData["Message"]">
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const el = document.getElementById('tempDataMessages');
+      const type = el?.dataset.type;
+      const message = el?.dataset.message;
+      if (type && message) {
+        Swal.fire({
+          icon: type === "success" ? "success" : "error",
+          title: type === "success" ? "Başarılı!" : "Hata!",
+          text: message,
+          timer: 3000,
+          showConfirmButton: false
+        });
+      }
     });
 </script>

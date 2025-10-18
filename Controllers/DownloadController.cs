@@ -175,7 +175,7 @@ namespace MyWebSite.Controllers
             if (string.IsNullOrWhiteSpace(city))
             {
                 string? ip = GetClientIp(HttpContext);
-                if (!string.IsNullOrWhiteSpace(ip) && IsPublicIp(ip))
+                if (!string.IsNullOrWhiteSpace(ip))
                     city = await ResolveCityFromIpAsync(ip);
             }
             await SQLCrud.InsertUpdateDeleteAsync(SP_DWREG, new()

@@ -4,7 +4,6 @@
     ViewData["Title"] = "Admin Eğitim Liste";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
 }
-
 <style>
     .status-toggle {
         cursor: pointer;
@@ -51,11 +50,9 @@
         transform: scale(1.05);
     }
 </style>
-
 <br />
 <h4 class="card-title">Eğitim Bilgileri</h4>
 <hr />
-
 <div class="row mb-2">
     <div class="col text-right">
         <select id="exportOptions" class="form-control form-control-sm w-100 mb-2 d-md-inline-block">
@@ -66,7 +63,6 @@
         </select>
     </div>
 </div>
-
 <div class="table-responsive">
     <table class="table table-hover table-striped table-bordered align-middle" id="yourTableId">
         <thead class="table-light">
@@ -115,17 +111,15 @@
             }
         </tbody>
     </table>
-
-    <div class="d-flex justify-content-between align-items-center mt-3">
-        <a class="btn btn-primary" href="/AdminEgitim/Ekle">
-            <i class="fa fa-plus"></i> Yeni Eğitim Ekle
-        </a>
-    </div>
+    <br />
+</div>
+<div class="d-flex justify-content-between align-items-center mt-3">
+    <a class="btn btn-primary" href="/AdminEgitim/Ekle">
+        <i class="fa fa-plus"></i> Yeni Eğitim Ekle
+    </a>
 </div>
 <br />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener("click", async function (e) {
@@ -232,32 +226,21 @@
         }
     }
 </script>
-@if (TempData["Type"] != null && TempData["Message"] != null)
+@{
+    var type = TempData["Type"]?.ToString();
+    var message = TempData["Message"]?.ToString();
+}
+@if (!string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(message))
 {
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Daha önce gösterildiyse tekrar gösterme
-            const alreadyShown = sessionStorage.getItem("alertShown");
-            if (alreadyShown) return;
-
-            const type = "@TempData["Type"]";
-            // Türkçe karakter sorunu için doğru kodlama
-            const message = "@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(TempData["Message"].ToString()))";
             Swal.fire({
-                icon: type === "success" ? "success" : "error",
-                title: type === "success" ? "Başarılı!" : "Hata!",
-                text: message,
+                icon: '@(type == "success" ? "success" : "error")',
+                title: '@(type == "success" ? "Başarılı!" : "Hata!")',
+                text: "@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(message))",
                 timer: 1500,
                 showConfirmButton: false
             });
-
-            // ✅ Artık gösterildiğini kaydet (F5’te tekrar göstermez)
-            sessionStorage.setItem("alertShown", "true");
-
-            // ✅ Yeni işlemde tekrar gösterilebilmesi için session temizliği yapılır
-            setTimeout(() => {
-                sessionStorage.removeItem("alertShown");
-            }, 2000);
         });
     </script>
 }

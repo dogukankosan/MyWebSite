@@ -193,7 +193,6 @@ wwwroot\AdminThema\table\dataTables.bootstrap4.min.css
 wwwroot\AdminThema\table\datatable-basic.min.js
 wwwroot\userThema\img\my.jpg
 wwwroot\AdminThema\table\buttons.bootstrap4.min.css
-wwwroot\userThema\css\style.css
 wwwroot\userThema\img\Thumbs.db
 wwwroot\userThema\js\main.js
 wwwroot\userThema\lib\animate\animate.css
@@ -307,11 +306,12 @@ wwwroot\userThema\scss\bootstrap\scss\_variables.scss
 wwwroot\css\site.css
 wwwroot\css\style.css
 wwwroot\userThema\img\reshot-icon-computer-UGMT6YVCE5.svg
-wwwroot\LoginTemp\css\main.css
-wwwroot\404-error.ico
-wwwroot\back.png
 wwwroot\cv\cv.pdf
+wwwroot\404-error.ico
+wwwroot\userThema\css\style.css
+wwwroot\LoginTemp\css\main.css
 wwwroot\ghostscript\bin\gsdll64.dll
 wwwroot\ghostscript\bin\gsdll64.lib
 wwwroot\ghostscript\bin\gswin64.exe
 wwwroot\ghostscript\bin\gswin64c.exe
+wwwroot\stars-7088.gif

@@ -15,7 +15,6 @@ wwwroot\AdminThema\table\jquery.dataTables.min.js
 wwwroot\AdminThema\table\select.dataTables.min.css
 wwwroot\AdminThema\table\style.css
 wwwroot\AdminThema\table\style.css.map
-wwwroot\back.png
 wwwroot\css\site.css
 wwwroot\css\style.css
 wwwroot\cv\cv.pdf
@@ -200,6 +199,7 @@ wwwroot\LoginTemp\vendor\select2\select2.css
 wwwroot\LoginTemp\vendor\select2\select2.js
 wwwroot\LoginTemp\vendor\select2\select2.min.css
 wwwroot\LoginTemp\vendor\select2\select2.min.js
+wwwroot\stars-7088.gif
 wwwroot\userThema\css\bootstrap.min.css
 wwwroot\userThema\css\style.css
 wwwroot\userThema\img\my.jpg
