@@ -4,6 +4,14 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.HttpOverrides;
 using MyWebSite.Business;
 using MyWebSite.Classes;
+// ── Çökme loglaması: süreç ölmeden önce sebebini logs/ klasörüne yazar ──
+AppDomain.CurrentDomain.UnhandledException += (_, e) =>
+    Logging.WriteToFile("[ÇÖKME] Yakalanmamış hata", e.ExceptionObject?.ToString() ?? "Bilinmeyen hata");
+TaskScheduler.UnobservedTaskException += (_, e) =>
+{
+    Logging.WriteToFile("[UYARI] Gözlemlenmemiş Task hatası", e.Exception.ToString());
+    e.SetObserved();
+};
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews()
@@ -122,8 +130,16 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 });
 IHttpContextAccessor httpContextAccessor = app.Services.GetRequiredService<IHttpContextAccessor>();
 SQLCrud.Configure(builder.Configuration, httpContextAccessor);
-Logging.Configure(httpContextAccessor);
+Logging.Configure(builder.Configuration, httpContextAccessor);
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-app.Run();
+try
+{
+    app.Run();
+}
+catch (Exception ex)
+{
+    Logging.WriteToFile("[ÇÖKME] Uygulama durdu", ex.ToString());
+    throw;
+}
